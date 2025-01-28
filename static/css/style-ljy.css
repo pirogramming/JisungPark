@@ -11,30 +11,44 @@ header {
 }
 .header-nav {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     height: 100%;
     margin-right: 1rem;
 }
+.header-nav a, i{
+    margin: 0 1.3rem;
+    font-size: 1.5rem;
+}
 
 footer {
-    background-color: white;
-    height: 5rem;
+    background: white;
 }
-.footer-top {
+.footer-top, .footer-bottom  {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     height: 100%;
-    margin: 0 1rem;
+    padding-block: 1rem;
 }
-.footer-bottom {
-    display: flex;
-    justify-content: space-around;
+
+.footer-top a {
+    margin: 0 1rem;
+    font-size: 1.2rem;
+}
+.home-container {
+    justify-content: center;
     align-items: center;
-    height: 100%;
-    margin: 0 1rem;
-}
+    color: #333;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    width: 390px;
+    height: 100dvh;
+    margin: auto;
+    background: #00AAFF;
+    display: flex;
+    flex-direction: column;
+    }
 .menu-icon {
     cursor: pointer;
     font-size: 24px;
@@ -71,19 +85,29 @@ h1 {
 
 .search-box {
     display: grid;
-    grid-template-columns: 1fr 0.15fr;
+    grid-template-columns: 1fr auto;
+    margin-block: 1rem;
 }
   
 .search-box>form {
     display: flex;
 }
-
+.search-btn {
+    background-color: white;
+    padding:1rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
 .signup-container, .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     padding: 30px 40px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
+    height: 80dvh;
     max-width: 265px;
     text-align: center;
 }
