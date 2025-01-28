@@ -1,0 +1,70 @@
+{% load static %}
+{% block styles %}
+        <link rel="stylesheet" href="{% static 'css/style-pth.css' %}">
+    {% endblock %}
+{% block content %}
+    <div class="search-container">
+        <input type="text" class="address" placeholder="주소를 입력하세요">
+        <button onclick="searchAddress()" class="search-button">검색</button>
+    </div>
+    <div id="map"></div>
+    <div class="parking-list-container">
+        <button id="toggle-parking-btn">주차장 리스트 </button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- 네이버 지도 API 키 추가 -->
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=&submodules=geocoder"></script>
+
+    <script>
+        // 네이버 지도 초기화
+        var map = new naver.maps.Map('map', {
+            center: new naver.maps.LatLng(37.5665, 126.9780), // 서울 시청 좌표
+            zoom: 14
+        });
+
+        // 마커 초기화 (초기 위치는 지도 중심으로 설정)
+        var marker = new naver.maps.Marker({
+            position: map.getCenter(), 
+            map: map, 
+            animation: naver.maps.Animation.BOUNCE  // 애니메이션 효과
+        });
+
+        function searchAddress() {
+            var address = document.getElementById('address').value;
+
+            if (!address) {
+                alert("주소를 입력하세요.");
+                return;
+            }
+
+            // 네이버 지도 API - 주소 검색(geocode)
+            naver.maps.Service.geocode({ query: address }, function(status, response) {
+                if (status !== naver.maps.Service.Status.OK) {
+                    alert("주소 검색에 실패했습니다.");
+                    return;
+                }
+
+                var result = response.v2.addresses[0]; 
+                var lat = result.y;
+                var lng = result.x;
+                var coord = new naver.maps.LatLng(lat, lng);
+
+                // 지도 이동
+                map.setCenter(coord);
+                map.setZoom(16);
+
+                // 마커 위치 업데이트
+                marker.setPosition(coord);
+
+                // 인포윈도우 추가 (수정된 백틱 사용)
+                var infoWindow = new naver.maps.InfoWindow({
+                    content: `<div style="padding:10px;">${result.roadAddress || result.jibunAddress}</div>`
+                });
+
+                infoWindow.open(map, marker);
+            });
+        }
+    </script>
+{% endblock %}

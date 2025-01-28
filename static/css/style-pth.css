@@ -1,0 +1,56 @@
+#map {
+    width: 100%;
+    height: 85%;
+    position: relative;
+    z-index: 1;
+    }
+.search-container {
+    position: absolute;
+    width: 100%;
+    height: 4%;
+    margin: 10px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+    z-index: 10;  
+    }
+.search-button{
+    background-color: white;
+    border: none;
+    width: 7%;
+    height: 100%;
+    cursor: pointer;
+}
+.search-button:hover{
+    background-color: rgb(243, 241, 241);
+}
+.address{
+    border: none;
+    width: 80%;
+    height: 100%;
+}
+.address:focus {
+    border: 2px solid #337eff;
+    outline: none;
+}
+.parking-list-container{
+    position: absolute;
+    bottom: 190px;
+    width: 100%;
+    height: 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;  
+    }
+.toggle-parking-btn{
+    background-color: white;
+    border: none;
+    width: 13%;
+    height: 100%;
+    cursor: pointer;
+}
+.toggle-parking-btn:hover{
+    background-color: rgb(243, 241, 241);
+}
