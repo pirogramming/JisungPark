@@ -12,27 +12,43 @@
   </head>
 
   <body>
-    <header>
-        {% comment %}<div class="logo">
-            <a href="{% url 'user:home' %}">
-                <img src="{%static 'user/img/logo.png'%}" alt="logo">
-            </a>
-        </div>{% endcomment %}
-        <div class="header-nav">
-            <ul>
-                <li><a href="{% url 'account_login' %}">Signin</a></li>
-                <li><a href="{% url 'account_signup' %}">Signup</a></li>
-                {% comment %}
-                	<li><a href="{% url 'user:menu' %}">
-                {% endcomment %}
-                    <i src="" class="hamburger" alt="hamburger"></i>
-                </a></li>
-            </ul>
-        </div>
-    </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    <div class="container">
+        <header>
+            {% comment %}<div class="logo">
+                <a href="{% url 'user:home' %}">
+                    <img src="{%static 'user/img/logo.png'%}" alt="logo">
+                </a>
+            </div>{% endcomment %}
+            <div class="header-nav">
+                {% if user.is_authenticated %}
+                    <a>({{ user.username }})님</a>
+                    <a href="{% url 'account_logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'account_login' %}">Signin</a>
+                    <a href="{% url 'account_signup' %}">Signup</a>
+                {% endif %}
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <i class="ri-menu-line"></i>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div id="menu" class="menu">
+                <a href="demos:service">서비스 소개</a>
+                <a href="demos:review">리뷰</a>
+                <a href="demos:community">커뮤니티</a>
+                <a href="demos:work">협력문의</a>
+                <a href="#">Q&A</a>
+              </div>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script>
+        function toggleMenu() {
+          const menu = document.getElementById('menu');
+          menu.classList.toggle('active');
+        }
+      </script>
   </body>
 </html>
 
