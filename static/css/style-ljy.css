@@ -136,7 +136,7 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-}
+} 
 
 .login-btn, .signup-btn{
     width: 60%;
