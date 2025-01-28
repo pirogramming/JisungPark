@@ -7,21 +7,24 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="{%static 'css/reset.css'%}">  
     <link rel="stylesheet" href="{%static 'css/layout.css'%}"> 
-    <link rel="stylesheet" href="{%static 'css/style.css'%}">
+    <link rel="stylesheet" href="{%static 'css/style-lyj.css'%}">
+    <link rel="stylesheet" href="{%static 'css/style-pth.css'%}">
   </head>
 
   <body>
     <header>
-        <div class="logo">
-            <a href="{% url 'demos:home' %}">
-                <img src="{%static 'demos/img/logo.png'%}" alt="logo">
+        {% comment %}<div class="logo">
+            <a href="{% url 'user:home' %}">
+                <img src="{%static 'user/img/logo.png'%}" alt="logo">
             </a>
-        </div>
-        <div>
+        </div>{% endcomment %}
+        <div class="header-nav">
             <ul>
-                <li><a href="{% url 'demos:signin' %}">Signin</a></li>
-                <li><a href="{% url 'demos:signup' %}">Signup</a></li>
-                <li><a href="{% url 'demos:menu' %}">
+                <li><a href="{% url 'account_login' %}">Signin</a></li>
+                <li><a href="{% url 'account_signup' %}">Signup</a></li>
+                {% comment %}
+                	<li><a href="{% url 'user:menu' %}">
+                {% endcomment %}
                     <i src="" class="hamburger" alt="hamburger"></i>
                 </a></li>
             </ul>
@@ -32,3 +35,4 @@
     </main>
   </body>
 </html>
+

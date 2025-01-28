@@ -38,7 +38,41 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'demos',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.naver',
+    'allauth.socialaccount.providers.google',
+    'user',
+    #allauth - kakao
+    #'allauth.socialaccount.providers.kakao',
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+AUTH_USER_MODEL = 'user.User'  # user는 앱 이름, User는 모델 이름
+
+ACCOUNT_FORMS = {
+    'signup': 'user.forms.MyCustomSignupForm',  # 회원가입 폼 커스터마이징
+    'login': 'user.forms.MyCustomLoginForm',    # 로그인 폼 커스터마이징
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -55,7 +90,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +153,45 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+  BASE_DIR / 'static',
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        "APP": {
+        "client_id": (""),
+        "secret": (""),
+        "key": ""
+        },
+        "SCOPE": [
+            "profile", #구글의 경우 무조건 추가
+            "email", # 구글의 경우 무조건 추가
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online", #추가
+            'prompt': 'select_account',#추가 간편로그인을 지원해줌
+        }
+    },
+     "naver": {
+        "APP": {
+        "client_id": (""),
+        "secret": (""),
+       "key": ""
+        },
+
+        "SCOPE": [
+
+        ],
+        #추가
+        "AUTH_PARAMS": {
+        "access_type": "online",#추가
+        'prompt': 'select_account',#추가 간편로그인을 지원해줌
+        }},}
