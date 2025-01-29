@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
 
 {% block content %}
   <div class="login-container">
@@ -14,6 +16,11 @@
                 {% comment %}
                 <a href="{% url 'user:signup'%}"> 회원가입</a>
                 {% endcomment %}
+                <button type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
+                    <img class="naver" src="{%  static 'img/naver_login_img.png' %}" alt="Naver Login">
+                </button>
+                <button type="button" onclick="location.href = '{% provider_login_url 'google' %}'">
+                    <img class="google" src="{% static 'img/google_login_img.png' %}" alt="Google Login">
             </div>
         {% if invalid_creds %}
             <p>다시 시도해주세요</p>

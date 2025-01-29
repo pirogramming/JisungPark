@@ -174,3 +174,11 @@ h1 {
 .signup-link:hover , .idpw-link a:hover, .login-link a:hover {
     text-decoration: underline;
     }
+
+.login_elements p:last-of-type{
+    display: none;
+}
+
+.google, .naver{
+    width: 60%;
+}
