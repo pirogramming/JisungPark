@@ -45,7 +45,8 @@ class MyCustomSignupForm(SignupForm):
 
     def __init__(self, *args, **kwargs):
         super(MyCustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields['email'].label = '이메일 주소(필수)'
+        self.fields['email'].label = '이메일 주소'
+        self.fields['password2'].label = '비밀번호'
 
     def clean_phonenumber(self):
         """전화번호 중복 확인 로직 추가"""

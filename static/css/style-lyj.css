@@ -2,7 +2,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 5rem;
+    height: 7rem;
     background-color: white;
     padding: 0 1rem;
     z-index: 1000;
@@ -32,7 +32,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 4rem;
     padding-block: 1rem;
 }
 
@@ -47,7 +47,7 @@ footer {
     font-size: 1.6rem;
     line-height: 1.5;
     width: 390px;
-    height: 87dvh;
+    height: 82.5dvh;
     margin: auto;
     background: #00AAFF;
     display: flex;
@@ -81,7 +81,7 @@ footer {
 }
 
 h1 {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     font-size: 2.4rem;
     color: #333;
 }
@@ -101,7 +101,7 @@ h1 {
     border-radius: 1rem;
     margin-top: 1rem;
 }
-.signup_container, .login_container, .introduce_container {
+.signup_container, .login_container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -114,6 +114,18 @@ h1 {
     max-width: 80%;
     text-align: center;
 }
+.introduce_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    padding: 40px 30px;
+}
 .signup_container {
     height: 60rem;
 }
@@ -121,34 +133,35 @@ h1 {
     height: 50rem;
 }
 
-.input-group {
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.input-group label {
-    display: block;
+.login_elements label, .signup_form label {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: right;
+    width: 7rem;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     color: #555;
+    margin-block: 1rem;
 }
 
-.input-group input {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.4rem;
+.login_elements input, .signup_form input {
+    width: 16rem;
+    padding: 0.5rem;
+    font-size: 1.3rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-block: 1rem;
 }
-.form-control {
+.form-control{
     padding: 1rem;
-    border-radius: 1rem;
-    margin: 1rem;
+    font-size: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
 }
-.login_elements p, .signup_form p {
-    margin: 1rem;
-}
+
 .login_elements p:last-of-type {
     display: none;
 }
@@ -156,7 +169,7 @@ h1 {
     display: none;
 }
 .login-btn, .signup-btn{
-    margin-top: 2rem;
+    margin-top: 1rem;
     padding: 10px 15px;
     font-size: 16px;
     background-color: #8BE0F1;
@@ -210,7 +223,7 @@ h1 {
     color: #555;
 }
 .signup-link, .login-link{
-    padding: 3px;
+    margin: 1rem;
     font-size: 14px;
     color: #555;
     }

@@ -1,29 +1,31 @@
 {% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
 
 {% block content %}
   <div class="signup-container">
     <div class="signup_container">
-      <h1>회원가입</h1>
       <form action="" method="POST" class="signup_form">
+        <h1>회원가입</h1>
           {% csrf_token %}
           {{ form.as_p }}
           <div class="signup_btn">
             <button type="submit" class="signup-btn">회원가입</button>
           </div>
           <p class="login-link">이미 계정이 있으신가요? <a href="{% url 'account_login'%}">로그인</a></p>
-      <hr>
+        <hr>
       <div class="social-login">
           <p>소셜 로그인</p>
-          <button class="google"><a href="{% url 'account_signup'%}"> 구글</a></button>
-          <button class="naver"><a href="{% url 'account_signup'%}"> 네이버</a></button>
-          <button class="kakao"><a href="{% url 'account_signup'%}"> 카카오</a></button>
+          <button type="button" class="naver" onclick="location.href = '{% provider_login_url 'naver' %}'">NAVER</button>
+          <button type="button" class="google" onclick="location.href = '{% provider_login_url 'google' %}'">Google</button>
+          <button class="kakao"><a href="{% url 'account_signup'%}">kakao</a></button>
       </div>
       </form>
     </div>
   </div>
   <footer>
     <div class="footer-top">
-        <a href="{% url 'demos:service' %}">서비스소개</a>
+        <a href="{% url 'demos:introduce' %}">서비스소개</a>
         <a href="{% url 'demos:review' %}">리뷰</a>
         <a href="{% url 'demos:community' %}">커뮤니티</a>
         <a href="{% url 'demos:work' %}">협력문의</a>
