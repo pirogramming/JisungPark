@@ -14,33 +14,6 @@ def map(request):
 def search(request):
     return render(request, 'map.html')
 
-# def load_selected_parking_data(request=None):  # request 기본값을 None으로 설정
-#     try:
-#         json_file_path = os.path.join(settings.BASE_DIR, "parking_data.json")
-
-#         with open(json_file_path, "r", encoding="utf-8") as json_file:
-#             data = json.load(json_file)
-
-#         parking_records = data.get("records", [])
-
-#         required_fields = ["주차장명", "소재지도로명주소", "주차구획수", "위도", "경도"]
-
-#         filtered_parking_data = [
-#             {field: record.get(field, "N/A") for field in required_fields}
-#             for record in parking_records
-#         ]
-
-#         #  `request`가 제공되었으면 JSON 응답 반환 (뷰에서 호출할 때)
-#         if request is not None:
-#             return JsonResponse(filtered_parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
-
-#         # `request`가 없으면 리스트 반환 (map 뷰에서 내부적으로 호출할 때)
-#         return filtered_parking_data
-
-#     except Exception as e:
-#         error_response = {"error": str(e)}
-#         return JsonResponse(error_response, status=500) if request is not None else []
-
 def load_selected_parking_data(request):
     try:
         json_file_path = os.path.join(settings.BASE_DIR, "parking_data.json")
