@@ -20,7 +20,11 @@
         </div>
         {% endblock %}
         {% block scripts %}
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1759239295647319dc8d7630951314f5&libraries=services"></script>
+
+        {% if parking_data %}
+        {{ parking_data | json_script:'jsonData' }}
+        {% endif %}
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAP_KEY}}&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
@@ -255,35 +259,14 @@
 
             // JSON 파일에서 주차장 데이터 불러오기
             function loadParkingData() {
-                fetch("{% static 'data/parking_data.json' %}") 
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("📌 로드된 전체 주차장 데이터:", data); 
-                        if (data.records && Array.isArray(data.records)) {
-                            parkingData = data.records.map(parking => {
-                                let lat = parking.위도 ? parseFloat(parking.위도.toString().trim()) : NaN;
-                                let lng = parking.경도 ? parseFloat(parking.경도.toString().trim()) : NaN;
-
-                                if (isNaN(lat) || isNaN(lng)) {
-                                    console.warn("잘못된 좌표 데이터 제외:", parking);
-                                    return null;
-                                }
-
-                                return {
-                                    주차장명: parking.주차장명,
-                                    위도: lat,
-                                    경도: lng
-                                };
-                            }).filter(p => p !== null); 
-
-                            console.log("변환된 주차장 데이터:", parkingData); 
-                        } else {
-                            parkingData = []; 
-                        }
-                    })
-                    .catch(error => {
-                        parkingData = []; 
+                var placeData = JSON.parse(document.getElementById('jsonData').textContent);
+                placeData.forEach(function(place) {
+                    parkingData.push({
+                        '주차장명': place['주차장명'], 
+                        '위도': place['위도'], 
+                        '경도': place['경도']
                     });
+                });
             }
             // 🅿️ 주차장 마커 추가 함수
             function showParkingMarkers(parkingList) {
