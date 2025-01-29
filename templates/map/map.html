@@ -1,5 +1,6 @@
 {% load static %}
 {% block styles %}
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/style-pth.css' %}">
 {% endblock %}
 {% block content %}
@@ -17,6 +18,45 @@
                 <ul id="placesList"></ul>
                 <div id="pagination"></div>
             </div>
+            <div class="bottom-btn"> 
+                <button class="list-button" onclick="toggleParkingList()">주차장 리스트</button>
+            </div>
+            <div id="parkingListWrap" style="display: none;">
+                <ul id="parkingList"></ul>
+            </div>
+        </div>
+        <div id="parkingDetailWrap" style="display: none;">
+            <h3 id="parkingTitle">주차장 이름</h3>
+            <p id="parkingReview">리뷰
+                <i onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
+            </p>
+            <div id="review" class="review">
+                {% for review in reviews %}
+                <div class="review-item">
+                    <p><strong>{{ review.user.username }}</strong> ⭐ {{ review.rating }}</p>
+                    <p>{{ review.content }}</p>
+                </div>
+                {% empty %}
+                <p>아직 리뷰가 없습니다.</p>
+                {% endfor %}
+                <input type="number" id="ratingInput" min="1" max="5" placeholder="평점(1~5)" />
+                <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
+                <button class="review-btn" onclick="addReview()">리뷰 등록</button>
+                <div class="review-list">
+                </div>
+            </div>
+            <p id="parkingCommunity">커뮤니티
+                <i onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
+            </p>
+            <div id="community" class="community">
+                <div class="messages">
+                </div>
+                <div class="input-msg">
+                    <input id="messageInput" type="text" placeholder="메시지를 입력하세요" />
+                    <button class="community-btn" onclick="sendMessage()">전송</button>
+                </div>
+            </div>
+            <button class="off-button" onclick="closeParkingDetail()">닫기</button>
         </div>
         {% endblock %}
         {% block scripts %}
@@ -24,10 +64,11 @@
         {% if parking_data %}
         {{ parking_data | json_script:'jsonData' }}
         {% endif %}
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAP_KEY}}&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
+            var selectedPlace = null;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -252,6 +293,8 @@
                 map.setCenter(marker.getPosition());
                 infowindow.close();
 
+                selectedPlace = marker.getPosition();
+
                 var lat = marker.getPosition().getLat();
                 var lng = marker.getPosition().getLng();
                 showParkingMarkers(parkingData);
@@ -280,6 +323,156 @@
                 while (el.hasChildNodes()) {
                     el.removeChild(el.lastChild);
                 }
+            }
+            function showClosestParkingLots() {
+                if (!selectedPlace) {
+                    alert("먼저 검색 후 장소를 선택하세요!");
+                    return;
+                }
+
+                var parkingListEl = document.getElementById('parkingList');
+                parkingListEl.innerHTML = ""; // 기존 리스트 초기화
+
+                var distances = parkingData.map(parking => {
+                    var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                    var distance = getDistance(selectedPlace, parkingLatLng);
+                    return { ...parking, distance };
+                });
+
+                // 거리 기준으로 정렬 후 상위 8개 선택
+                distances.sort((a, b) => a.distance - b.distance);
+                var closestParking = distances.slice(0, 8);
+
+                if (closestParking.length === 0) {
+                    alert("근처에 주차장이 없습니다.");
+                    return;
+                }
+
+                closestParking.forEach((parking, index) => {
+                    var li = document.createElement('li');
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)}km)`;
+                    li.onclick = function() {
+                        showParkingDetail(parking);
+                    };
+                    parkingListEl.appendChild(li);
+                });
+
+                document.getElementById('parkingListWrap').style.display = "block"; // 리스트 보이기
+                document.getElementById('parkingDetailWrap').style.display = "none"; // 상세 정보 숨기기
+            }
+
+            function showParkingDetail(parking) { 
+                var titleElement = document.getElementById('parkingTitle');
+
+                if (titleElement) {
+                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음"; // ✅ 주차장명이 없을 경우 대비
+                } else {
+                }
+
+                document.getElementById('parkingListWrap').style.display = "none"; // ✅ 리스트 숨김
+                document.getElementById('parkingDetailWrap').style.display = "block"; // ✅ 상세 정보 보이기
+            }
+
+            function closeParkingDetail() {
+                document.getElementById('parkingDetailWrap').style.display = "none"; // ✅ 상세 정보 숨기기
+                document.getElementById('parkingListWrap').style.display = "block"; // ✅ 리스트 다시 보이기
+            }
+
+            function getDistance(latlng1, latlng2) {
+                var earthRadius = 6371; 
+                var dLat = (latlng2.getLat() - latlng1.getLat()) * (Math.PI / 180);
+                var dLng = (latlng2.getLng() - latlng1.getLng()) * (Math.PI / 180);
+
+                var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(latlng1.getLat() * (Math.PI / 180)) *
+                    Math.cos(latlng2.getLat() * (Math.PI / 180)) *
+                    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return earthRadius * c; // 거리 반환 (km)
+            }
+            function toggleParkingList() {
+                var parkingListWrap = document.getElementById("parkingListWrap");
+
+                if (parkingListWrap.style.display === "none" || parkingListWrap.style.display === "") {
+                    showClosestParkingLots(); // 가장 가까운 주차장 8개 가져오기
+                    parkingListWrap.style.display = "flex"; 
+                    parkingListWrap.style.alignItems = "center"; 
+                    parkingListWrap.style.justifyContent = "center";
+                } else {
+                    parkingListWrap.style.display = "none"; 
+                }
+            }
+            const reviewContainer = document.getElementById('review');
+            function toggleReview() {
+                const review = document.getElementById('review');
+                review.classList.toggle('active');
+              }
+            function loadReviews() {
+            fetch('/api/reviews/')
+                .then(response => response.json())
+                .then(data => {
+                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                    data.reviews.forEach(review => {
+                        const reviewElement = `
+                            <div class="review-item">
+                                <strong>${review.user__username}</strong>
+                                <span>⭐ ${review.rating}</span>
+                                <p>${review.content || ''}</p>
+                            </div>
+                            <hr>
+                        `;
+                        reviewContainer.innerHTML += reviewElement;
+                    });
+                })
+                .catch(error => console.error('리뷰 로드 실패:', error));
+            }
+            function addReview() {
+                const rating = document.getElementById('ratingInput').value;
+                const content = document.getElementById('contentInput').value;
+        
+                fetch('/api/add_review/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({ rating, content }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            alert('리뷰가 추가되었습니다!');
+                            loadReviews(); // 리뷰 목록 새로고침
+                        }
+                    })
+                    .catch(error => console.error('리뷰 추가 실패:', error));
+            }
+            function toggleCommunity() {
+            const community = document.getElementById('community');
+            community.classList.toggle('active');
+            }
+            const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const messagesDiv = document.getElementById('messages');
+                const newMessage = document.createElement('div');
+                newMessage.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+                messagesDiv.appendChild(newMessage);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;  // 스크롤 자동 이동
+            };
+
+            function sendMessage() {
+                const inputBox = document.getElementById('message-input');
+                const message = inputBox.value;
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': '익명'  // 사용자 이름 추가 가능
+                }));
+                inputBox.value = '';
             }
         </script>
         {% endblock %}

@@ -15,4 +15,6 @@ urlpatterns = [
     path('email/', views.email, name='email'),
     path('insta/', views.insta, name='insta'),
     path('facebook/', views.facebook, name='facebook'),
+    path('api/reviews/', views.get_reviews, name='get_reviews'),
+    path('api/add_review/', views.add_review, name='add_review'),
 ]

@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
     'user',
+    'channels',
     #allauth - kakao
     #'allauth.socialaccount.providers.kakao',
 ]
@@ -89,7 +90,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+ASGI_APPLICATION = 'config.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -196,3 +197,13 @@ SOCIALACCOUNT_PROVIDERS = {
         "access_type": "online",#추가
         'prompt': 'select_account',#추가 간편로그인을 지원해줌
         }},}
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],  # Redis 서버 주소와 포트
+        },
+    },
+}

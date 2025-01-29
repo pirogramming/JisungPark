@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 
@@ -30,8 +32,6 @@ class ParkingLot(models.Model):
     def __str__(self):
         return f"{self.name} ({self.address})"
 
-
-
 class LiveInfo(models.Model):
     id = models.AutoField(primary_key=True)
     avail = models.IntegerField(null=False)  # 주차 가능 대수
@@ -41,3 +41,14 @@ class LiveInfo(models.Model):
     def __str__(self):
         return self.parking_lot.name
 
+class Review(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # 'auth.User' 대신 settings.AUTH_USER_MODEL 사용
+        on_delete=models.CASCADE
+    )
+    rating = models.IntegerField(default=1)  # 평점
+    content = models.TextField(blank=True, null=True)  # 리뷰 내용
+    created_at = models.DateTimeField(auto_now_add=True)  # 생성 시간
+
+    def __str__(self):
+        return f"{self.user.username} - {self.rating}"

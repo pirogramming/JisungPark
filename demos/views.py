@@ -3,8 +3,36 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from .models import Review
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
+def get_reviews(request):
+    reviews = Review.objects.all().values(
+        'user__username', 'rating', 'content'
+    )  # 필요한 필드만 가져오기
+    reviews_list = list(reviews)
+    return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
+
+@csrf_exempt
+def add_review(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        rating = data.get('rating')
+        content = data.get('content')
+        user = request.user
+
+        if not user.is_authenticated:
+            return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
+
+        review = Review.objects.create(user=user, rating=rating, content=content)
+        return JsonResponse({'message': '리뷰가 추가되었습니다.', 'review': {
+            'user': user.username,
+            'rating': rating,
+            'content': content,
+        }})
+    return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
+
 def home(request):
     return render(request, 'home.html')
 
