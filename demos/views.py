@@ -8,12 +8,6 @@ from django.conf import settings
 def home(request):
     return render(request, 'home.html')
 
-def map(request):
-    return render(request, 'map.html')
-
-def search(request):
-    return render(request, 'map.html')
-
 def load_selected_parking_data(request):
     try:
         json_file_path = os.path.join(settings.BASE_DIR, "parking_data.json")
@@ -42,10 +36,10 @@ def load_selected_parking_data(request):
 def map(request):
     response = load_selected_parking_data(request)  # request 전달 
     parking_data = json.loads(response.content)  # Jsonresponse엔서 json 데이터 가져옴옴
-    return render(request, "map.html", {"parking_data": parking_data})
+    return render(request, "map/map.html", {"parking_data": parking_data})
 
-def service(request):
-    return render(request, 'home.html')
+def introduce(request):
+    return render(request, 'introduce.html')
 
 def review(request):
     return render(request, 'home.html')
