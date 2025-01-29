@@ -3,10 +3,18 @@ from allauth.account.forms import SignupForm
 from allauth.account.forms import LoginForm
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from user.models import User
 
 class MyCustomLoginForm(LoginForm):
   # 추가하고 싶은 필드
     #remember_me = forms.BooleanField(required=False, initial=False)
+    
+    
+    def __init__(self, *args, **kwargs):
+        super(MyCustomLoginForm, self).__init__(*args, **kwargs)
+
+        #del self.fields['remember']
+        self.fields["password"].help_text = ''
 
     def clean_username(self):
         
@@ -29,18 +37,27 @@ class MyCustomLoginForm(LoginForm):
 
 class MyCustomSignupForm(SignupForm):
     # 기존 필드 제거 후 새 필드 추가
-    phonenumber = forms.CharField(max_length=20, label='전화번호',
-                                  widget=forms.TextInput(attrs={'placeholder': '전화번호를 입력하세요'}))
+    phonenumber = forms.CharField(
+        max_length=20,
+        label='전화번호',
+        widget=forms.TextInput(attrs={'placeholder': '전화번호를 입력하세요'}),
+    )
 
     def __init__(self, *args, **kwargs):
         super(MyCustomSignupForm, self).__init__(*args, **kwargs)
-
         self.fields['email'].label = '이메일 주소(필수)'
 
+    def clean_phonenumber(self):
+        """전화번호 중복 확인 로직 추가"""
+        phonenumber = self.cleaned_data.get('phonenumber')
+        if User.objects.filter(phonenumber=phonenumber).exists():
+            raise ValidationError("이미 사용 중인 전화번호입니다. 다른 번호를 입력하세요.")
+        return phonenumber
 
     def save(self, request):
+        """전화번호와 사용자명을 저장하는 커스텀 로직"""
         user = super(MyCustomSignupForm, self).save(request)
         user.phonenumber = self.cleaned_data['phonenumber']
-        user.username = self.cleaned_data['username']
+        user.username = self.cleaned_data.get('username', '')  # username도 검증
         user.save()
         return user

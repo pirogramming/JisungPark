@@ -39,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         unique=True,
     )
-    phonenumber = models.CharField(max_length=15, unique=True)
+    phonenumber = models.CharField(max_length=15)
     username = models.CharField(max_length=150, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # 관리자 페이지 접근 가능

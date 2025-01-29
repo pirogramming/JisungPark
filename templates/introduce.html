@@ -1,24 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="home-container">
-        <div class="search-box">    
-            <form action="/">      
-              <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
-            </form>
+    <div class="introduce-container">
+        <div class="introduce_container">
+            <h1>서비스 소개</h1>
+            <p>지성 Park 서비스는 전국 운전자들의 주차 스트레스를 해소함과 동시에 주차 문제로 발생하는 불법 주정차 등의 사회적인 문제를 해결하기 위해서 만들어진 서비스입니다.</p>
+            <p>현재 실시간 데이터를 제공하지 않는 지역이 존재하여 일부 지역을 대상으로만 실시간 서비스를 제공중입니다. 앞으로 더 많은 지역에 해당 추가할 예정입니다.</p>
         </div>
-        <button class="search-btn">
-            <a href="{% url 'demos:search' %}" class = 'btn btn-secondary'>주변 주차장 찾기</a>
-        </button>
     </div>
-
-
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:service' %}">서비스소개</a>
             <a href="{% url 'demos:review' %}">리뷰</a>
             <a href="{% url 'demos:community' %}">커뮤니티</a>
             <a href="{% url 'demos:work' %}">협력문의</a>
+            </ul>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
