@@ -20,17 +20,13 @@
             <hr>
             <div class="social-login">
                 <p>소셜 로그인</p>
+                <button type="button" class="naver" onclick="location.href = '{% provider_login_url 'naver' %}'">NAVER</button>
+                <button type="button" class="google" onclick="location.href = '{% provider_login_url 'google' %}'">Google</button>
                 {% comment %}
-                <button type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
-                    <img class="naver" src="{%  static 'img/naver_login_img.png' %}" alt="Naver Login">
-                </button>
-                <button type="button" onclick="location.href = '{% provider_login_url 'google' %}'">
-                    <img class="google" src="{% static 'img/google_login_img.png' %}" alt="Google Login">
-                </button>
-                {% endcomment %}
                 <button class="google"><a href="{% url 'account_signup'%}"> 구글</a></button>
                 <button class="naver"><a href="{% url 'account_signup'%}"> 네이버</a></button>
                 <button class="kakao"><a href="{% url 'account_signup'%}"> 카카오</a></button>
+                {% endcomment %}
             </div>
         {% if invalid_creds %}
             <p>다시 시도해주세요</p>
