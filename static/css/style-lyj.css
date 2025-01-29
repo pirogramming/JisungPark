@@ -13,6 +13,7 @@ header {
     height: 100%;
     margin-left: 1rem;
     font-size: large;
+    font-weight: 700;
 }
 .header-nav {
     display: flex;
@@ -39,7 +40,7 @@ footer {
     margin: 0 1rem;
     font-size: 1.2rem;
 }
-.home-container, .signup-container, .login-container {
+.home-container, .signup-container, .login-container, .introduce-container{
     justify-content: center;
     align-items: center;
     color: #333;
@@ -100,7 +101,7 @@ h1 {
     border-radius: 1rem;
     margin-top: 1rem;
 }
-.signup_container, .login_container {
+.signup_container, .login_container, .introduce_container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -156,7 +157,6 @@ h1 {
 }
 .login-btn, .signup-btn{
     margin-top: 2rem;
-    width: 60%;
     padding: 10px 15px;
     font-size: 16px;
     background-color: #8BE0F1;
@@ -223,3 +223,7 @@ h1 {
 .signup-link a:hover, .login-link a:hover {
     text-decoration: underline;
     }
+.introduce_container p {
+    margin: 1rem;
+    font-size: 1.4rem;
+}
