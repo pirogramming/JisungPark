@@ -11,9 +11,24 @@
             </div>
             <div class="login_btn">
                 <button type="submit" class="login-btn">로그인</button>
+            </div>
+            <div class="login-add">
+                <p class="login-link">아직 계정이 없으신가요? <a href="{% url 'account_signup'%}">회원가입</a></p>
+            </div>
+            <hr>
+            <div class="social-login">
+                <p>소셜 로그인</p>
                 {% comment %}
-                <a href="{% url 'user:signup'%}"> 회원가입</a>
+                <button type="button" onclick="location.href = '{% provider_login_url 'naver' %}'">
+                    <img class="naver" src="{%  static 'img/naver_login_img.png' %}" alt="Naver Login">
+                </button>
+                <button type="button" onclick="location.href = '{% provider_login_url 'google' %}'">
+                    <img class="google" src="{% static 'img/google_login_img.png' %}" alt="Google Login">
+                </button>
                 {% endcomment %}
+                <button class="google"><a href="{% url 'account_signup'%}"> 구글</a></button>
+                <button class="naver"><a href="{% url 'account_signup'%}"> 네이버</a></button>
+                <button class="kakao"><a href="{% url 'account_signup'%}"> 카카오</a></button>
             </div>
         {% if invalid_creds %}
             <p>다시 시도해주세요</p>

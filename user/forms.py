@@ -8,10 +8,12 @@ from user.models import User
 class MyCustomLoginForm(LoginForm):
   # 추가하고 싶은 필드
     #remember_me = forms.BooleanField(required=False, initial=False)
+    
+    
     def __init__(self, *args, **kwargs):
         super(MyCustomLoginForm, self).__init__(*args, **kwargs)
 
-        del self.fields['remember']
+        #del self.fields['remember']
         self.fields["password"].help_text = ''
 
     def clean_username(self):

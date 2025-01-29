@@ -7,13 +7,18 @@
       <form action="" method="POST" class="signup_form">
           {% csrf_token %}
           {{ form.as_p }}
-          <div class="login_btn">
+          <div class="signup_btn">
             <button type="submit" class="signup-btn">회원가입</button>
           </div>
+          <p class="login-link">이미 계정이 있으신가요? <a href="{% url 'account_login'%}">로그인</a></p>
+      <hr>
+      <div class="social-login">
+          <p>소셜 로그인</p>
+          <button class="google"><a href="{% url 'account_signup'%}"> 구글</a></button>
+          <button class="naver"><a href="{% url 'account_signup'%}"> 네이버</a></button>
+          <button class="kakao"><a href="{% url 'account_signup'%}"> 카카오</a></button>
+      </div>
       </form>
-      {% comment %}
-      <p class="login-link">이미 계정이 있으신가요? <a href="{% url 'user:login'%}">로그인</a></p>
-      {% endcomment %}
     </div>
   </div>
   <footer>
