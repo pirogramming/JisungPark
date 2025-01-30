@@ -298,15 +298,16 @@
 
             // JSON 파일에서 주차장 데이터 불러오기
             function loadParkingData() {
-                var placeData = JSON.parse(document.getElementById('jsonData').textContent);
+                var placeData = JSON.parse('{{ parking_data|escapejs }}');  // JSON 데이터 변환
                 placeData.forEach(function(place) {
                     parkingData.push({
-                        '주차장명': place['주차장명'], 
-                        '위도': place['위도'], 
-                        '경도': place['경도']
+                        '주차장명': place['name'],
+                        '위도': place['latitude'],
+                        '경도': place['longitude']
                     });
                 });
             }
+
             // 🅿️ 주차장 마커 추가 함수
             function showParkingMarkers(parkingList) {
                 for (var i = 0; i < parkingList.length; i++) {

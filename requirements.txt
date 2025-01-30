@@ -39,5 +39,5 @@ vine==5.1.0
 wcwidth==0.2.13
 channels>=4.0.0
 redis>=4.5.5
-asgiref>=3.6.0  # Django Channels와 호환되는 ASGI 라이브러리
-daphne>=4.0.0   # Django Channels를 위한 ASGI 서버
+asgiref>=3.6.0
+daphne>=4.0.0
