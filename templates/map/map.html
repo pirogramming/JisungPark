@@ -91,7 +91,6 @@
                     alert('주소나 장소를 입력해주세요!');
                     return false;
                 }
-                console.log("선택된 마커 상태 (삭제 전):", selectedPlaceMarker); 
 
             if (selectedPlaceMarker) {
                 selectedPlaceMarker.setMap(null);
@@ -232,7 +231,7 @@
                 markers.push(marker);
 
                 var infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px;">${title}</div>` // 
+                    content: `<div style="padding:5px; font-size:12px;">${title}</div>` 
                 });
 
                 kakao.maps.event.addListener(marker, 'mouseover', function() {

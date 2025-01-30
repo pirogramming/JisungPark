@@ -3,8 +3,8 @@
 {% block content %}
     <div class="home-container">
         <div class="search-box">    
-            <form action="/">      
-              <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
+            <form id="searchForm">      
+                <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
             </form>
         </div>
         <button class="search-btn" onclick="saveSearchTextAndRedirect()">
@@ -33,5 +33,22 @@
             localStorage.setItem('search_txt', searchValue);
             window.location.href = "{% url 'demos:map' %}";
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchForm = document.getElementById("searchForm");
+            var searchInput = document.querySelector("input[name='search_txt']");
+
+            searchForm.addEventListener("submit", function (event) {
+                event.preventDefault(); 
+                saveSearchTextAndRedirect(); 
+            });
+
+            searchInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    saveSearchTextAndRedirect(); 
+                }
+            });
+        });
         </script>
 {% endblock %}
