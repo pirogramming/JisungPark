@@ -65,6 +65,7 @@
             var markers = [];
             var parkingData = [];
             var selectedPlace = null;
+            let debounceTimeout = null;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -82,6 +83,7 @@
             loadParkingData();
 
             function searchPlaces() {
+                selectedPlace = null;
                 var keyword = document.getElementById('keyword').value;
 
                 if (!keyword.replace(/^\s+|\s+$/g, '')) {
@@ -236,13 +238,9 @@
 
                 return marker;
             }
-            function removeMarker(exceptMarker = null) {
-                for (var i = 0; i < markers.length; i++) {
-                    if (markers[i] !== exceptMarker) {
-                        markers[i].setMap(null);
-                    }
-                }
-                markers = exceptMarker ? [exceptMarker] : [];
+            function removeMarker() {
+                markers.forEach(marker => marker.setMap(null));
+                markers = []; 
             }
 
             function displayPagination(pagination) {
@@ -293,7 +291,7 @@
 
                 var lat = marker.getPosition().getLat();
                 var lng = marker.getPosition().getLng();
-                showParkingMarkers(parkingData);
+                updateVisibleParkingMarkers();
             }
 
             // JSON 파일에서 주차장 데이터 불러오기
@@ -307,13 +305,39 @@
                     });
                 });
             }
+            // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
+            kakao.maps.event.addListener(map, 'bounds_changed', function () {
+                if (!selectedPlace) return;
+                clearTimeout(debounceTimeout);
+                    debounceTimeout = setTimeout(() => {
+                        updateVisibleParkingMarkers();
+                    }, 300);
+                });
 
-            // 🅿️ 주차장 마커 추가 함수
-            function showParkingMarkers(parkingList) {
-                for (var i = 0; i < parkingList.length; i++) {
-                    var parkingLatLng = new kakao.maps.LatLng(parkingList[i].위도, parkingList[i].경도);
-                    var marker = addparkMarker(parkingLatLng, i,parkingList[i].주차장명);
-                }
+            function updateVisibleParkingMarkers() {
+                
+                var bounds = map.getBounds(); // 현재 지도 화면의 영역
+
+                removeMarker(); // 기존 마커 제거
+
+                var visibleParking = parkingData.filter(parking => {
+                var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                
+                // 1. 지도 화면 안에 있는지 확인
+                var isInBounds = bounds.contain(parkingLatLng);
+
+                // 2. 선택한 장소에서 2km 이내인지 확인
+                var distanceFromSelected = getDistance(selectedPlace, parkingLatLng);
+                var isWithin2km = distanceFromSelected <= 2; // 2km 이내 여부
+                
+                return isInBounds && isWithin2km;
+                });
+
+                // 필터링된 주차장만 마커 추가
+                visibleParking.forEach((parking, index) => {
+                    var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                    addparkMarker(parkingLatLng, index, parking.주차장명);
+                });
             }
 
             function removeAllChildNods(el) {
@@ -375,19 +399,22 @@
                 document.getElementById('parkingListWrap').style.display = "block"; // ✅ 리스트 다시 보이기
             }
 
+            const DEG_TO_RAD = Math.PI / 180;
+
             function getDistance(latlng1, latlng2) {
-                var earthRadius = 6371; 
-                var dLat = (latlng2.getLat() - latlng1.getLat()) * (Math.PI / 180);
-                var dLng = (latlng2.getLng() - latlng1.getLng()) * (Math.PI / 180);
+                var earthRadius = 6371;
+                var dLat = (latlng2.getLat() - latlng1.getLat()) * DEG_TO_RAD;
+                var dLng = (latlng2.getLng() - latlng1.getLng()) * DEG_TO_RAD;
 
                 var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(latlng1.getLat() * (Math.PI / 180)) *
-                    Math.cos(latlng2.getLat() * (Math.PI / 180)) *
+                    Math.cos(latlng1.getLat() * DEG_TO_RAD) *
+                    Math.cos(latlng2.getLat() * DEG_TO_RAD) *
                     Math.sin(dLng / 2) * Math.sin(dLng / 2);
 
                 var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                return earthRadius * c; // 거리 반환 (km)
+                return earthRadius * c;
             }
+
             function toggleParkingList() {
                 var parkingListWrap = document.getElementById("parkingListWrap");
 
