@@ -330,7 +330,7 @@
             }
             function showClosestParkingLots() {
                 if (!selectedPlace) {
-                    alert("먼저 검색 후 장소를 선택하세요!");
+                    alert("장소 선정을 먼저 하세요!");
                     return;
                 }
 
@@ -399,7 +399,12 @@
                 var parkingListWrap = document.getElementById("parkingListWrap");
 
                 if (parkingListWrap.style.display === "none" || parkingListWrap.style.display === "") {
-                    showClosestParkingLots(); // 가장 가까운 주차장 8개 가져오기
+                    showClosestParkingLots();
+                    if (closestParking.length === 0) {
+                    alert("근처에 주차장이 없습니다.");
+                    parkingListWrap.style.display = "none";
+                    return;
+                    }
                     parkingListWrap.style.display = "flex"; 
                     parkingListWrap.style.alignItems = "center"; 
                     parkingListWrap.style.justifyContent = "center";

@@ -1,7 +1,7 @@
 .map_wrap, .map_wrap * {
     margin:0;
     padding:0;
-    font-size: 1.1rem;x;
+    font-size: 1.3rem;x;
 }
 .map_wrap {
     position:relative;
@@ -91,11 +91,15 @@
 #parkingListWrap, #parkingDetailWrap{
     position: relative;
     z-index: 1;
-    bottom: 220px; 
-    background: white;
-    padding: 40px;
+    left: 22px;
+    bottom: 308px;
+    height: 200px;
+    overflow-y: auto;
+    background:rgba(255, 255, 255, 0.7);
+    padding: 20px 30px;
     border-radius: 8px;
-    width: 50%;
+    font-size: 15px;
+    width: 90%;
 }
 #parkingListWrap ul {
     list-style: none;
