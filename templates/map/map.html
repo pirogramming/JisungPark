@@ -60,12 +60,13 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAX_KEY}}&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7f990c514b989ac63728873819748d10&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
+            let selectedPlaceMarker = null;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -90,8 +91,14 @@
                     alert('주소나 장소를 입력해주세요!');
                     return false;
                 }
+                console.log("선택된 마커 상태 (삭제 전):", selectedPlaceMarker); 
 
-                ps.keywordSearch(keyword, placesSearchCB); // 장소 검색 요청
+            if (selectedPlaceMarker) {
+                selectedPlaceMarker.setMap(null);
+                selectedPlaceMarker = null; 
+            } 
+
+                ps.keywordSearch(keyword, placesSearchCB); 
             }
 
             function placesSearchCB(data, status, pagination) {
@@ -291,7 +298,27 @@
 
                 var lat = marker.getPosition().getLat();
                 var lng = marker.getPosition().getLng();
+
+                selectedPlaceMarker = addSelectedMarker(lat, lng);
                 updateVisibleParkingMarkers();
+            }
+            function addSelectedMarker(lat, lng) {
+
+                var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png';
+                markerImageSize = new kakao.maps.Size(36, 37), 
+                markerImageOptions = { 
+                    spriteSize: new kakao.maps.Size(125, 146), 
+                    spriteOrigin: new kakao.maps.Point(0, 0), 
+                    offset: new kakao.maps.Point(12, 37) 
+                };
+                var markerImage = new kakao.maps.MarkerImage(imageSrc, markerImageSize, markerImageOptions);
+
+                var newMarker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(lat, lng), 
+                    image: markerImage
+                });
+                newMarker.setMap(map); 
+                return newMarker;
             }
 
             // JSON 파일에서 주차장 데이터 불러오기
@@ -378,25 +405,25 @@
                     parkingListEl.appendChild(li);
                 });
 
-                document.getElementById('parkingListWrap').style.display = "block"; // 리스트 보이기
-                document.getElementById('parkingDetailWrap').style.display = "none"; // 상세 정보 숨기기
+                document.getElementById('parkingListWrap').style.display = "block"; 
+                document.getElementById('parkingDetailWrap').style.display = "none"; 
             }
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');
 
                 if (titleElement) {
-                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음"; // ✅ 주차장명이 없을 경우 대비
+                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음"; 
                 } else {
                 }
 
-                document.getElementById('parkingListWrap').style.display = "none"; // ✅ 리스트 숨김
-                document.getElementById('parkingDetailWrap').style.display = "block"; // ✅ 상세 정보 보이기
+                document.getElementById('parkingListWrap').style.display = "none"; 
+                document.getElementById('parkingDetailWrap').style.display = "block"; 
             }
 
             function closeParkingDetail() {
-                document.getElementById('parkingDetailWrap').style.display = "none"; // ✅ 상세 정보 숨기기
-                document.getElementById('parkingListWrap').style.display = "block"; // ✅ 리스트 다시 보이기
+                document.getElementById('parkingDetailWrap').style.display = "none"; 
+                document.getElementById('parkingListWrap').style.display = "block"; 
             }
 
             const DEG_TO_RAD = Math.PI / 180;
