@@ -32,14 +32,6 @@
                 <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
             </p>
             <div id="review" class="review">
-                {% for review in reviews %}
-                <div class="review-item">
-                    <p><strong>{{ review.user.username }}</strong> ⭐ {{ review.rating }}</p>
-                    <p>{{ review.content }}</p>
-                </div>
-                {% empty %}
-                <p>아직 리뷰가 없습니다.</p>
-                {% endfor %}
                 <input type="number" id="ratingInput" min="1" max="5" placeholder="평점(1~5)" />
                 <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
                 <button class="review-btn" onclick="addReview()">리뷰 등록</button>
@@ -412,7 +404,12 @@
                     parkingListWrap.style.display = "none"; 
                 }
             }
-            const reviewContainer = document.getElementById('review');
+            document.addEventListener('DOMContentLoaded', () => {
+                loadReviews(); // 페이지 로드 시 기존 리뷰 로드
+            });
+
+            const reviewContainer = document.querySelector('.review-list');
+
             function toggleReview() {
                 const review = document.getElementById('review');
                 const toggleBtn=document.getElementById('toggle-btn');
@@ -438,7 +435,6 @@
                                 <span>⭐ ${review.rating}</span>
                                 <p>${review.content || ''}</p>
                             </div>
-                            <hr>
                         `;
                         reviewContainer.innerHTML += reviewElement;
                     });
