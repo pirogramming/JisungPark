@@ -190,7 +190,7 @@
     font-weight: bold; 
     cursor: default;color:#777;
 }
-.ri-arrow-down-s-fill {
+.ri-arrow-down-s-fill, .ri-arrow-up-s-fill {
     font-size: 20px;
     cursor: pointer;
 }
@@ -200,6 +200,8 @@
 }
 .review.active , .community.active {
     display: flex;
+    margin-bottom: 20px;
+    font-size: 15px;
     padding-block: 30px;
     flex-direction: column;
     justify-content: center;

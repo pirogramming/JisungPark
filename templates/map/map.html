@@ -29,7 +29,7 @@
         <div id="parkingDetailWrap" style="display: none;">
             <h3 id="parkingTitle">주차장 이름</h3>
             <p id="parkingReview">리뷰
-                <i onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
+                <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
             </p>
             <div id="review" class="review">
                 {% for review in reviews %}
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <p id="parkingCommunity">커뮤니티
-                <i onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
+                <i id="toggle-btn2" onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
             </p>
             <div id="community" class="community">
                 <div class="messages">
@@ -415,8 +415,17 @@
             const reviewContainer = document.getElementById('review');
             function toggleReview() {
                 const review = document.getElementById('review');
+                const toggleBtn=document.getElementById('toggle-btn');
                 review.classList.toggle('active');
-              }
+
+                if (review.classList.contains('active')) {
+                    toggleBtn.classList.remove('ri-arrow-down-s-fill');
+                    toggleBtn.classList.add('ri-arrow-up-s-fill');
+                } else {
+                    toggleBtn.classList.remove('ri-arrow-up-s-fill');
+                    toggleBtn.classList.add('ri-arrow-down-s-fill');
+                }
+            }
             function loadReviews() {
             fetch('/api/reviews/')
                 .then(response => response.json())
@@ -460,8 +469,17 @@
                     .catch(error => console.error('리뷰 추가 실패:', error));
             }
             function toggleCommunity() {
-            const community = document.getElementById('community');
-            community.classList.toggle('active');
+                const community = document.getElementById('community');
+                community.classList.toggle('active');
+                const toggleBtn=document.getElementById('toggle-btn2');
+
+                if (community.classList.contains('active')) {
+                    toggleBtn.classList.remove('ri-arrow-down-s-fill');
+                    toggleBtn.classList.add('ri-arrow-up-s-fill');
+                } else {
+                    toggleBtn.classList.remove('ri-arrow-up-s-fill');
+                    toggleBtn.classList.add('ri-arrow-down-s-fill');
+                }
             }
             const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
 
