@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="aboutus-container">
+        <div class="aboutus_container">
+            <h1>MEMBERS</h1>
+            <div class="photo">우리 사진 찌거요</div>
+            <div class="mem1">
+                <div class="mem1_img"></div>
+                <p>정원준(PM)</p>
+                <ul>
+                    <li>기획, 백엔드</li>
+                    <li>email: dietken1@naver.com</li>
+                    <li>github: </li>
+                    <li>지성 있는 사람들을 이끄는 사람<li>
+                </ul>
+            </div>
+            <div class="mem2">
+                <div class="mem2_img"></div>
+                <p>김현진</p>
+                <ul>
+                    <li>백엔드</li>
+                    <li>khj32201270@dankook.ac.kr</li>
+                    <li>github: </li>
+                    <li>나는 감자<li>
+                </ul>
+            </div>
+            <div class="mem3">
+                <div class="mem3_img"></div>
+                <p>임유지</p>
+                <ul>
+                    <li>프론트엔드, 디자인</li>
+                    <li>limyuji01@naver.com</li>
+                    <li>github: </li>
+                    <li>나는 고구마가 좋아<li>
+                </ul>
+            </div>
+            <div class="mem4">
+                <div class="mem4_img"></div>
+                <p>김태린</p>
+                <ul>
+                    <li>백엔드</li>
+                    <li>redgreenyell@naver.com</li>
+                    <li>github: </li>
+                    <li><li>
+                </ul>
+            </div>
+            <div class="mem5">
+                <div class="mem5_img"></div>
+                <p>박태희</p>
+                <ul>
+                    <li>프론트엔드</li>
+                    <li>suk05553@naver.com</li>
+                    <li>github: </li>
+                    <li><li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}">Service</a>
+            <a href="{% url 'demos:home' %}">About Us</a>
+            <a href="{% url 'demos:home' %}">Guide Map</a>
+            <a href="#">Q&A</a>
+        </div>
+        <div class="footer-bottom">
+            <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
+            <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
+            <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
+            <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+        </div>
+    </footer>
+    <script>
+        
+    </script>
+{% endblock %}

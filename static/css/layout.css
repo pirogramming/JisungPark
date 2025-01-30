@@ -2,7 +2,7 @@
   width: 390px;
   height: 100dvh;
   margin: auto;
-  background: #00AAFF;
+  background: var(--blue);
   display: flex;
   flex-direction: column;
 }
@@ -25,6 +25,8 @@ main {
   --body: 1.4rem;
 
   /* color */
-  --blue: #1fa1ff;
+  --blue:	#CEDFF1;
+  --btn: #AADBFF;
+  --white: #fff;
   --gray: #c4c4c4;
 }

@@ -40,7 +40,7 @@ footer {
     margin: 0 1rem;
     font-size: 1.2rem;
 }
-.home-container, .signup-container, .login-container, .introduce-container{
+.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container{
     justify-content: center;
     align-items: center;
     color: #333;
@@ -49,7 +49,10 @@ footer {
     width: 390px;
     height: 82.5dvh;
     margin: auto;
-    background: #00AAFF;
+    background-image: url('../img/back.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
 }
@@ -91,12 +94,8 @@ h1 {
     grid-template-columns: 1fr auto;
     margin-block: 1rem;
 }
-  
-.search-box>form {
-    display: flex;
-}
 .search-btn {
-    background-color: white;
+    background: white;
     padding:1rem;
     border-radius: 1rem;
     margin-top: 1rem;
@@ -125,6 +124,20 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 80%;
     padding: 40px 30px;
+}
+.aboutus_container, .qanda_container, .guidemap_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    max-height: 80%;
+    padding: 40px 30px;
+    overflow-y: auto;
 }
 .signup_container {
     height: 60rem;
@@ -160,6 +173,10 @@ h1 {
     border-radius: 4px;
     box-sizing: border-box;
     margin-block: 1rem;
+    background: rgba(255, 255, 255, 0.7);
+}
+.form-control::placeholder {
+    opacity: 1; 
 }
 
 .login_elements p:last-of-type {

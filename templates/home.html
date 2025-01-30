@@ -3,8 +3,8 @@
 {% block content %}
     <div class="home-container">
         <div class="search-box">    
-            <form action="/">      
-              <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
+            <form id="searchForm">      
+                <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
             </form>
         </div>
         <button class="search-btn" onclick="saveSearchTextAndRedirect()">
@@ -12,13 +12,12 @@
         </button>        
     </div>
 
-
     <footer>
         <div class="footer-top">
-            <a href="{% url 'demos:introduce' %}">서비스소개</a>
-            <a href="{% url 'demos:review' %}">리뷰</a>
-            <a href="{% url 'demos:community' %}">커뮤니티</a>
-            <a href="{% url 'demos:work' %}">협력문의</a>
+            <a href="{% url 'demos:introduce' %}">Service</a>
+            <a href="{% url 'demos:home' %}">About Us</a>
+            <a href="{% url 'demos:home' %}">Guide Map</a>
+            <a href="#">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
@@ -33,5 +32,19 @@
             localStorage.setItem('search_txt', searchValue);
             window.location.href = "{% url 'demos:map' %}";
         }
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchForm = document.getElementById("searchForm");
+            var searchInput = document.querySelector("input[name='search_txt']");
+            searchForm.addEventListener("submit", function (event) {
+                event.preventDefault(); 
+                saveSearchTextAndRedirect(); 
+            });
+            searchInput.addEventListener("keydown", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    saveSearchTextAndRedirect(); 
+                }
+            });
+        });
         </script>
 {% endblock %}
