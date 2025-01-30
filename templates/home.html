@@ -32,9 +32,11 @@
             localStorage.setItem('search_txt', searchValue);
             window.location.href = "{% url 'demos:map' %}";
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             var searchForm = document.getElementById("searchForm");
             var searchInput = document.querySelector("input[name='search_txt']");
+
             searchForm.addEventListener("submit", function (event) {
                 event.preventDefault(); 
                 saveSearchTextAndRedirect(); 
