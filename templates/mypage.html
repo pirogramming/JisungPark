@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="mypage-container">
+        <div class="mypage_container">
+            <div class="mypage-h1"><h1>MY PAGE</h1></div>
+            <div class="profile">
+                <div class="profile_img"></div>
+                <div class="profile_name">
+                    <p>{{ user.email}}<p>
+                    <p>ID: {{ user.username}}<p>
+                </div>
+            </div>
+            <div class="mypage">
+                <div class="mypage_heart">
+                    <a href="{% url 'demos:home' %}" id="toggle-btn" onclick="toggleFavorite(); return false;">FAVORITE</a>
+                </div>
+                <div class="mypage_review">
+                    <a href="{% url 'demos:home' %}" id="toggle-btn" onclick="toggleMyReview(); return false;">MY REVIEW</a>
+                </div>
+            </div>
+            <div id="favorite" class="favorite">
+                <p>Favorite</p>
+            </div>
+            <div id="myreview" class="myreview">
+                <div id="review-list" class="review-list">
+                    <p>My Review</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}">Service</a>
+            <a href="{% url 'demos:home' %}">About Us</a>
+            <a href="{% url 'demos:home' %}">Guide Map</a>
+            <a href="#">Q&A</a>
+        </div>
+        <div class="footer-bottom">
+            <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
+            <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
+            <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
+            <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+        </div>
+    </footer>
+{% endblock %}
+{% block scripts %}
+    <script>
+        function toggleFavorite() {
+            const favorite = document.getElementById('favorite');
+            favorite.classList.toggle('active');
+        }
+        function toggleMyReview() {
+            const myreview = document.getElementById('myreview');
+            myreview.classList.toggle('active');
+        }
+        
+        const reviewContainer = document.getElementById('review-list'); 
+        function loadReviews() {
+            fetch('/api/myreviews/')
+                .then(response => response.json())
+                .then(data => {
+                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                    data.reviews.forEach(review => {
+                        const reviewElement = `
+                            <div class="review-item">
+                                <strong>${review.user__username}</strong>
+                                <span>⭐ ${review.rating}</span>
+                                <p>${review.content || ''}</p>
+                            </div>
+                        `;
+                        reviewContainer.innerHTML += reviewElement;
+                    });
+                })
+                .catch(error => console.error('리뷰 로드 실패:', error));
+            }
+        document.addEventListener('DOMContentLoaded', loadReviews);
+    </script>
+{% endblock %}

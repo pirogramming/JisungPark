@@ -40,7 +40,7 @@ footer {
     margin: 0 1rem;
     font-size: 1.2rem;
 }
-.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container{
+.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
     justify-content: center;
     align-items: center;
     color: #333;
@@ -82,8 +82,29 @@ footer {
     text-decoration: none;
     color: black;
 }
-
 h1 {
+    margin: 1rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #333;
+}
+h2 {
+    margin-block: 1rem;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+h3 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #333;
+}
+p{
+    font-size: 1.6rem;
+    color: #555;
+    margin-block: 1rem;
+}
+.login_container h1, .signup_container h1 {
     margin-bottom: 1.5rem;
     font-size: 2.4rem;
     color: #333;
@@ -125,17 +146,28 @@ h1 {
     max-width: 80%;
     padding: 40px 30px;
 }
-.aboutus_container, .qanda_container, .guidemap_container {
+.qanda_container, .guidemap_container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: white;
-    padding: 30px auto;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 80%;
-    max-height: 80%;
+    width: 80%;
+    height: 75dvh;
+    padding: 40px 30px;
+    overflow-y: auto;
+}
+.mypage_container, .aboutus_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    height: 70dvh;
     padding: 40px 30px;
     overflow-y: auto;
 }
@@ -256,4 +288,61 @@ h1 {
 .introduce_container p {
     margin: 1rem;
     font-size: 1.4rem;
+}
+.profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin: 1.5rem;
+}
+.profile_name {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin: 3rem;
+}
+.mypage{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 40px 30px;
+}
+.mypage a {
+    margin: 1.5rem;
+    font-size: 1.4rem;
+}
+.favorite, .myreview {
+    display: none;
+}
+.favorite.active, .myreview.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 40px 30px;
+    margin-top: 1rem;
+}
+.mypage-h1 {
+    margin-top: 5rem;
+    font-size: 3rem;
+}
+.aboutus_container p {
+    font-weight: 700;
+}
+.aboutus_container li {
+    font-size: 1.4rem;
+    margin-top: 0.5rem;
+}
+.aboutus_container ul {
+    margin-block: 2rem;
 }
