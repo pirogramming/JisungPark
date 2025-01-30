@@ -1,0 +1,242 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 7rem;
+    background-color: white;
+    padding: 0 1rem;
+    z-index: 1000;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: 1rem;
+    font-size: large;
+    font-weight: 700;
+}
+.header-nav {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.header-nav a, i{
+    margin: 0 1.3rem;
+    font-size: 1.5rem;
+}
+
+footer {
+    background: white;
+}
+.footer-top, .footer-bottom  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    padding-block: 1rem;
+}
+
+.footer-top a {
+    margin: 0 1rem;
+    font-size: 1.2rem;
+}
+.home-container, .signup-container, .login-container, .introduce-container{
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    width: 390px;
+    height: 82.5dvh;
+    margin: auto;
+    background: #00AAFF;
+    display: flex;
+    flex-direction: column;
+}
+.menu-icon {
+    cursor: pointer;
+}
+.menu {
+    display: none;
+    position: fixed;
+    top: 49px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.menu.active {
+    display: block;
+}
+.menu a {
+    display: block;
+    margin: 100px 0;
+    font-size: 2rem;
+    text-decoration: none;
+    color: black;
+}
+
+h1 {
+    margin-bottom: 1.5rem;
+    font-size: 2.4rem;
+    color: #333;
+}
+
+.search-box {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    margin-block: 1rem;
+}
+  
+.search-box>form {
+    display: flex;
+}
+.search-btn {
+    background-color: white;
+    padding:1rem;
+    border-radius: 1rem;
+    margin-top: 1rem;
+}
+.signup_container, .login_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 80%;
+    text-align: center;
+}
+.introduce_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+    padding: 40px 30px;
+}
+.signup_container {
+    height: 60rem;
+}
+.login_container {
+    height: 50rem;
+}
+
+.login_elements label, .signup_form label {
+    display: inline-block;
+    margin-right: 5px;
+    text-align: right;
+    width: 7rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    color: #555;
+    margin-block: 1rem;
+}
+
+.login_elements input, .signup_form input {
+    width: 16rem;
+    padding: 0.5rem;
+    font-size: 1.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+.form-control{
+    padding: 1rem;
+    font-size: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+
+.login_elements p:last-of-type {
+    display: none;
+}
+.signup_form ul {
+    display: none;
+}
+.login-btn, .signup-btn{
+    margin-top: 1rem;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #8BE0F1;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+.login-btn:hover, .signup-btn:hover {
+    background-color: #4BCFEA;
+    }
+.social-login {
+    margin-top: 10px;
+}
+.google, .naver, .kakao {
+    margin-top: 1rem;
+    padding: 1rem;
+    font-size: 12px;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+    margin-inline: 0.5rem;
+}
+.google {
+    background-color:#fff;
+}
+.google:hover {
+    background-color: #F1F1F1;
+}
+.naver {
+    background-color: #1AC049;
+    color:white;
+}
+.naver:hover {
+    background-color: #16A344;
+}
+.kakao {
+    background-color: #FFEB00;
+}
+.kakao:hover {
+    background-color: #FDD835;
+}
+.login-add {
+    display:flex;
+    flex-direction: column;
+    margin: 1rem;
+    font-size: 13px;
+    color: #555;
+}
+.signup-link, .login-link{
+    margin: 1rem;
+    font-size: 14px;
+    color: #555;
+    }
+
+.login-link a{
+    color: blueviolet;
+    text-decoration: none;
+    }
+
+.signup-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+    }
+.introduce_container p {
+    margin: 1rem;
+    font-size: 1.4rem;
+}

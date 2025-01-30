@@ -1,36 +1,35 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 
 class ParkingLot(models.Model):
-    id = models.AutoField(primary_key=True) 
-    manage_id = models.CharField(max_length=100, null=False)
-    name = models.CharField(max_length=255, null=False)
-    parking_type = models.CharField(max_length=50, null=False)  # 추가한 필드_주차장 구분 
-    cost_info = models.IntegerField(null=False) #요금 정보보
-    basic_time = models.IntegerField(null=False)  # 기본 시간
-    basic_cost = models.IntegerField(null=False)  # 기본 요금
-    unit_time = models.IntegerField(null=False)  # 추가 단위 시간
-    unit_cost = models.IntegerField(null=False)  # 추가 단위 요금
-    address = models.CharField(max_length=255, null=False)  # 도로명 주소
-    latitude = models.CharField(max_length=50, null=False)  # 위도
-    longitude = models.CharField(max_length=50, null=False)  # 경도
-    open_day = models.CharField(max_length=50, null=False)  # 운영 요일
-    weekday_open = models.CharField(max_length=50, null=False)  # 평일 오픈 시간
-    weekday_close = models.CharField(max_length=50, null=False)  # 평일 마감 시간
-    saturday_open = models.CharField(max_length=50, null=False)  # 토요일 오픈 시간
-    saturday_close = models.CharField(max_length=50, null=False)  # 토요일 마감 시간
-    holiday_open = models.CharField(max_length=50, null=False)  # 공휴일 오픈 시간
-    holiday_close = models.CharField(max_length=50, null=False)  # 공휴일 마감 시간
-    pay_method = models.CharField(max_length=100, null=False)  # 결제 방법
-    phone = models.CharField(max_length=50, null=False)  # 전화번호
-    disabled_person = models.BooleanField(default=False)  # 장애인 주차구역 보유 여부
-    update_date = models.DateTimeField(auto_now=True)  # 수정 날짜
+    name = models.CharField(max_length=255)  # 주차장명
+    category = models.CharField(max_length=50, null=True, blank=True)  # 주차장 구분
+    type = models.CharField(max_length=50, null=True, blank=True)  # 주차장 유형
+    road_address = models.CharField(max_length=255, null=True, blank=True)  # 도로명 주소
+    lot_address = models.CharField(max_length=255, null=True, blank=True)  # 지번 주소
+    capacity = models.IntegerField(null=True, blank=True)  # 주차구획수
+    weekday_start = models.CharField(max_length=10, null=True, blank=True)  # 평일 운영 시작시간
+    weekday_end = models.CharField(max_length=10, null=True, blank=True)  # 평일 운영 종료시간
+    saturday_start = models.CharField(max_length=10, null=True, blank=True)
+    saturday_end = models.CharField(max_length=10, null=True, blank=True)
+    holiday_start = models.CharField(max_length=10, null=True, blank=True)
+    holiday_end = models.CharField(max_length=10, null=True, blank=True)
+    fee_info = models.CharField(max_length=255, null=True, blank=True)  # 요금 정보
+    base_time = models.IntegerField(null=True, blank=True)  # 주차 기본 시간
+    base_fee = models.IntegerField(null=True, blank=True)  # 주차 기본 요금
+    extra_time = models.IntegerField(null=True, blank=True)  # 추가 단위 시간
+    extra_fee = models.IntegerField(null=True, blank=True)  # 추가 단위 요금
+    payment_method = models.CharField(max_length=50, null=True, blank=True)  # 결제 방법
+    phone = models.CharField(max_length=20, null=True, blank=True)  # 전화번호
+    latitude = models.FloatField(null=True, blank=True)  # 위도
+    longitude = models.FloatField(null=True, blank=True)  # 경도
+    disabled_parking = models.BooleanField(default=False)  # 장애인 전용 주차 여부
 
     def __str__(self):
-        return f"{self.name} ({self.address})"
-
-
+        return f"{self.name} - {self.road_address}"
 
 class LiveInfo(models.Model):
     id = models.AutoField(primary_key=True)
@@ -41,3 +40,14 @@ class LiveInfo(models.Model):
     def __str__(self):
         return self.parking_lot.name
 
+class Review(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # 'auth.User' 대신 settings.AUTH_USER_MODEL 사용
+        on_delete=models.CASCADE
+    )
+    rating = models.IntegerField(default=1)  # 평점
+    content = models.TextField(blank=True, null=True)  # 리뷰 내용
+    created_at = models.DateTimeField(auto_now_add=True)  # 생성 시간
+
+    def __str__(self):
+        return f"{self.user.username} - {self.rating}"

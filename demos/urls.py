@@ -7,9 +7,7 @@ app_name = 'demos'
 urlpatterns = [
     path('', views.home, name='home'),  
     path('map/', views.map, name='map'),  
-    path('search/', views.search, name='search'),
-    path("parking/json/", load_selected_parking_data, name="parking-json"),
-    path('service/', views.service, name='service'),
+    path('introduce/', views.introduce, name='introduce'),
     path('review/', views.review, name='review'),
     path('community/', views.community, name='community'),
     path('work/', views.work, name='work'),
@@ -17,4 +15,6 @@ urlpatterns = [
     path('email/', views.email, name='email'),
     path('insta/', views.insta, name='insta'),
     path('facebook/', views.facebook, name='facebook'),
+    path('api/reviews/', views.get_reviews, name='get_reviews'),
+    path('api/add_review/', views.add_review, name='add_review'),
 ]

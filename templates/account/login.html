@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+
+{% block content %}
+  <div class="login-container">
+    <div class="login_container">
+        <form action="" method="POST">
+            <h1>로그인</h1>
+            {% csrf_token %}
+            <div class="login_elements">
+            {{ form.as_p }}
+            </div>
+            <div class="login_btn">
+                <button type="submit" class="login-btn">로그인</button>
+            </div>
+            <div class="login-add">
+                <p class="login-link">아직 계정이 없으신가요? <a href="{% url 'account_signup'%}">회원가입</a></p>
+            </div>
+            <hr>
+            <div class="social-login">
+                <p>소셜 로그인</p>
+                <button type="button" class="naver" onclick="location.href = '{% provider_login_url 'naver' %}'">NAVER</button>
+                <button type="button" class="google" onclick="location.href = '{% provider_login_url 'google' %}'">Google</button>
+                <button class="kakao"><a href="{% url 'account_signup'%}">kakao</a></button>
+            </div>
+        {% if invalid_creds %}
+            <p>다시 시도해주세요</p>
+        {% endif %}
+        </form>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-top">
+        <a href="{% url 'demos:introduce' %}">서비스소개</a>
+        <a href="{% url 'demos:review' %}">리뷰</a>
+        <a href="{% url 'demos:community' %}">커뮤니티</a>
+        <a href="{% url 'demos:work' %}">협력문의</a>
+        </ul>
+    </div>
+    <div class="footer-bottom">
+        <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
+        <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
+        <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
+        <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+    </div>
+    </footer>
+{% endblock %}
+
+
