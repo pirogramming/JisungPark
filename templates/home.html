@@ -7,9 +7,9 @@
               <input class = 'form-control' type="input" name="search_txt" placeholder="검색어를 입력하세요" />
             </form>
         </div>
-        <button class="search-btn">
-            <a href="{% url 'demos:map' %}" class = 'btn btn-secondary'>주변 주차장 찾기</a>
-        </button>
+        <button class="search-btn" onclick="saveSearchTextAndRedirect()">
+            주변 주차장 찾기
+        </button>        
     </div>
 
 
@@ -27,4 +27,11 @@
             <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
         </div>
     </footer>
+    <script>
+        function saveSearchTextAndRedirect() {
+            const searchValue = document.querySelector("input[name='search_txt']").value;
+            localStorage.setItem('search_txt', searchValue);
+            window.location.href = "{% url 'demos:map' %}";
+        }
+        </script>
 {% endblock %}
