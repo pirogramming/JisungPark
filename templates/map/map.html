@@ -74,6 +74,10 @@
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
+<<<<<<< HEAD
+=======
+            let selectedParkingLotId = [];
+>>>>>>> 963ea1c ([fix]충돌수정)
             let selectedPlaceMarker = null;
             var visibleparkinglot = [];
             var parkingTime = null;
@@ -415,16 +419,28 @@
                 }
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
+<<<<<<< HEAD
                 visibleparkinglot.forEach((parking, index) => {
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
+=======
+
+                visibleparkinglot.forEach((parking, index) => {
+                    var feeText = ""; // 기본적으로 요금 표시 X
+
+                    if (parkingTime !== null) { // 사용자가 시간을 입력한 경우 요금 표시
+>>>>>>> 963ea1c ([fix]충돌수정)
                         var totalFee = calculateFee(parking, parkingTime);
                         feeText = ` - 요금: ${totalFee}`;
                     }
 
                     var li = document.createElement('li');
+<<<<<<< HEAD
                     li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
+=======
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km${feeText})`;
+>>>>>>> 963ea1c ([fix]충돌수정)
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -462,6 +478,66 @@
                 if (parkingTime <= 0) {
                     alert("올바른 시간을 입력하세요.");
                     parkingTime = null;
+                    return;
+                }
+
+                var parkingListEl = document.getElementById('parkingList');
+                parkingListEl.innerHTML = ""; // 기존 리스트 초기화
+
+                if (visibleparkinglot.length === 0) {
+                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
+                    return;
+                }
+
+                    var sortedParking = visibleparkinglot.map(parking => {
+                    var totalFee = calculateFee(parking, parkingTime);
+                    var numericFee = totalFee === "무료" ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity; // "무료"는 0원으로 처리, 오류 방지
+
+                    return {
+                        ...parking,
+                        totalFee,
+                        numericFee
+                    };
+                }).sort((a, b) => a.numericFee - b.numericFee);
+
+                sortedParking.forEach((parking, index) => {
+                    var li = document.createElement('li');
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
+                    li.onclick = function () {
+                        showParkingDetail(parking);
+                    };
+                    parkingListEl.appendChild(li);
+                });
+
+                document.getElementById('parkingListWrap').style.display = "block";
+            }
+
+            function calculateFee(parking, time) {
+                    var basicTime = parseInt(parking.주차기본시간, 10) || 0;
+                    var basicFee = parseInt(parking.주차기본요금, 10) || 0;
+                    var unitTime = parseInt(parking.추가단위시간, 10) || 1;
+                    var unitFee = parseInt(parking.추가단위요금, 10) || 0;
+                    var dailyFee = parseInt(parking["1일주차권요금"], 10) || 0;
+                    var feeInfo = parking.요금정보;
+                    console.log(feeInfo);
+                    if (feeInfo === "무료") {
+                        return feeInfo;
+                    }
+                    if (time >= 1440) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
+                    if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
+
+                    var extraTime = time - basicTime;
+                    var extraUnits = Math.ceil(extraTime / unitTime); // 올림 처리
+                    return (basicFee + (extraUnits * unitFee)) + "원";
+                }
+                
+            function calculateAndSortParkingFees() {
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; // 입력된 시간을 분 단위로 변환
+
+                if (parkingTime <= 0) {
+                    alert("올바른 시간을 입력하세요.");
                     return;
                 }
 
