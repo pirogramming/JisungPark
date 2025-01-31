@@ -3,12 +3,24 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
-from .models import Review, ParkingLot
+from .models import Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def get_reviews(request):
+    user = request.user
     reviews = Review.objects.all().values(
+        'user__username', 'rating', 'content'
+    )  # 필요한 필드만 가져오기
+    reviews_list = list(reviews)
+    return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
+
+@login_required
+def get_myreviews(request):
+    user = request.user
+    reviews = Review.objects.filter(user=user).values(
         'user__username', 'rating', 'content'
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
@@ -78,4 +90,12 @@ def qna(request):
     return render(request, 'qanda.html')
 
 def qanda_list(request):
-    return render(request, 'qanda_list.html')
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
+    qna_list = list(Post.objects.filter(writer=user))
+    ctx = {
+        'qna_list': qna_list,
+    }
+    return render(request, 'qanda_list.html', ctx)
+
