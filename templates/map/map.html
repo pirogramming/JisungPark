@@ -378,6 +378,13 @@
                 if (parkingTime <= 0) {
                     parkingTime = null;
                 }
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; 
+
+                if (parkingTime <= 0) {
+                    parkingTime = null;
+                }
 
                 var parkingListEl = document.getElementById('parkingList');
                 parkingListEl.innerHTML = ""; 
@@ -501,6 +508,7 @@
 
                 if (parkingTime <= 0) {
                     alert("올바른 시간을 입력하세요.");
+                    parkingTime = null;
                     return;
                 }
 
