@@ -74,10 +74,7 @@
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
-<<<<<<< HEAD
-=======
             let selectedParkingLotId = [];
->>>>>>> 963ea1c ([fix]충돌수정)
             let selectedPlaceMarker = null;
             var visibleparkinglot = [];
             var parkingTime = null;
@@ -419,28 +416,16 @@
                 }
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
-<<<<<<< HEAD
                 visibleparkinglot.forEach((parking, index) => {
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
-=======
-
-                visibleparkinglot.forEach((parking, index) => {
-                    var feeText = ""; // 기본적으로 요금 표시 X
-
-                    if (parkingTime !== null) { // 사용자가 시간을 입력한 경우 요금 표시
->>>>>>> 963ea1c ([fix]충돌수정)
                         var totalFee = calculateFee(parking, parkingTime);
                         feeText = ` - 요금: ${totalFee}`;
                     }
 
                     var li = document.createElement('li');
-<<<<<<< HEAD
                     li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
-=======
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km${feeText})`;
->>>>>>> 963ea1c ([fix]충돌수정)
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
