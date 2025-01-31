@@ -392,6 +392,13 @@
                     alert("장소 선정을 먼저 하세요!");
                     return;
                 }
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; 
+
+                if (parkingTime <= 0) {
+                    parkingTime = null;
+                }
 
                 var parkingListEl = document.getElementById('parkingList');
                 parkingListEl.innerHTML = ""; 
@@ -408,17 +415,16 @@
                 }
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
-
                 visibleparkinglot.forEach((parking, index) => {
-                    var feeText = ""; // 기본적으로 요금 표시 X
+                    var feeText = ""; 
 
-                    if (parkingTime !== null) { // 사용자가 시간을 입력한 경우 요금 표시
+                    if (parkingTime !== null) {
                         var totalFee = calculateFee(parking, parkingTime);
                         feeText = ` - 요금: ${totalFee}`;
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km${feeText})`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -455,6 +461,7 @@
 
                 if (parkingTime <= 0) {
                     alert("올바른 시간을 입력하세요.");
+                    parkingTime = null;
                     return;
                 }
 
