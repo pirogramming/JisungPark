@@ -91,15 +91,15 @@
 #parkingListWrap, #parkingDetailWrap{
     position: relative;
     z-index: 1;
-    left: 22px;
-    bottom: 308px;
+    left: 6px;
+    bottom: 295px;
     height: 200px;
     overflow-y: auto;
     background:rgba(255, 255, 255, 0.9);
     padding: 20px 30px;
     border-radius: 8px;
     font-size: 15px;
-    width: 90%;
+    width: 97%;
 }
 #parkingListWrap ul {
     list-style: none;
@@ -254,9 +254,25 @@
 .sort-btn{
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    white-space: nowrap;
 }
 .sort-btn input{
-    width: 15%;
+    width: 8%;
+    border: none;
+    border-bottom: 1px solid #789;
+}
+.list-way{
+    display: flex;
+    flex-direction: row;
+}
+.list-way button{
+    color:#789;
+}
+.list-way p{
+    color:#789;
 }
 .FQA p {
     font-size: 1.3rem;
