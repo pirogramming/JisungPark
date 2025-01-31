@@ -230,8 +230,16 @@
     cursor: pointer;
     color: black;
 }
-.input-msg {
+.input-msg, .input-qna {
     flex-direction: row;
+}
+.input-msg input, .input-qna input {
+    padding-block: 5px;
+    border: 1px solid #5F5F5F;
+    border-radius: 4px;
+}
+.input-qna input {
+    width: 80%;
 }
 .review-item {
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
@@ -249,4 +257,7 @@
 }
 .sort-btn input{
     width: 15%;
+}
+.FQA p {
+    font-size: 1.3rem;
 }
