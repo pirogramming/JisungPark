@@ -7,8 +7,8 @@ from .models import Review, ParkingLot
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-def get_reviews(request):
-    reviews = Review.objects.all().values(
+def get_reviews(request, parking_lot_id):
+    reviews = Review.objects.filter(parking_lot_id=parking_lot_id).values(
         'user__username', 'rating', 'content'
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
@@ -20,14 +20,20 @@ def add_review(request):
         data = json.loads(request.body)
         rating = data.get('rating')
         content = data.get('content')
+        parking_lot_id = data.get('parking_lot_id')  # 주차장 ID 받기
         user = request.user
 
         if not user.is_authenticated:
             return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
+        try:
+                parking_lot = ParkingLot.objects.get(id=parking_lot_id)
+        except ParkingLot.DoesNotExist:
+            return JsonResponse({'error': '해당 주차장이 존재하지 않습니다.'}, status=400)
 
-        review = Review.objects.create(user=user, rating=rating, content=content)
+        review = Review.objects.create(user=user, rating=rating, content=content,parking_lot=parking_lot,)
         return JsonResponse({'message': '리뷰가 추가되었습니다.', 'review': {
             'user': user.username,
+            'parking_lot': parking_lot.name,
             'rating': rating,
             'content': content,
         }})

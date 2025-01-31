@@ -60,12 +60,13 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7f990c514b989ac63728873819748d10&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAP_KEY}}&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
+            let selectedParkingLotId = [];
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -299,6 +300,7 @@
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');  // JSON 데이터 변환
                 placeData.forEach(function(place) {
                     parkingData.push({
+                        'id': place['id'], 
                         '주차장명': place['name'],
                         '위도': place['latitude'],
                         '경도': place['longitude']
@@ -389,9 +391,11 @@
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음"; // ✅ 주차장명이 없을 경우 대비
                 } else {
                 }
-
+                selectedParkingLotId = parking.id;  // ✅ 선택된 주차장 ID 저장
+                
                 document.getElementById('parkingListWrap').style.display = "none"; // ✅ 리스트 숨김
                 document.getElementById('parkingDetailWrap').style.display = "block"; // ✅ 상세 정보 보이기
+                loadReviews(); // ✅ 주차장 선택 시 해당 주차장의 리뷰 불러오기
             }
 
             function closeParkingDetail() {
@@ -452,26 +456,28 @@
                 }
             }
             function loadReviews() {
-            fetch('/api/reviews/')
-                .then(response => response.json())
-                .then(data => {
-                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
-                    data.reviews.forEach(review => {
-                        const reviewElement = `
-                            <div class="review-item">
-                                <strong>${review.user__username}</strong>
-                                <span>⭐ ${review.rating}</span>
-                                <p>${review.content || ''}</p>
-                            </div>
-                        `;
-                        reviewContainer.innerHTML += reviewElement;
-                    });
-                })
-                .catch(error => console.error('리뷰 로드 실패:', error));
-            }
+                fetch(`/api/reviews/${selectedParkingLotId}/`)  
+                    .then(response => response.json())
+                    .then(data => {
+                        reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                        data.reviews.forEach(review => {
+                            const reviewElement = `
+                                <div class="review-item">
+                                    <strong>${review.user__username}</strong>
+                                    <span>⭐ ${review.rating}</span>
+                                    <p>${review.content || ''}</p>
+                                </div>
+                            `;
+                            reviewContainer.innerHTML += reviewElement;
+                        });
+                    })
+                    .catch(error => console.error('리뷰 로드 실패:', error));
+                }
+        
             function addReview() {
                 const rating = document.getElementById('ratingInput').value;
                 const content = document.getElementById('contentInput').value;
+                const parkingLotId = selectedParkingLotId; // 현재 선택된 주차장의 ID 가져오기
         
                 fetch('/api/add_review/', {
                     method: 'POST',
@@ -479,7 +485,7 @@
                         'Content-Type': 'application/json',
                         'X-CSRFToken': '{{ csrf_token }}',
                     },
-                    body: JSON.stringify({ rating, content }),
+                    body: JSON.stringify({ rating, content,parking_lot_id: parkingLotId }),
                 })
                     .then(response => response.json())
                     .then(data => {
@@ -487,6 +493,7 @@
                             alert(data.error);
                         } else {
                             alert('리뷰가 추가되었습니다!');
+                            console.log("✅ 리뷰 추가됨:", data);
                             loadReviews(); // 리뷰 목록 새로고침
                         }
                     })

@@ -45,6 +45,13 @@ class Review(models.Model):
         settings.AUTH_USER_MODEL,  # 'auth.User' 대신 settings.AUTH_USER_MODEL 사용
         on_delete=models.CASCADE
     )
+    parking_lot = models.ForeignKey(  # 주차장과 연결
+        ParkingLot,
+        on_delete=models.CASCADE,
+        related_name="reviews",
+        null=True,  
+        blank=True  #
+    )
     rating = models.IntegerField(default=1)  # 평점
     content = models.TextField(blank=True, null=True)  # 리뷰 내용
     created_at = models.DateTimeField(auto_now_add=True)  # 생성 시간
