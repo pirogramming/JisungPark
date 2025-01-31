@@ -3,10 +3,16 @@
 {% block content %}
     <div class="qanda-container">
         <div class="qanda_container">
-            {% for qna in qna_list %}
-            <a href="{% url 'demos:qna_detail' qna.id %}">{{ qna.title }}</a>
-            {% endfor %}
-            <a href="{% url 'demos:qanda_create'%}">새로운 문의 생성</a>
+            <form action = "{% url 'demos:qanda_create' %}" method="post">
+                {% csrf_token %}
+                <label for="title" class="form-label">제목 : </label>
+                <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
+                <br>
+                <label for="content" class="form-label">문의사항 : </label><br>
+                <textarea  name="content" id="content" rows="12" placeholder="문의 내용을 입력하세요"></textarea>
+                <br>
+                <button type="submit" class="btn btn-submit">제출하기</button>
+            </form>
         </div>
     </div>
     <footer>
