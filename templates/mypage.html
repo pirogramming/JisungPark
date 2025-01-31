@@ -57,7 +57,7 @@
         
         const reviewContainer = document.getElementById('review-list'); 
         function loadReviews() {
-            fetch('/api/myreviews/')
+            fetch('/api/myreviews')
                 .then(response => response.json())
                 .then(data => {
                     reviewContainer.innerHTML = ''; // 기존 리뷰 초기화

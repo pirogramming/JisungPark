@@ -230,14 +230,34 @@
     cursor: pointer;
     color: black;
 }
-.input-msg {
+.input-msg, .input-qna {
     flex-direction: row;
+}
+.input-msg input, .input-qna input {
+    padding-block: 5px;
+    border: 1px solid #5F5F5F;
+    border-radius: 4px;
+}
+.input-qna input {
+    width: 80%;
 }
 .review-item {
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin: 20px;
+    margin-block: 20px;
+    width: 25rem;
+    border-radius: 4px;
 }
 .review-item p {
     margin-top: 10px;
+}
+.sort-btn{
+    display: flex;
+    flex-direction: row;
+}
+.sort-btn input{
+    width: 15%;
+}
+.FQA p {
+    font-size: 1.3rem;
 }
