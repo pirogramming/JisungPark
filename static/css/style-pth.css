@@ -243,3 +243,10 @@
 .review-item p {
     margin-top: 10px;
 }
+.sort-btn{
+    display: flex;
+    flex-direction: row;
+}
+.sort-btn input{
+    width: 15%;
+}
