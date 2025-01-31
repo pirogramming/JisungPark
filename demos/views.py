@@ -73,3 +73,9 @@ def insta(request):
 
 def facebook(request):
     return render(request, 'home.html')
+
+def qna(request):
+    return render(request, 'qanda.html')
+
+def qanda_list(request):
+    return render(request, 'qanda_list.html')

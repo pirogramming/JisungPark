@@ -17,4 +17,6 @@ urlpatterns = [
     path('facebook/', views.facebook, name='facebook'),
     path('api/reviews/', views.get_reviews, name='get_reviews'),
     path('api/add_review/', views.add_review, name='add_review'),
+    path('qna/', views.qna, name='qna'),
+    path('qna/list/', views.qanda_list, name='qanda_list'),
 ]

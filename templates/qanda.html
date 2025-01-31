@@ -3,7 +3,7 @@
 {% block content %}
     <div class="qanda-container">
         <div class="qanda_container">
-            <div class="FQA">
+            <div class="FAQ">
                 <h1>FAQ</h1>
                 <div class="qanda_title">
                     <h2>Q. 지성 Park 서비스는 어떤 서비스인가요?</h2>
@@ -19,6 +19,7 @@
                 <div class="contact_title">
                     <h2>문의사항이 있으신가요?</h2>
                     <p>아래의 채팅으로 문의사항을 보내주시면 빠른 시간 내에 답변드리겠습니다.</p>
+                    <button onclick="window.location.href='{% url 'demos:qanda_list' %}'"></button>
                 </div>
             </div>
         </div>

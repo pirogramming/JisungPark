@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="qanda-container">
+        <div class="qanda_container">
+
+        </div>
+    </div>
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}">Service</a>
+            <a href="{% url 'demos:home' %}">About Us</a>
+            <a href="{% url 'demos:home' %}">Guide Map</a>
+            <a href="#">Q&A</a>
+        </div>
+        <div class="footer-bottom">
+            <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
+            <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
+            <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
+            <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+        </div>
+    </footer>
+{% endblock %}
