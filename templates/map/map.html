@@ -24,6 +24,13 @@
                 <button class="list-button" onclick="toggleParkingList()">주차장 리스트</button>
             </div>
             <div id="parkingListWrap" style="display: none;">
+                <div class="sort-btn">
+                    <label for="hours">주차할 시간:</label>
+                    <input type="number" id="hours"  min="0" placeholder="예: 2"> 시간
+                    <input type="number" id="minutes" min="0" max="59" placeholder="예: 30"> 분
+                </div>
+                <button onclick="calculateAndSortParkingFees()">요금순</button>
+                <button onclick="showClosestParkingLots()">거리순</button>
                 <ul id="parkingList"></ul>
             </div>
         </div>
@@ -61,13 +68,15 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ MAP_KEY }}&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7f990c514b989ac63728873819748d10&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
             let selectedPlaceMarker = null;
+            var visibleparkinglot = [];
+            var parkingTime = null;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -105,6 +114,7 @@
                 if (status === kakao.maps.services.Status.OK) {
                     var menuEl = document.getElementById('menu_wrap');
                     menuEl.style.display = 'block';
+                    document.getElementById('parkingListWrap').style.display = "none";
                     displayPlaces(data); 
                     displayPagination(pagination); 
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -327,10 +337,16 @@
                 placeData.forEach(function(place) {
                     parkingData.push({
                         '주차장명': place['name'],
-                        '위도': place['latitude'],
-                        '경도': place['longitude']
+                        '위도': parseFloat(place['latitude']) || 0,  
+                        '경도': parseFloat(place['longitude']) || 0, 
+                        '주차기본시간': parseFloat(place['base_time']),
+                        '주차기본요금': parseFloat(place['base_fee']),
+                        '추가단위시간': parseFloat(place['extra_time']),
+                        '추가단위요금': parseFloat(place['extra_fee']),
+                        '요금정보': place['fee_info']
                     });
                 });
+                console.log(parkingData);
             }
             // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
             kakao.maps.event.addListener(map, 'bounds_changed', function () {
@@ -343,24 +359,23 @@
 
             function updateVisibleParkingMarkers() {
                 
-                var bounds = map.getBounds(); // 현재 지도 화면의 영역
+                var bounds = map.getBounds(); 
 
-                removeMarker(); // 기존 마커 제거
+                removeMarker(); 
 
                 var visibleParking = parkingData.filter(parking => {
                 var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
                 
-                // 1. 지도 화면 안에 있는지 확인
+                //지도 화면 안에 있는지 확인
                 var isInBounds = bounds.contain(parkingLatLng);
 
-                // 2. 선택한 장소에서 2km 이내인지 확인
+                //선택한 장소에서 2km 이내인지 확인
                 var distanceFromSelected = getDistance(selectedPlace, parkingLatLng);
                 var isWithin2km = distanceFromSelected <= 2; // 2km 이내 여부
                 
                 return isInBounds && isWithin2km;
                 });
 
-                // 필터링된 주차장만 마커 추가
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
                     addparkMarker(parkingLatLng, index, parking.주차장명);
@@ -379,27 +394,32 @@
                 }
 
                 var parkingListEl = document.getElementById('parkingList');
-                parkingListEl.innerHTML = ""; // 기존 리스트 초기화
+                parkingListEl.innerHTML = ""; 
 
-                var distances = parkingData.map(parking => {
+                visibleparkinglot = parkingData.map(parking => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
                     var distance = getDistance(selectedPlace, parkingLatLng);
                     return { ...parking, distance };
-                });
+                }).filter(parking => parking.distance <= 2); 
 
-                // 거리 기준으로 정렬 후 상위 8개 선택
-                distances.sort((a, b) => a.distance - b.distance);
-                var closestParking = distances.slice(0, 8);
-
-                if (closestParking.length === 0) {
-                    alert("근처에 주차장이 없습니다.");
+                if (visibleparkinglot.length === 0) {
+                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
                     return;
                 }
 
-                closestParking.forEach((parking, index) => {
+                visibleparkinglot.sort((a, b) => a.distance - b.distance);
+
+                visibleparkinglot.forEach((parking, index) => {
+                    var feeText = ""; // 기본적으로 요금 표시 X
+
+                    if (parkingTime !== null) { // 사용자가 시간을 입력한 경우 요금 표시
+                        var totalFee = calculateFee(parking, parkingTime);
+                        feeText = ` - 요금: ${totalFee}`;
+                    }
+
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)}km)`;
-                    li.onclick = function() {
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km${feeText})`;
+                    li.onclick = function () {
                         showParkingDetail(parking);
                     };
                     parkingListEl.appendChild(li);
@@ -407,6 +427,66 @@
 
                 document.getElementById('parkingListWrap').style.display = "block"; 
                 document.getElementById('parkingDetailWrap').style.display = "none"; 
+            }
+
+            function calculateFee(parking, time) {
+                    var basicTime = parseInt(parking.주차기본시간, 10) || 0;
+                    var basicFee = parseInt(parking.주차기본요금, 10) || 0;
+                    var unitTime = parseInt(parking.추가단위시간, 10) || 1;
+                    var unitFee = parseInt(parking.추가단위요금, 10) || 0;
+                    var dailyFee = parseInt(parking["1일주차권요금"], 10) || 0;
+                    var feeInfo = parking.요금정보;
+                    console.log(feeInfo);
+                    if (feeInfo === "무료") {
+                        return feeInfo;
+                    }
+                    if (time >= 1440) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
+                    if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
+
+                    var extraTime = time - basicTime;
+                    var extraUnits = Math.ceil(extraTime / unitTime); // 올림 처리
+                    return (basicFee + (extraUnits * unitFee)) + "원";
+                }
+                
+            function calculateAndSortParkingFees() {
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; // 입력된 시간을 분 단위로 변환
+
+                if (parkingTime <= 0) {
+                    alert("올바른 시간을 입력하세요.");
+                    return;
+                }
+
+                var parkingListEl = document.getElementById('parkingList');
+                parkingListEl.innerHTML = ""; // 기존 리스트 초기화
+
+                if (visibleparkinglot.length === 0) {
+                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
+                    return;
+                }
+
+                    var sortedParking = visibleparkinglot.map(parking => {
+                    var totalFee = calculateFee(parking, parkingTime);
+                    var numericFee = totalFee === "무료" ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity; // "무료"는 0원으로 처리, 오류 방지
+
+                    return {
+                        ...parking,
+                        totalFee,
+                        numericFee
+                    };
+                }).sort((a, b) => a.numericFee - b.numericFee);
+
+                sortedParking.forEach((parking, index) => {
+                    var li = document.createElement('li');
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
+                    li.onclick = function () {
+                        showParkingDetail(parking);
+                    };
+                    parkingListEl.appendChild(li);
+                });
+
+                document.getElementById('parkingListWrap').style.display = "block";
             }
 
             function showParkingDetail(parking) { 
@@ -447,11 +527,6 @@
 
                 if (parkingListWrap.style.display === "none" || parkingListWrap.style.display === "") {
                     showClosestParkingLots();
-                    if (closestParking.length === 0) {
-                    alert("근처에 주차장이 없습니다.");
-                    parkingListWrap.style.display = "none";
-                    return;
-                    }
                     parkingListWrap.style.display = "flex"; 
                     parkingListWrap.style.alignItems = "center"; 
                     parkingListWrap.style.justifyContent = "center";
