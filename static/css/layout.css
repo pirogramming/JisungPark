@@ -8,6 +8,8 @@
 
 main {
   flex-grow: 1;
+  width: fit-content;
+  height: fit-content;
 }
 
 :root {
