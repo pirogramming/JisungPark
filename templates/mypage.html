@@ -1,14 +1,16 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
     <div class="mypage-container">
         <div class="mypage_container">
             <div class="mypage-h1"><h1>MY PAGE</h1></div>
             <div class="profile">
-                <div class="profile_img"></div>
+                <div class="profile_img">
+                    <img src="{% static 'img/profile.png' %}">
+                </div>
                 <div class="profile_name">
-                    <p>{{ user.email}}<p>
-                    <p>ID: {{ user.username}}<p>
+                    <p>{{ user.email}}</p>
+                    <p>ID: {{ user.username}}</p>
                 </div>
             </div>
             <div class="mypage">
@@ -32,9 +34,9 @@
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:home' %}">About Us</a>
-            <a href="{% url 'demos:home' %}">Guide Map</a>
-            <a href="#">Q&A</a>
+            <a href="{% url 'demos:aboutus' %}">About Us</a>
+            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
+            <a href="{% url 'demos:qna' %}">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
