@@ -347,3 +347,139 @@ p{
 .aboutus_container ul {
     margin-block: 2rem;
 }
+.contact_title button {
+    padding: 10px 15px;
+    font-size: 16px;
+    background: var(--btn);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.qanda_container p{
+    color: black;
+}
+.btn-primary {
+    margin: 1rem;
+    font-size: 1.4rem;
+    padding: 10px 15px;
+    background: var(--btn);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.qna-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: black;
+}
+.qna-title:hover {
+    text-decoration: underline;
+}
+.ri-close-large-line {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    right: 10px;
+}
+.qna_container {
+    position: relative; /* 컨테이너를 기준으로 절대 위치를 설정 */
+    width: 100%; /* 컨테이너 너비 */
+    max-width: 600px; /* 컨테이너의 최대 너비 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+}
+.qanda_container label {
+    width: 7rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: #555;
+    margin-block: 2rem;
+}
+.qanda_container input, .qanda_container textarea {
+    padding: 0.5rem;
+    font-size: 1.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+h4 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #333;
+}
+h5 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #333;
+}
+h6 {
+    margin-top: 2rem;
+    font-weight: 600;
+}
+.comment-form, .comment-form textarea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.comment-form textarea{
+    width: 100%;
+}
+.comment strong {
+    font-size: medium;
+}
+.comment text {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    
+}
+.btn-info {
+    padding: 10px;
+    margin-left: 1rem;
+    font-size: 1.2rem;
+    background-color: #8BE0F1;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+.reply-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.before-qna{
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+.qanda_title h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+}
+.FQA p {
+    font-size: 1.4rem;
+    color: #555;
+}
+.contact_title p{
+    font-size: 1.5rem; 
+}
+.upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

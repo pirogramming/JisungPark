@@ -64,8 +64,8 @@ class Post(models.Model):
     title = models.CharField(max_length=255, verbose_name='제목')
     content = models.TextField('게시물 내용')
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts', null=True)
-    created_date = models.DateTimeField('작성일', blank=True, auto_created=True, auto_now_add=True)
-    updated_date = models.DateTimeField('수정일', blank=True, auto_created=True, auto_now=True)
+    created_date = models.DateTimeField('작성일', auto_now_add=True, null=True, blank=True)
+    updated_date = models.DateTimeField('수정일', auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return self.title

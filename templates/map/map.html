@@ -57,6 +57,7 @@
                 <div class="review-list">
                 </div>
             </div>
+            {% comment %}
             <p id="parkingCommunity">커뮤니티
                 <i id="toggle-btn2" onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
             </p>
@@ -67,6 +68,7 @@
                     <input id="messageInput" type="text" placeholder="메시지를 입력하세요" />
                     <button class="community-btn" onclick="sendMessage()">전송</button>
                 </div>
+            {% endcomment %}
             </div>
             <button class="off-button" onclick="closeParkingDetail()">닫기</button>
         </div>
@@ -80,7 +82,7 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7f990c514b989ac63728873819748d10&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
@@ -651,32 +653,7 @@
                     })
                     .catch(error => console.error('리뷰 로드 실패:', error));
                 }
-
-            const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
-            console.log('Fetching URL:', url);
-
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
-                    data.reviews.forEach(review => {
-                        const reviewElement = `
-                        <div class="review-item">
-                            <strong>${review.user__username}</strong>
-                            <span><i class="ri-star-fill"></i> ${review.rating}</span>
-                            <p>${review.content || ''}</p>
-                        </div>
-                        `;
-                        reviewContainer.innerHTML += reviewElement;
-                    });
-                })
-                .catch(error => console.error('리뷰 로드 실패:', error));
-
+                
 
             document.addEventListener("DOMContentLoaded", () => {
                 const stars = document.querySelectorAll(".star-rating i");
@@ -768,8 +745,8 @@
                 }
             }
 
-            function toggleCommunity() {
-                /*const community = document.getElementById('community');
+            /* function toggleCommunity() {
+                const community = document.getElementById('community');
                 community.classList.toggle('active');
                 const toggleBtn=document.getElementById('toggle-btn2');
 
@@ -799,7 +776,7 @@
                     'message': message,
                     'username': '익명'  // 사용자 이름 추가 가능
                 }));
-                inputBox.value = '';*/
-            }
+                inputBox.value = '';
+            }*/
         </script>
         {% endblock %}

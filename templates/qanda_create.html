@@ -3,7 +3,10 @@
 {% block content %}
     <div class="qanda-container">
         <div class="qanda_container">
-            <form action = "{% url 'demos:qanda_create' %}" method="post">
+            <div class="qna_container">
+                <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
+            </div>
+                <form action = "{% url 'demos:qanda_create' %}" method="post">
                 {% csrf_token %}
                 <label for="title" class="form-label">제목 : </label>
                 <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
@@ -11,7 +14,9 @@
                 <label for="content" class="form-label">문의사항 : </label><br>
                 <textarea  name="content" id="content" rows="12" placeholder="문의 내용을 입력하세요"></textarea>
                 <br>
-                <button type="submit" class="btn btn-submit">제출하기</button>
+                <div class="upload">
+                    <button type="submit" class="btn btn-primary">문의 등록</button>
+                </div>
             </form>
         </div>
     </div>

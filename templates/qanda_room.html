@@ -3,42 +3,62 @@
 {% block content %}
     <div class="qanda-container">
         <div class="qanda_container">
-            <p>{{ post.title }}</p> {% comment %} 문의 내용 {% endcomment %}
-            <p>{{ post.writer }}</p>
-            <p>{{ post.content }}</p>
-            <h3>댓글</h3>
-<ul class="comments-list">
-    {% for comment in comments %}
-        <li class="comment">
-            <strong>{{ comment.writer }}</strong>: {{ comment.content }}
-            <span style="font-size: 12px; color: gray;">{{ comment.created_date }}</span>
+            <div class="qna_container">
+                <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
+            </div>
+            <div class="qna_container2">
+                <h3>{{ post.title }}</h3> {% comment %} 문의 내용 {% endcomment %}
+                <h5>ID: {{ post.writer }}</h5>
+                <h4>{{ post.content }}</h4>
+                {% comment%}
+                    <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
+                    <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                {% endcomment %}
+                <h6>댓글</h6>
+                <ul class="comments-list">
+                    {% for comment in comments %}
+                        <li class="comment">
+                            <strong>{{ comment.writer }}</strong>: {{ comment.content }}
+                            <span style="font-size: 10px; color: gray;">{{ comment.created_date }}</span>
+                            {% comment%}
+                                <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
+                                <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                            {% endcomment %}
 
-            <!-- 대댓글 입력 폼 -->
-            <form method="POST" class="reply-form">
-                {% csrf_token %}
-                <input type="hidden" name="parent_comment_id" value="{{ comment.id }}" />
-                <input type="text" name="content" placeholder="답글 입력..." required />
-                <button type="submit" class="btn btn-info">답글 작성</button>
-            </form>
+                            <!-- 대댓글 입력 폼 -->
+                            <form method="POST" class="reply-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_comment_id" value="{{ comment.id }}" />
+                                <input type="text" name="content" placeholder="답글 입력..." required />
+                                <button type="submit" class="btn-info">답글 작성</button>
+                            </form>
 
-            <!-- 대댓글 목록 -->
-            <ul class="replies">
-                {% for reply in comment.comments.all %}
-                    <li class="reply">▶️[답글] {{ reply.writer }}: {{ reply.content }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% empty %}
-        <p>아직 댓글이 없습니다.</p>
-    {% endfor %}
-</ul>
+                            <!-- 대댓글 목록 -->
+                            <ul class="replies">
+                                {% for reply in comment.comments.all %}
+                                    <li class="reply">
+                                        <i class="ri-corner-down-right-line"></i> 
+                                        {{ reply.writer }}: {{ reply.content }}
+                                        {% comment%}
+                                        <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
+                                        <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                                        {% endcomment %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% empty %}
+                        <h5>아직 댓글이 없습니다.</h5>
+                    {% endfor %}
+                </ul>
 
-<!-- 새 댓글 입력 -->
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">댓글 작성</button>
-</form>
+                <!-- 새 댓글 입력 -->
+                <form method="POST" class="comment-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">댓글 작성</button>
+                </form>
+            </div>
         </div>
     </div>
     <footer>
