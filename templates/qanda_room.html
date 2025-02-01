@@ -8,16 +8,24 @@
             </div>
             <div class="qna_container2">
                 <h3>{{ post.title }}</h3> {% comment %} 문의 내용 {% endcomment %}
-                <h5>ID: {{ post.writer }}</h5>
-                <h4>{{ post.content }}</h4>
-                <a href="{% url 'demos:qanda_delete' post.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                <a href="{% url 'demos:qanda_update' post.id %}"><i class="ri-edit-line"></i>[수정]</a>
+                <div id="post-writer">
+                    <h5 id = "qna_writer">작성자: {{ post.writer }}</h5>
+                </div id="post-main">
+                <main>
+                    <h4>{{ post.content }}</h4>
+                </main>
+
+                <div class="qna-left-btns">
+                    <a href="{% url 'demos:qanda_delete' post.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                    <a href="{% url 'demos:qanda_update' post.id %}"><i class="ri-edit-line"></i>[수정]</a>
+                </div>
+                <hr style="width : 100%">
                 <h6>댓글</h6>
                 <ul class="comments-list">
                     {% for comment in comments %}
                         <li class="comment">
                             <strong>{{ comment.writer }}</strong>: {{ comment.content }}
-                            <span style="font-size: 10px; color: gray;">{{ comment.created_date }}</span>
+                            <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                             <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
 
                             <!-- 대댓글 목록 -->
@@ -26,13 +34,13 @@
                                     <li class="reply">
                                         <i class="ri-corner-down-right-line"></i> 
                                         {{ reply.writer }}: {{ reply.content }}
-                                         <span style="font-size: 10px; color: gray;">{{ reply.created_date }}</span>
+                                         <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                                         <a href="{% url 'demos:delete_comment' reply.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                                 {% endfor %}
                             </ul>
 
                         <!-- 대댓글 입력 폼 -->
-                            <form method="POST" class="reply-form">
+                            <form method="POST" class="reply-form hidden">
                                 {% csrf_token %}
                                 <input type="hidden" name="parent_comment_id" value="{{ comment.id }}" />
                                 <input type="text" name="content" placeholder="답글 입력..." required />
@@ -56,9 +64,9 @@
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:home' %}">About Us</a>
-            <a href="{% url 'demos:home' %}">Guide Map</a>
-            <a href="#">Q&A</a>
+            <a href="{% url 'demos:aboutus' %}">About Us</a>
+            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
+            <a href="{% url 'demos:qna' %}">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>

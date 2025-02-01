@@ -6,26 +6,28 @@
             <div class="qna_container">
                 <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
             </div>
+            <div class="qna_container2">
                 <form action = "{% url 'demos:qanda_create' %}" method="post">
                 {% csrf_token %}
                 <label for="title" class="form-label">제목 : </label>
                 <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
                 <br>
                 <label for="content" class="form-label">문의사항 : </label><br>
-                <textarea  name="content" id="content" rows="12" placeholder="문의 내용을 입력하세요"></textarea>
+                <textarea  name="content" id="content" rows="15" cols="30" placeholder="문의 내용을 입력하세요"></textarea>
                 <br>
                 <div class="upload">
                     <button type="submit" class="btn btn-primary">문의 등록</button>
                 </div>
             </form>
         </div>
+        </div>
     </div>
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:home' %}">About Us</a>
-            <a href="{% url 'demos:home' %}">Guide Map</a>
-            <a href="#">Q&A</a>
+            <a href="{% url 'demos:aboutus' %}">About Us</a>
+            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
+            <a href="{% url 'demos:qna' %}">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>

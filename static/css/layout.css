@@ -1,17 +1,16 @@
 .container {
   width: 390px;
   height: 100dvh;
+  /*height: fit-content;*/
   margin: auto;
-  background: var(--blue);
   display: flex;
   flex-direction: column;
+  background-color: var(--blue);
 }
 
 main {
   flex-grow: 1;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  height: fit-content;
 }
 
 :root {

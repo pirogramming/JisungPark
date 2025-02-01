@@ -6,21 +6,23 @@
             <div class="qna_container">
                 <a href="{% url 'demos:qna' %}"><i class="ri-close-large-line"></i></a>
             </div>
+            <div class="qna_container2">
                 {% if qna_list %}
                 <p class="before-qna">이전 문의</p>
                 {% endif %}
                 {% for qna in qna_list %}
                     <a href="{% url 'demos:qna_detail' qna.id %}" class="qna-title">{{ qna.title }}  {{ qna.updated_date|date:"y.m.d" }}</a>
                 {% endfor %}
-            <a href="{% url 'demos:qanda_create'%}" class="btn-primary">새로운 문의 생성</a>
+                <a href="{% url 'demos:qanda_create'%}" class="btn-primary">새로운 문의 생성</a>
+            </div>
         </div>
     </div>
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:home' %}">About Us</a>
-            <a href="{% url 'demos:home' %}">Guide Map</a>
-            <a href="#">Q&A</a>
+            <a href="{% url 'demos:aboutus' %}">About Us</a>
+            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
+            <a href="{% url 'demos:qna' %}">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>

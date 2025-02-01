@@ -38,7 +38,3 @@ tzdata==2025.1
 urllib3==2.3.0
 vine==5.1.0
 wcwidth==0.2.13
-channels>=4.0.0
-redis>=4.5.5
-asgiref>=3.6.0
-daphne>=4.0.0
