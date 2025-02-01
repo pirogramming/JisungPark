@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
     'user',
-    'channels',
     #allauth - kakao
     #'allauth.socialaccount.providers.kakao',
 ]
