@@ -28,6 +28,7 @@
                         <label for="hours">주차할 시간:</label>
                         <input type="number" id="hours"  min="0"> 시간
                         <input type="number" id="minutes" min="0" max="59"> 분
+                        <button class="adjust" onclick="calculateAndSortParkingFees()">적용</button>
                     </div>
                     <div class="list-way">
                         <button onclick="calculateAndSortParkingFees()">요금순</button>
@@ -337,7 +338,6 @@
                         '요금정보': place['fee_info']
                     });
                 });
-                console.log(parkingData);
             }
             // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
             kakao.maps.event.addListener(map, 'bounds_changed', function () {
@@ -497,11 +497,11 @@
                     var unitFee = parseInt(parking.추가단위요금, 10) || 0;
                     var dailyFee = parseInt(parking["1일주차권요금"], 10) || 0;
                     var feeInfo = parking.요금정보;
-                    console.log(feeInfo);
                     if (feeInfo === "무료") {
                         return feeInfo;
                     }
-                    if (time >= 1440) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
+
+                    if (time >= 1440 && dailyFee !== 0) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
                     if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
 
                     var extraTime = time - basicTime;
