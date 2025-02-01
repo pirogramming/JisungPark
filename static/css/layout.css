@@ -4,11 +4,11 @@
   margin: auto;
   display: flex;
   flex-direction: column;
+  background-color: var(--blue);
 }
 
 main {
   flex-grow: 1;
-  width: fit-content;
   height: fit-content;
 }
 
@@ -24,7 +24,7 @@ main {
 
   /* color */
   --blue:	#CEDFF1;
-  --btn: #AADBFF;
-  --white: #fff;
-  --gray: #c4c4c4;
+  —btn: #AADBFF;
+  —white: #fff;
+  —gray: #c4c4c4;
 }
