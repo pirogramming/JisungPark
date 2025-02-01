@@ -83,7 +83,7 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAP_KEY}}&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0f059122b64c44eccdc5637bc30e8292&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
@@ -585,6 +585,10 @@
                                     <strong>${review.user__username}</strong>
                                     <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                     <p>${review.content || ''}</p>
+                                    {% comment%}
+                                        <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
+                                        <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                                    {% endcomment %}
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;
@@ -677,10 +681,25 @@
                         alert("✅ 리뷰가 추가되었습니다!");
                         console.log("✅ 리뷰 추가됨:", data);
                         loadReviews(); // 리뷰 목록 새로고침
+                        resetStars(); // 별점 초기화
+                        document.getElementById("contentInput").value = ""; // 입력내용 초기화
                     }
                 } catch (error) {
                     console.error("❌ 리뷰 추가 실패:", error);
                     alert("리뷰를 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            }
+            function resetStars() {
+                const stars = document.querySelectorAll(".star-rating i");
+                stars.forEach(star => {
+                    star.classList.remove("ri-star-fill");
+                    star.classList.add("ri-star-line");
+                });
+            
+                selectedRating = 0; // 별점 값 초기화
+                const ratingDisplay = document.getElementById("rating-display");
+                if (ratingDisplay) {
+                    ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
 
