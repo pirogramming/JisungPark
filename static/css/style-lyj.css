@@ -90,14 +90,8 @@ h1 {
     color: #333;
 }
 h2 {
-    margin-block: 1rem;
     font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-}
-h3 {
-    font-size: 1.8rem;
-    font-weight: 500;
+    font-weight: 900;
     color: #333;
 }
 p{
@@ -136,10 +130,6 @@ p{
     text-align: center;
 }
 .introduce_container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background-color: white;
     padding: 30px auto;
     border-radius: 10px;
@@ -148,10 +138,6 @@ p{
     padding: 40px 30px;
 }
 .qanda_container, .guidemap_container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -161,10 +147,6 @@ p{
     overflow-y: auto;
 }
 .mypage_container, .aboutus_container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 80%;
@@ -470,6 +452,9 @@ h6 {
     font-weight: 700;
     color: #333;
 }
+.FQA {
+    margin-bottom: 2.5rem;
+}
 .FQA p {
     font-size: 1.4rem;
     color: #555;
@@ -478,6 +463,12 @@ h6 {
     font-size: 1.5rem; 
 }
 .upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.qna_container2 {
     display: flex;
     flex-direction: column;
     align-items: center;

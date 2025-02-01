@@ -18,8 +18,8 @@
                 <ul class="comments-list">
                     {% for comment in comments %}
                         <li class="comment">
-                            <strong>{{ comment.writer }}</strong>: {{ comment.content }}
-                            <span style="font-size: 10px; color: gray;">{{ comment.created_date }}</span>
+                            <p><strong>{{ comment.writer }}</strong>: {{ comment.content }}</p>
+                            <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h6>
                             {% comment%}
                                 <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
                                 <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
@@ -38,7 +38,8 @@
                                 {% for reply in comment.comments.all %}
                                     <li class="reply">
                                         <i class="ri-corner-down-right-line"></i> 
-                                        {{ reply.writer }}: {{ reply.content }}
+                                        {{ reply.writer }}: {{ reply.content }} <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
+                                        
                                         {% comment%}
                                         <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
                                         <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
@@ -66,7 +67,7 @@
             <a href="{% url 'demos:introduce' %}">Service</a>
             <a href="{% url 'demos:home' %}">About Us</a>
             <a href="{% url 'demos:home' %}">Guide Map</a>
-            <a href="#">Q&A</a>
+            <a href="{% url 'demos:qna' %}">Q&A</a>
         </div>
         <div class="footer-bottom">
             <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
