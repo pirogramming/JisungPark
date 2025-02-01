@@ -94,6 +94,8 @@
             var visibleparkinglot = [];
             var parkingTime = null;
             let selectedRating = 0;
+            var ratingDisplay="";
+            var stars = "";
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -599,8 +601,8 @@
                 
 
             document.addEventListener("DOMContentLoaded", () => {
-                const stars = document.querySelectorAll(".star-rating i");
-                const ratingDisplay = document.getElementById("rating-display");
+                stars = document.querySelectorAll(".star-rating i");
+                ratingDisplay = document.getElementById("rating-display");
 
                 stars.forEach(star => {
                     star.addEventListener("click", () => {
@@ -638,6 +640,7 @@
             // ⭐ 리뷰 등록 함수 수정 (selectedRating 사용)
             async function addReview() {
                 const content = document.getElementById("contentInput").value.trim();
+                stars = document.getElementById("star")
                 const parkingLotId = selectedParkingLotId; // 선택된 주차장 ID 가져오기
 
                 if (!selectedRating) {
@@ -680,6 +683,12 @@
                     } else {
                         alert("✅ 리뷰가 추가되었습니다!");
                         console.log("✅ 리뷰 추가됨:", data);
+                                    // ⭐ 입력 폼 초기화
+                        stars="";
+                        ratingDisplay.textContent="";
+                        contentInput.value = ""; // 리뷰 내용 초기화
+                        console.log(stars);
+            
                         loadReviews(); // 리뷰 목록 새로고침
                         resetStars(); // 별점 초기화
                         document.getElementById("contentInput").value = ""; // 입력내용 초기화
