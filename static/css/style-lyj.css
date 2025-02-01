@@ -153,6 +153,7 @@ p{
     height: 70dvh;
     padding: 40px 30px;
     overflow-y: auto;
+    background: white;
 }
 .signup_container {
     height: 60rem;
@@ -217,16 +218,16 @@ p{
 .social-login {
     margin-top: 10px;
 }
-.google, .naver, .kakao {
-    margin-top: 1rem;
-    padding: 1rem;
-    font-size: 12px;
-    color: black;
-    border: none;
-    border-radius: 4px;
+.google img, .naver img, .kakao img{
+    margin: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
-    margin-inline: 0.5rem;
+    width: 40px;
+    height: 40px;
+}
+.google, .naver, .kakao {
+    border-radius: 50%;
+    width: 50px;
+    height:50px;
 }
 .google {
     background-color:#fff;
@@ -235,8 +236,7 @@ p{
     background-color: #F1F1F1;
 }
 .naver {
-    background-color: #1AC049;
-    color:white;
+    background-color: #03C75A;
 }
 .naver:hover {
     background-color: #16A344;
@@ -368,10 +368,10 @@ p{
     right: 10px;
 }
 .qna_container {
-    position: relative; /* 컨테이너를 기준으로 절대 위치를 설정 */
-    width: 100%; /* 컨테이너 너비 */
-    max-width: 600px; /* 컨테이너의 최대 너비 */
-    margin: 0 auto; /* 중앙 정렬 */
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
 }
 .qanda_container label {
@@ -473,4 +473,21 @@ h6 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
 }

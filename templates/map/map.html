@@ -83,7 +83,7 @@
         <script>
             document.getElementById('keyword').value = localStorage.getItem('search_txt') || '';
         </script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=56608f5756c28cc1c5a7ecf37e079ecf&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{MAP_KEY}}&libraries=services"></script>
         <script>
             var markers = [];
             var parkingData = [];
@@ -686,7 +686,7 @@
                     }
                 } catch (error) {
                     console.error("❌ 리뷰 추가 실패:", error);
-                    alert("리뷰를 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.");
+                    alert("로그인 후 이용해주세요.");
                 }
             }
             function resetStars() {

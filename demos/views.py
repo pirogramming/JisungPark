@@ -61,7 +61,7 @@ def load_parking_data(request): # Ajax 요청시 사용
         return JsonResponse({"error": str(e)}, status=500)
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude")
+    parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee")
 
     context = {
         "parking_data": json.dumps(list(parking_data), ensure_ascii=False),  # JSON 변환
@@ -72,8 +72,14 @@ def map(request):   # 페이지 로드시 사용
 def introduce(request):
     return render(request, 'introduce.html')
 
-def review(request):
-    return render(request, 'home.html')
+def aboutus(request):
+    return render(request, 'aboutus.html')
+
+def guidemap(request):
+    return render(request, 'guidemap.html')
+
+def qna(request):
+    return render(request, 'qanda.html')
 
 def community(request):
     return render(request, 'home.html')
