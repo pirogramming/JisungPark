@@ -81,6 +81,9 @@ def guidemap(request):
 def qna(request):
     return render(request, 'qanda.html')
 
+def mypage(request):
+    return render(request, 'mypage.html')
+
 def community(request):
     return render(request, 'home.html')
 

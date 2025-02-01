@@ -10,6 +10,7 @@ urlpatterns = [
     path('introduce/', views.introduce, name='introduce'),
     path('aboutus/', views.aboutus, name='aboutus'),
     path('guidemap/', views.guidemap, name='guidemap'),
+    path('mypage/', views.mypage, name='mypage'),
     path('community/', views.community, name='community'),
     path('work/', views.work, name='work'),
     path('github/', views.github, name='github'),

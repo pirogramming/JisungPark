@@ -19,7 +19,7 @@
             </div>
             <div class="header-nav">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'demos:home' %}">({{ user.username }})님</a>
+                    <a href="{% url 'demos:mypage' %}">({{ user.username }})님</a>
                     <a href="{% url 'account_logout' %}">Logout</a>
                 {% else %}
                     <a href="{% url 'account_login' %}">Signin</a>
