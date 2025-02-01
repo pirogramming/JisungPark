@@ -20,7 +20,7 @@ header {
     align-items: center;
     height: 100%;
 }
-.header-nav a, i{
+.header-nav a, .header-nav i{
     margin: 0 1.3rem;
     font-size: 1.5rem;
 }
@@ -36,10 +36,11 @@ footer {
     padding-block: 1rem;
 }
 
-.footer-top a {
+.footer-top a , .footer-bottom a{
     margin: 0 1rem;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
+
 .home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
     justify-content: center;
     align-items: center;

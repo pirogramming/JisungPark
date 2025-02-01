@@ -28,6 +28,7 @@
                         <label for="hours">주차할 시간:</label>
                         <input type="number" id="hours"  min="0"> 시간
                         <input type="number" id="minutes" min="0" max="59"> 분
+                        <button class="adjust" onclick="calculateAndSortParkingFees()">적용</button>
                     </div>
                     <div class="list-way">
                         <button onclick="calculateAndSortParkingFees()">요금순</button>
@@ -44,7 +45,14 @@
                 <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
             </p>
             <div id="review" class="review">
-                <input type="number" id="ratingInput" min="1" max="5" placeholder="평점(1~5)" />
+                <div class="star-rating">
+                    <i class="ri-star-line" data-value="1"></i>
+                    <i class="ri-star-line" data-value="2"></i>
+                    <i class="ri-star-line" data-value="3"></i>
+                    <i class="ri-star-line" data-value="4"></i>
+                    <i class="ri-star-line" data-value="5"></i>
+                </div>
+                <p id="rating-display">0점</p>
                 <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
                 <button class="review-btn" onclick="addReview()">리뷰 등록</button>
                 <div class="review-list">
@@ -83,6 +91,7 @@
             let selectedPlaceMarker = null;
             var visibleparkinglot = [];
             var parkingTime = null;
+            let selectedRating = 0;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -329,7 +338,6 @@
                         '요금정보': place['fee_info']
                     });
                 });
-                console.log(parkingData);
             }
             // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
             kakao.maps.event.addListener(map, 'bounds_changed', function () {
@@ -431,69 +439,8 @@
                     if (feeInfo === "무료") {
                         return feeInfo;
                     }
-                    if (time >= 1440 && dailyFee !== undefined && dailyFee !== null && dailyFee !== "") return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
-                    if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
 
-                    var extraTime = time - basicTime;
-
-                    var extraUnits = Math.ceil(extraTime / unitTime);
-                    return (basicFee + (extraUnits * unitFee)) + "원";
-                }
-                
-            function calculateAndSortParkingFees() {
-                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
-                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
-                parkingTime = (hours * 60) + minutes;
-
-                if (parkingTime <= 0) {
-                    alert("올바른 시간을 입력하세요.");
-                    parkingTime = null;
-                    return;
-                }
-
-                var parkingListEl = document.getElementById('parkingList');
-                parkingListEl.innerHTML = ""; 
-
-                if (visibleparkinglot.length === 0) {
-                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
-                    return;
-                }
-
-                    var sortedParking = visibleparkinglot.map(parking => {
-                    var totalFee = calculateFee(parking, parkingTime);
-                    var numericFee = totalFee === "무료" ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity; // "무료"는 0원으로 처리, 오류 방지
-
-                    return {
-                        ...parking,
-                        totalFee,
-                        numericFee
-                    };
-                }).sort((a, b) => a.numericFee - b.numericFee);
-
-                sortedParking.forEach((parking, index) => {
-                    var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
-                    li.onclick = function () {
-                        showParkingDetail(parking);
-                    };
-                    parkingListEl.appendChild(li);
-                });
-
-                document.getElementById('parkingListWrap').style.display = "block";
-            }
-
-            function calculateFee(parking, time) {
-                    var basicTime = parseInt(parking.주차기본시간, 10) || 0;
-                    var basicFee = parseInt(parking.주차기본요금, 10) || 0;
-                    var unitTime = parseInt(parking.추가단위시간, 10) || 1;
-                    var unitFee = parseInt(parking.추가단위요금, 10) || 0;
-                    var dailyFee = parseInt(parking["1일주차권요금"], 10) || 0;
-                    var feeInfo = parking.요금정보;
-                    console.log(feeInfo);
-                    if (feeInfo === "무료") {
-                        return feeInfo;
-                    }
-                    if (time >= 1440) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
+                    if (time >= 1440 && dailyFee !== 0) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
                     if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
 
                     var extraTime = time - basicTime;
@@ -634,7 +581,7 @@
                             const reviewElement = `
                                 <div class="review-item">
                                     <strong>${review.user__username}</strong>
-                                    <span>⭐ ${review.rating}</span>
+                                    <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                     <p>${review.content || ''}</p>
                                 </div>
                             `;
@@ -642,35 +589,122 @@
                         });
                     })
                     .catch(error => console.error('리뷰 로드 실패:', error));
-            }
-        
-            function addReview() {
-                const rating = document.getElementById('ratingInput').value;
-                const content = document.getElementById('contentInput').value;
-                const parkingLotId = selectedParkingLotId; // 현재 선택된 주차장의 ID 가져오기
-        
-                fetch('/api/add_review/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({ rating, content,parking_lot_id: parkingLotId }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            alert('리뷰가 추가되었습니다!');
-                            console.log("✅ 리뷰 추가됨:", data);
-                            loadReviews(); // 리뷰 목록 새로고침
+                }
 
-                            ratingInput.value = "";
-                            contentInput.value = "";
+            const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
+            console.log('Fetching URL:', url);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                    data.reviews.forEach(review => {
+                        const reviewElement = `
+                        <div class="review-item">
+                            <strong>${review.user__username}</strong>
+                            <span><i class="ri-star-fill"></i> ${review.rating}</span>
+                            <p>${review.content || ''}</p>
+                        </div>
+                        `;
+                        reviewContainer.innerHTML += reviewElement;
+                    });
+                })
+                .catch(error => console.error('리뷰 로드 실패:', error));
+
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const stars = document.querySelectorAll(".star-rating i");
+                const ratingDisplay = document.getElementById("rating-display");
+
+                stars.forEach(star => {
+                    star.addEventListener("click", () => {
+                        selectedRating = parseInt(star.getAttribute("data-value"), 10); // 선택된 별점 저장
+                        updateStars(selectedRating);
+                        ratingDisplay.textContent = `${selectedRating}점`; // 별점 표시 업데이트
+                    });
+
+                    // 마우스 오버 시 미리보기 효과
+                    star.addEventListener("mouseover", () => {
+                        const hoverValue = parseInt(star.getAttribute("data-value"), 10);
+                        updateStars(hoverValue);
+                    });
+
+                    // 마우스 아웃 시 원래 선택된 별점으로 복구
+                    star.addEventListener("mouseout", () => {
+                        updateStars(selectedRating);
+                    });
+                });
+
+                function updateStars(rating) {
+                    stars.forEach(star => {
+                        const value = parseInt(star.getAttribute("data-value"), 10);
+                        if (value <= rating) {
+                            star.classList.remove("ri-star-line");
+                            star.classList.add("ri-star-fill"); // 채워진 별로 변경
+                        } else {
+                            star.classList.remove("ri-star-fill");
+                            star.classList.add("ri-star-line"); // 빈 별로 변경
                         }
-                    })
-                    .catch(error => console.error('리뷰 추가 실패:', error));
+                    });
+                }
+            });
+
+            // ⭐ 리뷰 등록 함수 수정 (selectedRating 사용)
+            async function addReview() {
+                const content = document.getElementById("contentInput").value.trim();
+                const parkingLotId = selectedParkingLotId; // 선택된 주차장 ID 가져오기
+
+                if (!selectedRating) {
+                    alert("별점을 선택해주세요.");
+                    return;
+                }
+
+                if (!content) {
+                    alert("리뷰 내용을 입력하세요.");
+                    return;
+                }
+
+                if (!parkingLotId) {
+                    alert("주차장을 먼저 선택하세요.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("/api/add_review/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: JSON.stringify({
+                            rating: selectedRating, // ⭐ 선택된 별점 값 사용
+                            content: content,
+                            parking_lot_id: parkingLotId,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`서버 오류: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        alert(`리뷰 등록 실패: ${data.error}`);
+                    } else {
+                        alert("✅ 리뷰가 추가되었습니다!");
+                        console.log("✅ 리뷰 추가됨:", data);
+                        loadReviews(); // 리뷰 목록 새로고침
+                    }
+                } catch (error) {
+                    console.error("❌ 리뷰 추가 실패:", error);
+                    alert("리뷰를 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
             }
 
             function toggleCommunity() {
