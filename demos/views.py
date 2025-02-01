@@ -61,11 +61,13 @@ def load_parking_data(request): # Ajax 요청시 사용
         return JsonResponse({"error": str(e)}, status=500)
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = list(ParkingLot.objects.values())  # QuerySet → 리스트 변환
-    return render(request, "map/map.html", {
-        "parking_data": json.dumps(parking_data, ensure_ascii=False),  # JSON 변환 추가
+    parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude")
+
+    context = {
+        "parking_data": json.dumps(list(parking_data), ensure_ascii=False),  # JSON 변환
         "MAP_KEY": settings.MAP_KEY
-    })
+    }
+    return render(request, "map/map.html", context)
 
 def introduce(request):
     return render(request, 'introduce.html')
@@ -138,3 +140,10 @@ def qanda_create(request):
         )
         return redirect("demos:qna_detail", pk=post.pk)
     return render(request, 'qanda_create.html')
+
+@login_required
+def qanda_delete(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    if request.method == "POST":
+        post.delete()
+        return redirect("demos:qanda_list")
