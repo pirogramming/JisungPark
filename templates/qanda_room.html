@@ -6,6 +6,7 @@
             <p>{{ post.title }}</p> {% comment %} 문의 내용 {% endcomment %}
             <p>{{ post.writer }}</p>
             <p>{{ post.content }}</p>
+            <p>{{ post.created_date }}</p>
             <h3>댓글</h3>
 <ul class="comments-list">
     {% for comment in comments %}
