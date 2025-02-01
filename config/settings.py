@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.naver',
     'allauth.socialaccount.providers.google',
     'user',
-    #allauth - kakao
+    'django_celery_beat',
+    # allauth - kakao
     #'allauth.socialaccount.providers.kakao',
 ]
 
@@ -197,12 +198,18 @@ SOCIALACCOUNT_PROVIDERS = {
         'prompt': 'select_account',#추가 간편로그인을 지원해줌
         }},}
 
-# Redis 설정
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# ✅ Redis를 Result Backend로 설정
+CELERY_BROKER_URL = 'redis://localhost:6379/0'         # 기존 브로커 설정
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'     # ✅ 결과 백엔드 추가
+CELERY_BEAT_SCHEDULE = {
+    'fetch-parking-data-every-minute': {
+        'task': 'demos.tasks.fetch_parking_data_from_api',
+        'schedule': 60.0,  # 1분 간격으로 실행
+    },
+}
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-
-# django-celery-beat 추가
-INSTALLED_APPS += [
-    'django_celery_beat',
-]
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+CELERY_ENABLE_UTC = False

@@ -24,4 +24,5 @@ urlpatterns = [
     path('qna/list/', views.qanda_list, name='qanda_list'),
     path('qna/detail/<int:pk>', views.qna_detail, name='qna_detail'),
     path('qna/create/', views.qanda_create, name='qanda_create'),
+    path('api/real-time-parking/', views.load_parking_data, name='real_time_parking'),  # 실시간 데이터 API
 ]
