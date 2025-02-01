@@ -263,6 +263,7 @@
     width: 8%;
     border: none;
     border-bottom: 1px solid #789;
+    text-align: center;
 }
 .list-way{
     display: flex;
