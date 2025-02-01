@@ -439,67 +439,6 @@
                     if (feeInfo === "무료") {
                         return feeInfo;
                     }
-                    if (time >= 1440 && dailyFee !== undefined && dailyFee !== null && dailyFee !== "") return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
-                    if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
-
-                    var extraTime = time - basicTime;
-
-                    var extraUnits = Math.ceil(extraTime / unitTime);
-                    return (basicFee + (extraUnits * unitFee)) + "원";
-                }
-                
-            function calculateAndSortParkingFees() {
-                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
-                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
-                parkingTime = (hours * 60) + minutes;
-
-                if (parkingTime <= 0) {
-                    alert("올바른 시간을 입력하세요.");
-                    parkingTime = null;
-                    return;
-                }
-
-                var parkingListEl = document.getElementById('parkingList');
-                parkingListEl.innerHTML = ""; 
-
-                if (visibleparkinglot.length === 0) {
-                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
-                    return;
-                }
-
-                    var sortedParking = visibleparkinglot.map(parking => {
-                    var totalFee = calculateFee(parking, parkingTime);
-                    var numericFee = totalFee === "무료" ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity; // "무료"는 0원으로 처리, 오류 방지
-
-                    return {
-                        ...parking,
-                        totalFee,
-                        numericFee
-                    };
-                }).sort((a, b) => a.numericFee - b.numericFee);
-
-                sortedParking.forEach((parking, index) => {
-                    var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
-                    li.onclick = function () {
-                        showParkingDetail(parking);
-                    };
-                    parkingListEl.appendChild(li);
-                });
-
-                document.getElementById('parkingListWrap').style.display = "block";
-            }
-
-            function calculateFee(parking, time) {
-                    var basicTime = parseInt(parking.주차기본시간, 10) || 0;
-                    var basicFee = parseInt(parking.주차기본요금, 10) || 0;
-                    var unitTime = parseInt(parking.추가단위시간, 10) || 1;
-                    var unitFee = parseInt(parking.추가단위요금, 10) || 0;
-                    var dailyFee = parseInt(parking["1일주차권요금"], 10) || 0;
-                    var feeInfo = parking.요금정보;
-                    if (feeInfo === "무료") {
-                        return feeInfo;
-                    }
 
                     if (time >= 1440 && dailyFee !== 0) return dailyFee + "원"; // 24시간 이상이면 1일 주차권 요금 적용
                     if (time <= basicTime) return basicFee + "원"; // 기본 시간 내이면 기본 요금 적용
