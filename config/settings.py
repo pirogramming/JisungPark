@@ -197,12 +197,12 @@ SOCIALACCOUNT_PROVIDERS = {
         'prompt': 'select_account',#추가 간편로그인을 지원해줌
         }},}
 
+# Redis 설정
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],  # Redis 서버 주소와 포트
-        },
-    },
-}
+# django-celery-beat 추가
+INSTALLED_APPS += [
+    'django_celery_beat',
+]
