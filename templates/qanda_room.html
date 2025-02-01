@@ -10,28 +10,15 @@
                 <h3>{{ post.title }}</h3> {% comment %} 문의 내용 {% endcomment %}
                 <h5>ID: {{ post.writer }}</h5>
                 <h4>{{ post.content }}</h4>
-                {% comment%}
-                    <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
-                    <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                {% endcomment %}
+                <a href="{% url 'demos:qanda_delete' post.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                <a href="{% url 'demos:qanda_update' post.id %}"><i class="ri-edit-line"></i>[수정]</a>
                 <h6>댓글</h6>
                 <ul class="comments-list">
                     {% for comment in comments %}
                         <li class="comment">
                             <strong>{{ comment.writer }}</strong>: {{ comment.content }}
                             <span style="font-size: 10px; color: gray;">{{ comment.created_date }}</span>
-                            {% comment%}
-                                <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
-                                <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                            {% endcomment %}
-
-                            <!-- 대댓글 입력 폼 -->
-                            <form method="POST" class="reply-form">
-                                {% csrf_token %}
-                                <input type="hidden" name="parent_comment_id" value="{{ comment.id }}" />
-                                <input type="text" name="content" placeholder="답글 입력..." required />
-                                <button type="submit" class="btn-info">답글 작성</button>
-                            </form>
+                            <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
 
                             <!-- 대댓글 목록 -->
                             <ul class="replies">
@@ -39,13 +26,18 @@
                                     <li class="reply">
                                         <i class="ri-corner-down-right-line"></i> 
                                         {{ reply.writer }}: {{ reply.content }}
-                                        {% comment%}
-                                        <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
-                                        <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                                        {% endcomment %}
-                                    </li>
+                                         <span style="font-size: 10px; color: gray;">{{ reply.created_date }}</span>
+                                        <a href="{% url 'demos:delete_comment' reply.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                                 {% endfor %}
                             </ul>
+
+                        <!-- 대댓글 입력 폼 -->
+                            <form method="POST" class="reply-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="parent_comment_id" value="{{ comment.id }}" />
+                                <input type="text" name="content" placeholder="답글 입력..." required />
+                                <button type="submit" class="btn-info">답글 작성</button>
+                            </form>
                         </li>
                     {% empty %}
                         <h5>아직 댓글이 없습니다.</h5>

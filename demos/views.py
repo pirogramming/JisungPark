@@ -1,7 +1,7 @@
 import json 
 import os 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
 from .models import Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
@@ -101,6 +101,10 @@ def qanda_list(request):
     user = request.user
     if not user.is_authenticated:
         return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
+    if user.is_superuser:
+        qna_list = list(Post.objects.all().values())
+        ctx = {'qna_list': qna_list}
+        return render(request, 'qanda_list.html', ctx)
     qna_list = list(Post.objects.filter(writer=user))
     ctx = {
         'qna_list': qna_list,
@@ -140,10 +144,35 @@ def qanda_create(request):
         )
         return redirect("demos:qna_detail", pk=post.pk)
     return render(request, 'qanda_create.html')
+@login_required
+def qanda_update(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    if request.method == 'POST':
+        title = request.POST['title']
+        content = request.POST['content']
+
+        post.title = title
+        post.content = content
+        post.save()
+        return redirect("demos:qna_detail", pk=post.pk)
+
+    ctx = {'post':post}
+    return render(request, 'qanda_update.html', ctx)
 
 @login_required
 def qanda_delete(request, pk):
     post = get_object_or_404(Post, id=pk)
-    if request.method == "POST":
-        post.delete()
-        return redirect("demos:qanda_list")
+    post.delete()
+    return redirect("demos:qanda_list")
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    # 댓글 작성자만 삭제 가능하도록 제한
+    if comment.writer != request.user:
+        return HttpResponseForbidden("삭제할 권한이 없습니다.")
+
+    comment.delete()
+    return redirect('demos:qna_detail', comment.post.id)  # 댓글이 달린 게시글 상세 페이지로 이동

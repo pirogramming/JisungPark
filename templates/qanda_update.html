@@ -4,15 +4,20 @@
     <div class="qanda-container">
         <div class="qanda_container">
             <div class="qna_container">
-                <a href="{% url 'demos:qna' %}"><i class="ri-close-large-line"></i></a>
+                <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
             </div>
-                {% if qna_list %}
-                <p class="before-qna">이전 문의</p>
-                {% endif %}
-                {% for qna in qna_list %}
-                    <a href="{% url 'demos:qna_detail' qna.id %}" class="qna-title">{{ qna.title }}  {{ qna.updated_date|date:"y.m.d" }}</a>
-                {% endfor %}
-            <a href="{% url 'demos:qanda_create'%}" class="btn-primary">새로운 문의 생성</a>
+                <form action = "{% url 'demos:qanda_update' post.id %}" method="post">
+                {% csrf_token %}
+                <label for="title" class="form-label">제목 : </label>
+                <input type="text" name="title" id="title" value = {{ post.title }}>
+                <br>
+                <label for="content" class="form-label">문의사항 : </label><br>
+                <textarea  name="content" id="content" rows="12"> {{ post.content }}</textarea>
+                <br>
+                <div class="upload">
+                    <button type="submit" class="btn btn-primary">문의 등록</button>
+                </div>
+            </form>
         </div>
     </div>
     <footer>
