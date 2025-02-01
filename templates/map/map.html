@@ -44,7 +44,14 @@
                 <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
             </p>
             <div id="review" class="review">
-                <input type="number" id="ratingInput" min="1" max="5" placeholder="평점(1~5)" />
+                <div class="star-rating">
+                    <i class="ri-star-line" data-value="1"></i>
+                    <i class="ri-star-line" data-value="2"></i>
+                    <i class="ri-star-line" data-value="3"></i>
+                    <i class="ri-star-line" data-value="4"></i>
+                    <i class="ri-star-line" data-value="5"></i>
+                </div>
+                <p id="rating-display">0점</p>
                 <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
                 <button class="review-btn" onclick="addReview()">리뷰 등록</button>
                 <div class="review-list">
@@ -83,6 +90,7 @@
             let selectedPlaceMarker = null;
             var visibleparkinglot = [];
             var parkingTime = null;
+            let selectedRating = 0;
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -642,35 +650,122 @@
                         });
                     })
                     .catch(error => console.error('리뷰 로드 실패:', error));
-            }
-        
-            function addReview() {
-                const rating = document.getElementById('ratingInput').value;
-                const content = document.getElementById('contentInput').value;
-                const parkingLotId = selectedParkingLotId; // 현재 선택된 주차장의 ID 가져오기
-        
-                fetch('/api/add_review/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}',
-                    },
-                    body: JSON.stringify({ rating, content,parking_lot_id: parkingLotId }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            alert('리뷰가 추가되었습니다!');
-                            console.log("✅ 리뷰 추가됨:", data);
-                            loadReviews(); // 리뷰 목록 새로고침
+                }
 
-                            ratingInput.value = "";
-                            contentInput.value = "";
+            const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
+            console.log('Fetching URL:', url);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                    data.reviews.forEach(review => {
+                        const reviewElement = `
+                        <div class="review-item">
+                            <strong>${review.user__username}</strong>
+                            <span><i class="ri-star-fill"></i> ${review.rating}</span>
+                            <p>${review.content || ''}</p>
+                        </div>
+                        `;
+                        reviewContainer.innerHTML += reviewElement;
+                    });
+                })
+                .catch(error => console.error('리뷰 로드 실패:', error));
+
+                
+            document.addEventListener("DOMContentLoaded", () => {
+                const stars = document.querySelectorAll(".star-rating i");
+                const ratingDisplay = document.getElementById("rating-display");
+
+                stars.forEach(star => {
+                    star.addEventListener("click", () => {
+                        selectedRating = parseInt(star.getAttribute("data-value"), 10); // 선택된 별점 저장
+                        updateStars(selectedRating);
+                        ratingDisplay.textContent = `${selectedRating}점`; // 별점 표시 업데이트
+                    });
+
+                    // 마우스 오버 시 미리보기 효과
+                    star.addEventListener("mouseover", () => {
+                        const hoverValue = parseInt(star.getAttribute("data-value"), 10);
+                        updateStars(hoverValue);
+                    });
+
+                    // 마우스 아웃 시 원래 선택된 별점으로 복구
+                    star.addEventListener("mouseout", () => {
+                        updateStars(selectedRating);
+                    });
+                });
+
+                function updateStars(rating) {
+                    stars.forEach(star => {
+                        const value = parseInt(star.getAttribute("data-value"), 10);
+                        if (value <= rating) {
+                            star.classList.remove("ri-star-line");
+                            star.classList.add("ri-star-fill"); // 채워진 별로 변경
+                        } else {
+                            star.classList.remove("ri-star-fill");
+                            star.classList.add("ri-star-line"); // 빈 별로 변경
                         }
-                    })
-                    .catch(error => console.error('리뷰 추가 실패:', error));
+                    });
+                }
+            });
+
+            // ⭐ 리뷰 등록 함수 수정 (selectedRating 사용)
+            async function addReview() {
+                const content = document.getElementById("contentInput").value.trim();
+                const parkingLotId = selectedParkingLotId; // 선택된 주차장 ID 가져오기
+
+                if (!selectedRating) {
+                    alert("별점을 선택해주세요.");
+                    return;
+                }
+
+                if (!content) {
+                    alert("리뷰 내용을 입력하세요.");
+                    return;
+                }
+
+                if (!parkingLotId) {
+                    alert("주차장을 먼저 선택하세요.");
+                    return;
+                }
+
+                try {
+                    const response = await fetch("/api/add_review/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: JSON.stringify({
+                            rating: selectedRating, // ⭐ 선택된 별점 값 사용
+                            content: content,
+                            parking_lot_id: parkingLotId,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`서버 오류: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    if (data.error) {
+                        alert(`리뷰 등록 실패: ${data.error}`);
+                    } else {
+                        alert("✅ 리뷰가 추가되었습니다!");
+                        console.log("✅ 리뷰 추가됨:", data);
+                        loadReviews(); // 리뷰 목록 새로고침
+                    }
+                } catch (error) {
+                    console.error("❌ 리뷰 추가 실패:", error);
+                    alert("리뷰를 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
             }
 
             function toggleCommunity() {

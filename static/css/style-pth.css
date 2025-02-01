@@ -278,3 +278,19 @@
 .FQA p {
     font-size: 1.3rem;
 }
+
+.star-rating {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.star-rating i {
+    font-size: 2rem;
+    color: gold;
+    transition: color 0.3s;
+}
+
+.star-rating i, .ri-star-fill {
+    color: gold;
+}
