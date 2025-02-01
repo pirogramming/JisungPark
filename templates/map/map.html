@@ -613,36 +613,36 @@
                 }
             }
             function loadReviews() {
-            if (!selectedParkingLotId) {
-                console.error('selectedParkingLotId가 설정되지 않았습니다.');
-                return;
+                if (!selectedParkingLotId) {
+                    console.error('selectedParkingLotId가 설정되지 않았습니다.');
+                    return;
+                }
+
+                const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
+                console.log('Fetching URL:', url);
+
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                        data.reviews.forEach(review => {
+                            const reviewElement = `
+                                <div class="review-item">
+                                    <strong>${review.user__username}</strong>
+                                    <span>⭐ ${review.rating}</span>
+                                    <p>${review.content || ''}</p>
+                                </div>
+                            `;
+                            reviewContainer.innerHTML += reviewElement;
+                        });
+                    })
+                    .catch(error => console.error('리뷰 로드 실패:', error));
             }
-
-            const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
-            console.log('Fetching URL:', url);
-
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
-                    data.reviews.forEach(review => {
-                        const reviewElement = `
-                            <div class="review-item">
-                                <strong>${review.user__username}</strong>
-                                <span>⭐ ${review.rating}</span>
-                                <p>${review.content || ''}</p>
-                            </div>
-                        `;
-                        reviewContainer.innerHTML += reviewElement;
-                    });
-                })
-                .catch(error => console.error('리뷰 로드 실패:', error));
-}
         
             function addReview() {
                 const rating = document.getElementById('ratingInput').value;
@@ -665,10 +665,14 @@
                             alert('리뷰가 추가되었습니다!');
                             console.log("✅ 리뷰 추가됨:", data);
                             loadReviews(); // 리뷰 목록 새로고침
+
+                            ratingInput.value = "";
+                            contentInput.value = "";
                         }
                     })
                     .catch(error => console.error('리뷰 추가 실패:', error));
             }
+
             function toggleCommunity() {
                 const community = document.getElementById('community');
                 community.classList.toggle('active');
