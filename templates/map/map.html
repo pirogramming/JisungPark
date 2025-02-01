@@ -436,7 +436,7 @@
 
                     var extraTime = time - basicTime;
 
-                    var extraUnits = Math.floor(extraTime / unitTime);
+                    var extraUnits = Math.ceil(extraTime / unitTime);
                     return (basicFee + (extraUnits * unitFee)) + "원";
                 }
                 

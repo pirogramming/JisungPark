@@ -267,6 +267,7 @@
 .list-way{
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .list-way button{
     color:#789;
