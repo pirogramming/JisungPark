@@ -1,12 +1,12 @@
 import json 
 import os 
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
-from .models import Review, ParkingLot
+from .models import Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-
+from .forms import CommentForm
 
 # Create your views here.
 def get_reviews(request, parking_lot_id):
@@ -90,3 +90,51 @@ def insta(request):
 
 def facebook(request):
     return render(request, 'home.html')
+
+def qna(request):
+    return render(request, 'qanda.html')
+
+@login_required
+def qanda_list(request):
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
+    qna_list = list(Post.objects.filter(writer=user))
+    ctx = {
+        'qna_list': qna_list,
+    }
+    return render(request, 'qanda_list.html', ctx)
+
+@login_required
+def qna_detail(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    comments = Comment.objects.filter(post=post, parent_comment__isnull=True)  # 부모 댓글만 가져오기
+    form = CommentForm()
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.writer = request.user  # 현재 로그인한 사용자
+
+            parent_id = request.POST.get('parent_comment_id')
+            if parent_id:  # 대댓글이면
+                comment.parent_comment = Comment.objects.get(id=parent_id)
+
+            comment.save()
+            return redirect("demos:qna_detail", pk=post.id)  # 저장 후 리디렉션
+
+    return render(request, 'qanda_room.html', {'post': post, 'comments': comments, 'form': form})
+
+@login_required
+def qanda_create(request):
+    if request.method == 'POST':
+        post = Post.objects.create(
+            category = 'qna',
+            title=request.POST['title'],
+            content=request.POST['content'],
+            writer=request.user,
+        )
+        return redirect("demos:qna_detail", pk=post.pk)
+    return render(request, 'qanda_create.html')

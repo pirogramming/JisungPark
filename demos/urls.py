@@ -18,4 +18,8 @@ urlpatterns = [
     path('api/reviews/<int:parking_lot_id>/', views.get_reviews, name='get_reviews'),
     path('api/myreviews/', views.get_myreviews, name='get_myreviews'),
     path('api/add_review/', views.add_review, name='add_review'),
+    path('qna/', views.qna, name='qna'),
+    path('qna/list/', views.qanda_list, name='qanda_list'),
+    path('qna/detail/<int:pk>', views.qna_detail, name='qna_detail'),
+    path('qna/create/', views.qanda_create, name='qanda_create'),
 ]

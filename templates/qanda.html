@@ -11,7 +11,7 @@
                 </div>
                 <div class="qanda_title">
                     <h3>Q. 실시간 데이터를 제공하지 않는 지역이 있나요?</h3>
-                    <p>A. 현재 실시간 데이터를 제공하지 않는 지역이 존재하여 일부 지역을 대상으로만 실시간 서비스를 제공중입니다. </p>
+                    <p>A. 현재 실시간 데이터를 제공하지 않는 지역이 존재하여 일부 지역을 대상으로만 실시간 서비스를 제공중입니다. 앞으로 더 많은 지역에 해당 추가할 예정입니다.</p>
                 </div>
             </div>
             <div class="contact">
@@ -19,10 +19,7 @@
                 <div class="contact_title">
                     <h3>문의사항이 있으신가요?</h3>
                     <p>아래의 채팅으로 문의사항을 보내주시면 빠른 시간 내에 답변드리겠습니다.</p>
-                    <div class="input-qna">
-                        <input id="messageInput" type="text" placeholder=" 질문을 입력하세요" />
-                        <button class="community-btn" onclick="sendMessage()">전송</button>
-                    </div>
+                    <button onclick="window.location.href='{% url 'demos:qanda_list' %}'">문의하러 가기</button>
                 </div>
             </div>
         </div>

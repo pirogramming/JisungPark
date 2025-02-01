@@ -58,3 +58,25 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.rating}"
+
+class Post(models.Model):
+    category = models.CharField(max_length=50, null=True, blank=True)
+    title = models.CharField(max_length=255, verbose_name='제목')
+    content = models.TextField('게시물 내용')
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts', null=True)
+    created_date = models.DateTimeField('작성일', blank=True, auto_created=True, auto_now_add=True)
+    updated_date = models.DateTimeField('수정일', blank=True, auto_created=True, auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, related_name='comments', null=True)
+    content = models.TextField('댓글 내용')
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    created_date = models.DateTimeField('작성일', blank=True, auto_created=True, auto_now_add=True)
+    updated_date = models.DateTimeField('수정일', blank=True, auto_created=True, auto_now=True)
+
+    def __str__(self):
+        return self.content
