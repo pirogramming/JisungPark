@@ -280,7 +280,19 @@
 .list-way p{
     color:#789;
 }
-
+.firstline{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+#parkingInfo1{
+    color: #789;
+}
+#parkingInfo2{
+    color: #576af1;
+}
 .star-rating {
     display: flex;
     gap: 5px;
