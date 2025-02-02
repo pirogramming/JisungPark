@@ -457,6 +457,7 @@
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
                 visibleparkinglot.forEach((parking, index) => {
+                    console.log(`📍 주차장 ${index + 1}:`, parking);
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
@@ -513,10 +514,10 @@
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
                     return;
                 }
-
+                
                     var sortedParking = visibleparkinglot.map(parking => {
                     var totalFee = calculateFee(parking, parkingTime);
-                    var numericFee = totalFee === "무료" ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity; // "무료"는 0원으로 처리, 오류 방지
+                    var numericFee = (totalFee === "무료" || totalFee === "0원") ? 0 : parseInt(totalFee.replace("원", ""), 10) || Infinity;
 
                     return {
                         ...parking,
