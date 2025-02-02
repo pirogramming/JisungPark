@@ -1,5 +1,5 @@
-import json 
-import os 
+import json
+import redis
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
@@ -53,18 +53,39 @@ def add_review(request):
 def home(request):
     return render(request, 'home.html')
 
+# Redis 설정
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
+
 def load_parking_data(request): # Ajax 요청시 사용
     try:
         parking_data = list(ParkingLot.objects.values())  # QuerySet → 리스트 변환
+        for lot in parking_data:    # Redis와 실시간 데이터 매칭
+            parking_name = lot['name']
+            redis_key = f'parking_availability:{parking_name}'
+            available_spots = redis_client.get(redis_key)
+
+            lot['available_spots'] = int(available_spots) if available_spots else 0
+
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
+
 def map(request):   # 페이지 로드시 사용
     parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee")
 
+    enriched_data = []
+    for lot in parking_data:
+        parking_name = lot['name']
+        redis_key = f'parking_availability:{parking_name}'
+        available_spots = redis_client.get(redis_key)
+
+        # 실시간 데이터 추가
+        lot['available_spots'] = int(available_spots) if available_spots else 0
+        enriched_data.append(lot)
+
     context = {
-        "parking_data": json.dumps(list(parking_data), ensure_ascii=False),  # JSON 변환
+        "parking_data": json.dumps(enriched_data, ensure_ascii=False),
         "MAP_KEY": settings.MAP_KEY
     }
     return render(request, "map/map.html", context)

@@ -267,3 +267,9 @@ pyrightconfig.json
 .dump.rdb
 .dump.rdb/
 # End of https://www.toptal.com/developers/gitignore/api/django,python
+
+# Celery 관련 파일 무시
+results*
+transport*
+celerybeat-schedule
+celerybeat-schedule.*

@@ -324,9 +324,12 @@
                 updateVisibleParkingMarkers();
             }
 
-            // JSON 파일에서 주차장 데이터 불러오기
+            // 주차장 데이터 불러오기
             function loadParkingData() {
-                var placeData = JSON.parse('{{ parking_data|escapejs }}');  
+                var placeData = JSON.parse('{{ parking_data|escapejs }}');
+
+                console.log("🚀 초기 로드된 데이터:", placeData);   //테스트용!!!!
+
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -337,10 +340,47 @@
                         '주차기본요금': parseFloat(place['base_fee']),
                         '추가단위시간': parseFloat(place['extra_time']),
                         '추가단위요금': parseFloat(place['extra_fee']),
-                        '요금정보': place['fee_info']
+                        '요금정보': place['fee_info'],
+                        '남은자리': place['available_spots'] || 0 
                     });
                 });
+                updateParkingDisplay();
             }
+
+            // 실시간 데이터 갱신
+            function fetchRealTimeData() {
+                fetch('/api/real-time-parking/')
+                    .then(response => response.json())
+                    .then(data => {
+
+                        console.log("📡 실시간 API 데이터:", data); //테스트용!!!!
+
+                        data.forEach(function(realTimeInfo) {
+                            const parking = parkingData.find(p => p['주차장명'] === realTimeInfo['name']);
+                            if (parking) {
+                                parking['남은자리'] = realTimeInfo['available_spots'];
+                            }
+                        });
+                        updateParkingDisplay();
+                    })
+                    .catch(error => console.error('실시간 데이터 로드 오류:', error));
+}
+
+            // 주차장 데이터 표시 (예시)
+            function updateParkingDisplay() {
+                parkingData.forEach(function(place) {
+                    // console.log(`주차장: ${place['주차장명']} | 남은 자리: ${place['남은자리']}개`);
+                    // 지도 마커 또는 DOM 요소 업데이트
+                });
+            }
+
+            // 초기 로딩
+            loadParkingData();
+            fetchRealTimeData();
+
+            // 1분마다 자동 갱신
+            setInterval(fetchRealTimeData, 50000);  // 1분 간격
+
             // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
             kakao.maps.event.addListener(map, 'bounds_changed', function () {
                 if (!selectedPlace) return;
