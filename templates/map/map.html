@@ -40,7 +40,11 @@
             </div>
         </div>
         <div id="parkingDetailWrap" style="display: none;">
-            <h3 id="parkingTitle">주차장 이름</h3>
+            <div class="firstline">
+                <h3 id="parkingTitle"></h3>
+                <span id="parkingInfo1"></span>
+            </div>
+            <span id="parkingInfo2"></span>
             <p id="parkingReview">리뷰
                 <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
             </p>
@@ -341,9 +345,12 @@
                         '추가단위시간': parseFloat(place['extra_time']),
                         '추가단위요금': parseFloat(place['extra_fee']),
                         '요금정보': place['fee_info'],
+                        '주차장유형': place['type'],
+                        '장애인전용주차구역보유여부': place['disabled_parking'],
                         '남은자리': place['available_spots'] || 0 
                     });
                 });
+                console.log(parkingData);
                 updateParkingDisplay();
             }
 
@@ -530,11 +537,15 @@
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');
+                var infoElement1 = document.getElementById('parkingInfo1'); 
+                var infoElement2 = document.getElementById('parkingInfo2');
 
-                if (titleElement) {
-                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음"; 
-                } else {
+                if (titleElement && infoElement1 && infoElement2) {
+                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
+                    infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
+                    infoElement2.innerText = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}`;
                 }
+
                 selectedParkingLotId = parking.id;  
                 
                 document.getElementById('parkingListWrap').style.display = "none"; 
