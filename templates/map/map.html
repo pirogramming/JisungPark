@@ -421,29 +421,26 @@
                 }
             }
             function showClosestParkingLots() {
-                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
-                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
-                parkingTime = (hours * 60) + minutes; 
-
-                if (parkingTime <= 0) {
-                    parkingTime = null;
-                }
-                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
-                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
-                parkingTime = (hours * 60) + minutes; 
-
-                if (parkingTime <= 0) {
-                    parkingTime = null;
-                }
-
+                visibleparkinglot = [];  // ⭐ 중복 방지: 리스트 초기화
                 var parkingListEl = document.getElementById('parkingList');
                 parkingListEl.innerHTML = ""; 
+
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; 
+
+                if (parkingTime <= 0) {
+                    parkingTime = null;
+                }
 
                 visibleparkinglot = parkingData.map(parking => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
                     var distance = getDistance(selectedPlace, parkingLatLng);
                     return { ...parking, distance };
-                }).filter(parking => parking.distance <= 2); 
+                }).filter((parking, index, self) =>
+                    parking.distance <= 2 &&
+                    index === self.findIndex(p => p.id === parking.id)  // 중복 제거
+                );
 
                 if (visibleparkinglot.length === 0) {
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
