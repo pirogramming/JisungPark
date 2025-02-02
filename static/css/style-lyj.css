@@ -491,15 +491,139 @@ h6 {
     width: 50px;
     height: 50px;
 }
-#post-writer{
-    margin-block: 5px;
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
-}
-#post-main{
-    margin-bottom: 5px;
-}
 .hidden{
     display: none;
+}
+/* 추가 Kim-Hyun-Jin */
+
+/* 제목 스타일 */
+.qna_container2 h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+/* 작성자 정보 */
+#post-writer h5 {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* 본문 스타일 */
+.qna_post_content {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.qna_post_content h4 {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* 버튼 스타일 */
+.qna-left-btns{
+    margin-block: 5px;
+}
+.qna-left-btns a {
+    font-size: 10px;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background: #007bff;
+    padding: 8px 12px;
+    margin-right: 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.qna-left-btns a:hover {
+    background: #0056b3;
+}
+
+/* 댓글 스타일 */
+.comments-list {
+    margin-top: 5px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.comment {
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.comment strong {
+    color: #333;
+}
+
+.comment .date {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.comment a {
+    color: red;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.reply-form-create-btn{
+    font-size: 10px;
+    color: #8a8a8a;
+}
+
+/* 대댓글 스타일 */
+.replies {
+    list-style: none;
+    margin-left: 20px;
+    padding-left: 15px;
+    border-left: 2px solid #ccc;
+}
+
+.reply {
+    background: #e9ecef;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* 댓글 입력 폼 */
+.comment-form, .reply-form {
+    margin-top: 10px;
+}
+
+.comment-form input,
+.reply-form input {
+    width: calc(100% - 100px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.comment-form button,
+.reply-form button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+}
+
+.comment-form button:hover,
+.reply-form button:hover {
+    background: #218838;
 }

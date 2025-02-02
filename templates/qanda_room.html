@@ -11,15 +11,14 @@
                 <div id="post-writer">
                     <h5 id = "qna_writer">작성자: {{ post.writer }}</h5>
                 </div id="post-main">
-                <main>
+                <div class ="qna_post_content">
                     <h4>{{ post.content }}</h4>
-                </main>
+                </div>
 
                 <div class="qna-left-btns">
                     <a href="{% url 'demos:qanda_delete' post.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                     <a href="{% url 'demos:qanda_update' post.id %}"><i class="ri-edit-line"></i>[수정]</a>
                 </div>
-                <hr style="width : 100%">
                 <h6>댓글</h6>
                 <ul class="comments-list">
                     {% for comment in comments %}
@@ -27,6 +26,7 @@
                             <strong>{{ comment.writer }}</strong>: {{ comment.content }}
                             <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                             <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                            <button class="reply-form-create-btn">댓글 달기</button>
 
                             <!-- 대댓글 목록 -->
                             <ul class="replies">
@@ -75,4 +75,24 @@
             <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
         </div>
     </footer>
+
+    <script>
+   document.addEventListener("DOMContentLoaded", () => {
+    const replyButtons = document.querySelectorAll('.reply-form-create-btn');
+
+    replyButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            // 클릭된 버튼을 기준으로 가장 가까운 부모 요소를 찾고, 해당 요소 내의 form을 선택
+            const commentContainer = event.target.closest('.comment'); // 댓글을 감싸는 컨테이너 요소
+            const replyForm = commentContainer.querySelector('.reply-form'); // 해당 댓글의 폼 찾기
+
+            if (replyForm) {
+                replyForm.classList.toggle('hidden'); // 폼 보이기/숨기기
+            }
+        });
+    });
+});
+
+
+    </script>
 {% endblock %}
