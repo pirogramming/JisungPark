@@ -110,7 +110,8 @@
             var ps = new kakao.maps.services.Places(); 
 
             var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 }); 
-            
+            var openInfoWindows = [];
+
             searchPlaces(); 
             loadParkingData();
 
@@ -130,6 +131,7 @@
                 if (status === kakao.maps.services.Status.OK) {
                     var menuEl = document.getElementById('menu_wrap');
                     menuEl.style.display = 'block';
+                    closeAllInfoWindows();
                     document.getElementById('parkingListWrap').style.display = "none";
                     document.getElementById('parkingDetailWrap').style.display = "none";
                     displayPlaces(data); 
@@ -262,15 +264,15 @@
                     content: `<div style="padding:5px; font-size:12px;">${title}</div>` 
                 });
 
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    infowindow.open(map, marker);
-                });
+                infowindow.open(map, marker);
 
-                kakao.maps.event.addListener(marker, 'mouseout', function() {
-                    infowindow.close();
-                });
+                openInfoWindows.push(infowindow);
 
                 return marker;
+            }
+            function closeAllInfoWindows() {
+                openInfoWindows.forEach(iw => iw.close());  
+                openInfoWindows = []; 
             }
             function removeMarker() {
                 markers.forEach(marker => marker.setMap(null));
