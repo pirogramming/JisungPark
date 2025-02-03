@@ -258,6 +258,9 @@
                 return marker;
             }
             function addparkMarker(position, idx, title, seat) {
+                if (openInfoWindows[idx]) {
+                    openInfoWindows[idx].close();
+                }
                 var marker = new kakao.maps.Marker({
                     position: position, 
                 });
@@ -266,12 +269,13 @@
                 markers.push(marker);
 
                 var infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px;">${title} 남은자리: ${seat}</div>` 
+                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
                 });
 
                 infowindow.open(map, marker);
 
                 openInfoWindows.push(infowindow);
+                openInfoWindows[idx] = infowindow;
 
                 return marker;
             }
