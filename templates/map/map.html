@@ -257,7 +257,7 @@
 
                 return marker;
             }
-            function addparkMarker(position, idx, title) {
+            function addparkMarker(position, idx, title, seat) {
                 var marker = new kakao.maps.Marker({
                     position: position, 
                 });
@@ -266,7 +266,7 @@
                 markers.push(marker);
 
                 var infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px;">${title}</div>` 
+                    content: `<div style="padding:5px; font-size:12px;">${title} 남은자리: ${seat}</div>` 
                 });
 
                 infowindow.open(map, marker);
@@ -442,7 +442,7 @@
 
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-                    addparkMarker(parkingLatLng, index, parking.주차장명);
+                    addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리);
                 });
             }
 
