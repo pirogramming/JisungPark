@@ -63,7 +63,7 @@ footer {
 .menu {
     display: none;
     position: fixed;
-    top: 49px;
+    top: 4dvh;
     left: 0;
     width: 100%;
     height: 100%;
