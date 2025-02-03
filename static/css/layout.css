@@ -10,7 +10,7 @@
 
 main {
   flex-grow: 1;
-  height: fit-content;
+  height: 100dvh;
 }
 
 :root {
