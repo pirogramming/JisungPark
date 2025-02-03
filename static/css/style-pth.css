@@ -1,7 +1,7 @@
 .map_wrap, .map_wrap * {
     margin:0;
     padding:0;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 .map_wrap {
     position:relative;
@@ -92,8 +92,8 @@
     position: relative;
     z-index: 1;
     left: 6px;
-    bottom: 295px;
-    height: 200px;
+    bottom: 455px;
+    height: 43%;
     overflow-y: auto;
     background:rgba(255, 255, 255, 0.9);
     padding: 20px 30px;
@@ -113,6 +113,10 @@
 }
 #parkingDetailWrap{
     z-index: 1;
+}
+#parkingTitle{
+    font-size: 2rem;
+    font-weight: bold;
 }
 #menu_wrap hr {
     display: block; 
@@ -256,7 +260,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin: 10px 0;
     white-space: nowrap;
 }
 .sort-btn input{
@@ -276,6 +280,7 @@
 }
 .list-way button{
     color:#789;
+    cursor: pointer;
 }
 .list-way p{
     color:#789;
@@ -285,13 +290,14 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
-    margin-bottom: 6px;
+    margin: 10px 0;
 }
 #parkingInfo1{
     color: #789;
 }
 #parkingInfo2{
     color: #007bff;
+    font-size: 1.5rem;
 }
 .star-rating {
     display: flex;

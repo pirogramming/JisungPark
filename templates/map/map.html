@@ -20,11 +20,12 @@
                 <div id="pagination"></div>
             </div>
             <div class="bottom-btn"> 
-                <button class="list-button" onclick="toggleParkingList()">주차장 리스트</button>
+                <button id="list-btn" class="list-button" onclick="toggleParkingList()">주차장 리스트</button>
             </div>
             <div id="parkingListWrap" style="display: none;">
                 <div class="sort-btn">
                     <div>
+                        <i id="delete-btn" class="ri-close-large-line"></i>
                         <label for="hours">주차할 시간:</label>
                         <input type="number" id="hours"  min="0"> 시간
                         <input type="number" id="minutes" min="0" max="59"> 분
@@ -38,43 +39,43 @@
                 </div>
                 <ul id="parkingList"></ul>
             </div>
-        </div>
-        <div id="parkingDetailWrap" style="display: none;">
-            <div class="firstline">
-                <h3 id="parkingTitle"></h3>
-                <span id="parkingInfo1"></span>
-            </div>
-            <span id="parkingInfo2"></span>
-            <p id="parkingReview">리뷰
-                <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
-            </p>
-            <div id="review" class="review">
-                <div class="star-rating">
-                    <i class="ri-star-line" data-value="1"></i>
-                    <i class="ri-star-line" data-value="2"></i>
-                    <i class="ri-star-line" data-value="3"></i>
-                    <i class="ri-star-line" data-value="4"></i>
-                    <i class="ri-star-line" data-value="5"></i>
+            <div id="parkingDetailWrap" style="display: none;">
+                <i id="delete-btn2" class="ri-close-large-line"></i>
+                <div class="firstline">
+                    <span id="parkingTitle"></span>
+                    <span id="parkingInfo1"></span>
                 </div>
-                <p id="rating-display">0점</p>
-                <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
-                <button class="review-btn" onclick="addReview()">리뷰 등록</button>
-                <div class="review-list">
+                <span id="parkingInfo2"></span>
+                <p id="parkingReview">리뷰
+                    <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
+                </p>
+                <div id="review" class="review">
+                    <div class="star-rating">
+                        <i class="ri-star-line" data-value="1"></i>
+                        <i class="ri-star-line" data-value="2"></i>
+                        <i class="ri-star-line" data-value="3"></i>
+                        <i class="ri-star-line" data-value="4"></i>
+                        <i class="ri-star-line" data-value="5"></i>
+                    </div>
+                    <p id="rating-display">0점</p>
+                    <textarea id="contentInput" placeholder="리뷰를 입력하세요"></textarea>
+                    <button class="review-btn" onclick="addReview()">리뷰 등록</button>
+                    <div class="review-list">
+                    </div>
                 </div>
-            </div>
-            {% comment %}
-            <p id="parkingCommunity">커뮤니티
-                <i id="toggle-btn2" onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
-            </p>
-            <div id="community" class="community">
-                <div class="messages">
+                {% comment %}
+                <p id="parkingCommunity">커뮤니티
+                    <i id="toggle-btn2" onclick="toggleCommunity()" class="ri-arrow-down-s-fill"></i>
+                </p>
+                <div id="community" class="community">
+                    <div class="messages">
+                    </div>
+                    <div class="input-msg">
+                        <input id="messageInput" type="text" placeholder="메시지를 입력하세요" />
+                        <button class="community-btn" onclick="sendMessage()">전송</button>
+                    </div>
+                {% endcomment %}
                 </div>
-                <div class="input-msg">
-                    <input id="messageInput" type="text" placeholder="메시지를 입력하세요" />
-                    <button class="community-btn" onclick="sendMessage()">전송</button>
-                </div>
-            {% endcomment %}
-            <button class="off-button" onclick="closeParkingDetail()">닫기</button>
             </div>
         </div>
         {% endblock %}
@@ -129,6 +130,10 @@
 
             function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
+                    if (selectedPlaceMarker) {
+                        selectedPlaceMarker.setMap(null);
+                        selectedPlaceMarker = null;
+                    }
                     var menuEl = document.getElementById('menu_wrap');
                     menuEl.style.display = 'block';
                     closeAllInfoWindows();
@@ -270,6 +275,23 @@
 
                 return marker;
             }
+            function addSelectedMarker(lat, lng) {
+                var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png';
+                markerImageSize = new kakao.maps.Size(36, 37), 
+                markerImageOptions = { 
+                    spriteSize: new kakao.maps.Size(125, 146), 
+                    spriteOrigin: new kakao.maps.Point(0, 0), 
+                    offset: new kakao.maps.Point(12, 37) 
+                };
+                var markerImage = new kakao.maps.MarkerImage(imageSrc, markerImageSize, markerImageOptions);
+
+                var newMarker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(lat, lng), 
+                    image: markerImage
+                });
+                newMarker.setMap(map); 
+                return newMarker;
+                }
             function closeAllInfoWindows() {
                 openInfoWindows.forEach(iw => iw.close());  
                 openInfoWindows = []; 
@@ -327,6 +349,7 @@
 
                 var lat = marker.getPosition().getLat();
                 var lng = marker.getPosition().getLng();
+                selectedPlaceMarker = addSelectedMarker(lat, lng);
                 updateVisibleParkingMarkers();
             }
 
@@ -542,6 +565,7 @@
                 var titleElement = document.getElementById('parkingTitle');
                 var infoElement1 = document.getElementById('parkingInfo1'); 
                 var infoElement2 = document.getElementById('parkingInfo2');
+                var deleteBtn = document.getElementById('delete-btn2');
 
                 if (titleElement && infoElement1 && infoElement2) {
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
@@ -552,13 +576,12 @@
                 selectedParkingLotId = parking.id;  
                 
                 document.getElementById('parkingListWrap').style.display = "none"; 
-                document.getElementById('parkingDetailWrap').style.display = "block"; 
+                document.getElementById('parkingDetailWrap').style.display = "block";
+                deleteBtn.addEventListener("click", function () {
+                    document.getElementById('parkingListWrap').style.display = "block"; 
+                    document.getElementById('parkingDetailWrap').style.display = "none";
+                    }); 
                 loadReviews(); 
-            }
-
-            function closeParkingDetail() {
-                document.getElementById('parkingDetailWrap').style.display = "none"; 
-                document.getElementById('parkingListWrap').style.display = "block"; 
             }
 
             const DEG_TO_RAD = Math.PI / 180;
@@ -579,6 +602,8 @@
 
             function toggleParkingList() {
                 var parkingListWrap = document.getElementById("parkingListWrap");
+                var parkingList = document.getElementById("list-btn");
+                var parkingListDelete = document.getElementById("delete-btn");
 
                 if (!selectedPlace) {
                     alert("장소 선정을 먼저 하세요!");
@@ -588,9 +613,15 @@
 
                 if (parkingListWrap.style.display === "none" || parkingListWrap.style.display === "") {
                     showClosestParkingLots();
+                    parkingList.style.display = "none"; 
                 } else {
                     parkingListWrap.style.display = "none"; 
                 }
+
+                parkingListDelete.addEventListener("click", function () {
+                    parkingListWrap.style.display = "none";
+                    parkingList.style.display = "block"; 
+        });
             }
             document.addEventListener('DOMContentLoaded', () => {
                 loadReviews(); // 페이지 로드 시 기존 리뷰 로드
