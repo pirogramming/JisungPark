@@ -1,6 +1,7 @@
 from pathlib import Path
 import environ
 import os
+import logging
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,7 @@ INSTALLED_APPS = [
     'user',
     'django_celery_beat',
     # allauth - kakao
-    #'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.kakao',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -165,6 +166,8 @@ GOOGLE_ID = env('GOOGLE_ID')
 GOOGLE_SECRET = env('GOOGLE_SECRET')
 NAVER_ID = env('NAVER_ID')
 NAVER_SECRET = env('NAVER_SECRET')
+KAKAO_ID = env('KAKAO_ID')
+
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -196,7 +199,18 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {
         "access_type": "online",#추가
         'prompt': 'select_account',#추가 간편로그인을 지원해줌
-        }},}
+        }},
+    "kakao":{
+      "APP" : {
+        "client_id": (f"{KAKAO_ID}"),
+        "secret": "",
+        "key": ""
+      },
+    'AUTH_PARAMS': {'scope': 'profile_nickname, account_email'},
+    'METHOD': 'oauth2',
+    'VERIFIED_EMAIL': False,
+    },
+}
 
 
 # ✅ Redis를 Result Backend로 설정
@@ -213,3 +227,5 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
+
+#서버 로그 확인

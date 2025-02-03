@@ -82,7 +82,6 @@
 
     replyButtons.forEach(button => {
         button.addEventListener("click", (event) => {
-            // 클릭된 버튼을 기준으로 가장 가까운 부모 요소를 찾고, 해당 요소 내의 form을 선택
             const commentContainer = event.target.closest('.comment'); // 댓글을 감싸는 컨테이너 요소
             const replyForm = commentContainer.querySelector('.reply-form'); // 해당 댓글의 폼 찾기
 
