@@ -372,7 +372,7 @@
                         '요금정보': place['fee_info'],
                         '주차장유형': place['type'],
                         '장애인전용주차구역보유여부': place['disabled_parking'],
-                        '남은자리': place['available_spots'] || 0 
+                        '남은자리': parseFloat(place['available_spots']) || 0 
                     });
                 });
                 console.log(parkingData);
@@ -388,7 +388,7 @@
                         console.log("📡 실시간 API 데이터:", data); //테스트용!!!!
 
                         data.forEach(function(realTimeInfo) {
-                            const parking = parkingData.find(p => p['주차장명'] === realTimeInfo['name']);
+                            const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
                                 parking['남은자리'] = realTimeInfo['available_spots'];
                             }

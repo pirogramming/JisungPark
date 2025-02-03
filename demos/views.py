@@ -1,5 +1,6 @@
 import json
 import redis
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
@@ -7,6 +8,19 @@ from .models import Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
+
+# 주소 비교
+def normalize_address(address):
+    # "서울특별시" 제거
+    address = re.sub(r'^서울특별시\s*', '', address)
+
+    # 숫자 뒤에 "-"가 오고 또 숫자가 올 경우, 첫 번째 숫자만 남김
+    address = re.sub(r'(\d+)-\d+', r'\1', address)
+
+    # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
+    address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
+
+    return address
 
 # Create your views here.
 def get_reviews(request, parking_lot_id):
@@ -56,15 +70,24 @@ def home(request):
 # Redis 설정
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
+def convert_to_utf8(text):
+    # UTF-8 인코딩 후 각 바이트를 이스케이프 시퀀스로 변환
+    utf8_encoded = ''.join(f'\\x{b:02x}' for b in text.encode('utf-8'))
+    return f'parking_availability:{utf8_encoded}'
+
 def load_parking_data(request): # Ajax 요청시 사용
     try:
-        parking_data = list(ParkingLot.objects.values())  # QuerySet → 리스트 변환
+        parking_data = list(ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking"))  # QuerySet → 리스트 변환
         for lot in parking_data:    # Redis와 실시간 데이터 매칭
-            parking_name = lot['name']
-            redis_key = f'parking_availability:{parking_name}'
-            available_spots = redis_client.get(redis_key)
-
-            lot['available_spots'] = int(available_spots) if available_spots else 0
+            parking_addr = lot['lot_address']
+            parking_addr = normalize_address(parking_addr)
+            print(parking_addr)
+            encoded_addr = convert_to_utf8(parking_addr) + " " + parking_addr.split(" ").pop()
+            # redis_key = f'parking_availability:{encoded_addr}'
+            print(encoded_addr)
+            available_spots = redis_client.get(encoded_addr)
+            print(available_spots)
+            lot['available_spots'] = available_spots if available_spots else 0
 
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
     except Exception as e:
@@ -72,16 +95,16 @@ def load_parking_data(request): # Ajax 요청시 사용
 
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking")
+    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking")
 
     enriched_data = []
     for lot in parking_data:
-        parking_name = lot['name']
-        redis_key = f'parking_availability:{parking_name}'
+        parking_addr = lot['lot_address']
+        redis_key = f'parking_availability:{parking_addr}'
         available_spots = redis_client.get(redis_key)
 
         # 실시간 데이터 추가
-        lot['available_spots'] = int(available_spots) if available_spots else 0
+        lot['available_spots'] = available_spots if available_spots else 0
         enriched_data.append(lot)
 
     context = {
