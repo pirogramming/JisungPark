@@ -2,7 +2,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 7rem;
+    height: 5dvh;
     background-color: white;
     padding: 0 1rem;
     z-index: 1000;
@@ -48,7 +48,7 @@ footer {
     font-size: 1.6rem;
     line-height: 1.5;
     width: 390px;
-    height: 82.5dvh;
+    height: 100%;
     margin: auto;
     background-image: url('../img/back.png');
     background-size: cover;
@@ -166,7 +166,7 @@ p{
     display: inline-block;
     margin-right: 5px;
     text-align: right;
-    width: 7rem;
+    width: 8rem;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     color: #555;
