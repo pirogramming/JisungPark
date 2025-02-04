@@ -11,7 +11,7 @@ from .forms import CommentForm
 # Create your views here.
 def get_reviews(request, parking_lot_id):
     reviews = Review.objects.filter(parking_lot_id=parking_lot_id).values(
-        'user__username', 'rating', 'content'
+        'user__username', 'rating', 'content','id'
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -20,7 +20,7 @@ def get_reviews(request, parking_lot_id):
 def get_myreviews(request):
     user = request.user
     myreviews = Review.objects.filter(user=user).values(
-        'user__username', 'rating', 'content'
+        'user__username', 'rating', 'content','id'
     )  # 필요한 필드만 가져오기
     reviews_list = list(myreviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -206,3 +206,28 @@ def delete_comment(request, comment_id):
 
     comment.delete()
     return redirect('demos:qna_detail', comment.post.id)  # 댓글이 달린 게시글 상세 페이지로 이동
+
+@csrf_exempt
+def delete_review(request, review_id):
+    if request.method == "DELETE":
+        try:
+            review = Review.objects.get(id=review_id)
+            review.delete()
+            return JsonResponse({"message": "리뷰가 삭제되었습니다."}, status=200)
+        except Review.DoesNotExist:
+            return JsonResponse({"error": "리뷰를 찾을 수 없습니다."}, status=404)
+    return JsonResponse({"error": "잘못된 요청 방식입니다."}, status=400)
+
+@csrf_exempt
+def update_review(request, review_id):
+    if request.method == "PATCH":
+        try:
+            review = Review.objects.get(id=review_id)
+            data = json.loads(request.body)
+            review.content = data.get("content", review.content)  # 기존 값 유지
+            review.rating = data.get("rating", review.rating)
+            review.save()
+            return JsonResponse({"message": "리뷰가 수정되었습니다."}, status=200)
+        except Review.DoesNotExist:
+            return JsonResponse({"error": "리뷰를 찾을 수 없습니다."}, status=404)
+    return JsonResponse({"error": "잘못된 요청 방식입니다."}, status=400)

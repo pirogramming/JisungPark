@@ -646,15 +646,18 @@
                     toggleBtn.classList.add('ri-arrow-down-s-fill');
                 }
             }
+            
             function loadReviews() {
+
                 if (!selectedParkingLotId) {
                     console.error('selectedParkingLotId가 설정되지 않았습니다.');
                     return;
                 }
+                console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
 
-                const url = `/api/reviews/${selectedParkingLotId}/`; // 숫자 ID로 URL 설정
+                const url = `/api/reviews/${selectedParkingLotId}/`;
                 console.log('Fetching URL:', url);
-
+            
                 fetch(url)
                     .then(response => {
                         if (!response.ok) {
@@ -663,62 +666,139 @@
                         return response.json();
                     })
                     .then(data => {
-                        reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                        console.log("받아온 리뷰 데이터:", data);
+                        reviewContainer.innerHTML = ''; 
                         data.reviews.forEach(review => {
+                            console.log("리뷰 객체 확인:", review);
                             const reviewElement = `
-                                <div class="review-item">
+                                <div class="review-item" id="review-${review.id}">
                                     <strong>${review.user__username}</strong>
-                                    <span><i class="ri-star-fill"></i> ${review.rating}</span>
-                                    <p>${review.content || ''}</p>
-                                    {% comment%}
-                                        <a href="{% url 'demos:modify' %}"><i class="ri-edit-line"></i>[수정]</a>
-                                        <a href="{% url 'demos:delete' %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                                    {% endcomment %}
+                                    <div class="star-rating">
+                                        ${[1, 2, 3, 4, 5].map(star => `
+                                            <i class="ri-star-${star <= review.rating ? 'fill' : 'line'}"></i>
+                                        `).join('')}
+                                    </div>
+                                    <p id="content-${review.id}">${review.content || ''}</p>
+                                    <a href="javascript:void(0);" onclick="deleteReview(${review.id})">
+                                        <i class="ri-delete-bin-6-line"></i> [삭제]
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="editReview(${review.id}, ${review.rating}, '${review.content}')">
+                                        <i class="ri-edit-line"></i> [수정]
+                                    </a>
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;
                         });
+                        initializeStarRating();
                     })
                     .catch(error => console.error('리뷰 로드 실패:', error));
-                }
-                
-
-            document.addEventListener("DOMContentLoaded", () => {
-                const stars = document.querySelectorAll(".star-rating i");
-                const ratingDisplay = document.getElementById("rating-display");
-
-                stars.forEach(star => {
+            }
+            
+            function initializeStarRating() {
+                document.querySelectorAll(".star-rating i").forEach(star => {
                     star.addEventListener("click", () => {
-                        selectedRating = parseInt(star.getAttribute("data-value"), 10); // 선택된 별점 저장
+                        const rating = parseInt(star.getAttribute("data-value"), 10);
+                        selectedRating = rating; //  별점 값 저장
                         updateStars(selectedRating);
-                        ratingDisplay.textContent = `${selectedRating}점`; // 별점 표시 업데이트
-                    });
-
-                    // 마우스 오버 시 미리보기 효과
-                    star.addEventListener("mouseover", () => {
-                        const hoverValue = parseInt(star.getAttribute("data-value"), 10);
-                        updateStars(hoverValue);
-                    });
-
-                    // 마우스 아웃 시 원래 선택된 별점으로 복구
-                    star.addEventListener("mouseout", () => {
-                        updateStars(selectedRating);
+                        document.getElementById("rating-display").textContent = `${rating}점`;
                     });
                 });
-
-                function updateStars(rating) {
-                    stars.forEach(star => {
-                        const value = parseInt(star.getAttribute("data-value"), 10);
-                        if (value <= rating) {
-                            star.classList.remove("ri-star-line");
-                            star.classList.add("ri-star-fill"); // 채워진 별로 변경
-                        } else {
-                            star.classList.remove("ri-star-fill");
-                            star.classList.add("ri-star-line"); // 빈 별로 변경
-                        }
-                    });
+            }
+            function updateStars(rating) {
+                document.querySelectorAll(".star-rating i").forEach(star => {
+                    const value = parseInt(star.getAttribute("data-value"), 10);
+                    star.classList.toggle("ri-star-fill", value <= rating);
+                    star.classList.toggle("ri-star-line", value > rating);
+                });
+            }
+            
+            function editReview(reviewId, currentRating, currentContent) {
+                const reviewElement = document.getElementById(`review-${reviewId}`);
+                if (!reviewElement) return;
+            
+                reviewElement.innerHTML = `
+                    <div class="star-rating">
+                        ${[1, 2, 3, 4, 5].map(star => `
+                            <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
+                        `).join('')}
+                    </div>
+                    <p id="rating-display-${reviewId}">${currentRating}점</p>
+                    <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
+                    <button class="review-btn" onclick="updateReview(${reviewId})">수정 완료</button>
+                `;
+                selectRating(currentRating, reviewId);
+            }
+            
+            function selectRating(rating, reviewId) {
+                const stars = document.querySelectorAll(`#review-${reviewId} .star-rating i`);
+                stars.forEach(star => {
+                    const value = parseInt(star.getAttribute("data-value"), 10);
+                    star.classList.toggle("ri-star-fill", value <= rating);
+                    star.classList.toggle("ri-star-line", value > rating);
+                });
+                document.getElementById(`rating-display-${reviewId}`).textContent = `${rating}점`;
+                selectedRating = rating;
+            }
+            
+            async function updateReview(reviewId) {
+                const content = document.getElementById(`edit-content-${reviewId}`).value.trim();
+                if (!selectedRating) {
+                    alert("별점을 선택해주세요.");
+                    return;
                 }
-            });
+                if (!content) {
+                    alert("리뷰 내용을 입력하세요.");
+                    return;
+                }
+                try {
+                    const response = await fetch(`/api/update_review/${reviewId}/`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: JSON.stringify({
+                            rating: selectedRating,
+                            content: content,
+                        }),
+                    });
+                    if (!response.ok) {
+                        throw new Error(`서버 오류: ${response.status}`);
+                    }
+                    alert("✅ 리뷰가 수정되었습니다!");
+                    loadReviews();
+                } catch (error) {
+                    console.error("❌ 리뷰 수정 실패:", error);
+                    alert("로그인 후 이용해주세요.");
+                }
+            }
+            
+            async function deleteReview(reviewId) {
+                if (!confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
+                    return;
+                }
+            
+                try {
+                    const response = await fetch(`/api/delete_review/${reviewId}/`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error(`서버 오류: ${response.status}`);
+                    }
+            
+                    alert("✅ 리뷰가 삭제되었습니다!");
+                    loadReviews();
+                } catch (error) {
+                    console.error("❌ 리뷰 삭제 실패:", error);
+                    alert("로그인 후 이용해주세요.");
+                }
+            }
+            
 
             // ⭐ 리뷰 등록 함수 수정 (selectedRating 사용)
             async function addReview() {
