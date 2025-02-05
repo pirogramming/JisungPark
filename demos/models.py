@@ -27,6 +27,7 @@ class ParkingLot(models.Model):
     latitude = models.FloatField(null=True, blank=True)  # 위도
     longitude = models.FloatField(null=True, blank=True)  # 경도
     disabled_parking = models.BooleanField(default=False)  # 장애인 전용 주차 여부
+    average_rating = models.FloatField(null=True, default=None) # 평균 평점
 
     def __str__(self):
         return f"{self.name} - {self.road_address}"
