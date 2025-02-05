@@ -94,7 +94,7 @@
             var parkingData = [];
             var selectedPlace = null;
             let debounceTimeout = null;
-            let selectedParkingLotId = [];
+            let selectedParkingLotId = null;
             let selectedPlaceMarker = null;
             var visibleparkinglot = [];
             var parkingTime = null;
@@ -361,8 +361,6 @@
             function loadParkingData() {
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');
 
-                console.log("🚀 초기 로드된 데이터:", placeData);   //테스트용!!!!
-
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -376,10 +374,10 @@
                         '요금정보': place['fee_info'],
                         '주차장유형': place['type'],
                         '장애인전용주차구역보유여부': place['disabled_parking'],
-                        '남은자리': place['available_spots'] || 0 
+                        '남은자리': place['available_spots']
                     });
                 });
-                console.log(parkingData);
+                
                 updateParkingDisplay();
             }
 
@@ -389,18 +387,21 @@
                     .then(response => response.json())
                     .then(data => {
 
-                        console.log("📡 실시간 API 데이터:", data); //테스트용!!!!
-
                         data.forEach(function(realTimeInfo) {
-                            const parking = parkingData.find(p => p['주차장명'] === realTimeInfo['name']);
+                            parkingData.push({
+                                '소재지지번주소': realTimeInfo['lot_address'],
+                                '남은자리': realTimeInfo['available_spots']
+                            });
+                            const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
                                 parking['남은자리'] = realTimeInfo['available_spots'];
                             }
+                            
                         });
                         updateParkingDisplay();
                     })
                     .catch(error => console.error('실시간 데이터 로드 오류:', error));
-}
+            }
 
             // 주차장 데이터 표시 (예시)
             function updateParkingDisplay() {
@@ -446,7 +447,12 @@
 
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+
+                    console.log('응....');
+                    console.log(parking.남은자리);
+                    
                     addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리);
+                    
                 });
             }
 
@@ -649,10 +655,6 @@
             
             function loadReviews() {
 
-                if (!selectedParkingLotId) {
-                    console.error('selectedParkingLotId가 설정되지 않았습니다.');
-                    return;
-                }
                 console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
 
                 const url = `/api/reviews/${selectedParkingLotId}/`;

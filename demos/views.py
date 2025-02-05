@@ -1,5 +1,6 @@
 import json
 import redis
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
@@ -8,10 +9,23 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
 
+# 주소 비교
+def normalize_address(address):
+    # "서울특별시" 제거
+    address = re.sub(r'^서울특별시\s*', '', address)
+
+    # 숫자 뒤에 "-"가 오고 또 숫자가 올 경우, 첫 번째 숫자만 남김
+    address = re.sub(r'(\d+)-\d+', r'\1', address)
+
+    # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
+    address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
+
+    return address
+
 # Create your views here.
 def get_reviews(request, parking_lot_id):
     reviews = Review.objects.filter(parking_lot_id=parking_lot_id).values(
-        'user__username', 'rating', 'content','id'
+        'user__username', 'rating', 'content'
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -20,7 +34,7 @@ def get_reviews(request, parking_lot_id):
 def get_myreviews(request):
     user = request.user
     myreviews = Review.objects.filter(user=user).values(
-        'user__username', 'rating', 'content','id'
+        'user__username', 'rating', 'content'
     )  # 필요한 필드만 가져오기
     reviews_list = list(myreviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -56,32 +70,46 @@ def home(request):
 # Redis 설정
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
-def load_parking_data(request): # Ajax 요청시 사용
+# 수정된 코드 (views.py)
+def load_parking_data(request):
     try:
-        parking_data = list(ParkingLot.objects.values())  # QuerySet → 리스트 변환
-        for lot in parking_data:    # Redis와 실시간 데이터 매칭
-            parking_name = lot['name']
-            redis_key = f'parking_availability:{parking_name}'
+        parking_data = list(ParkingLot.objects.values(
+            "id", "name", "lot_address", "latitude", "longitude",
+            "base_time", "base_fee", "extra_time", "extra_fee",
+            "fee_info", "type", "disabled_parking"
+        ))
+        for lot in parking_data:
+            parking_addr = lot['lot_address']
+            parking_addr = normalize_address(parking_addr)  # 주소 정규화
+            redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
             available_spots = redis_client.get(redis_key)
+            
+            ### if available_spots!=None:
+                ### print(available_spots)
 
-            lot['available_spots'] = int(available_spots) if available_spots else 0
+            lot['available_spots'] = (available_spots) if available_spots else 0
+            
+            ### if lot['available_spots'] != None and lot['available_spots']!=0 and lot['available_spots']!='0':
+                ### print(lot['available_spots'])
+
 
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
 
+
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking")
+    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking")
 
     enriched_data = []
     for lot in parking_data:
-        parking_name = lot['name']
-        redis_key = f'parking_availability:{parking_name}'
+        parking_addr = lot['lot_address']
+        redis_key = f'parking_availability:{parking_addr}'
         available_spots = redis_client.get(redis_key)
 
         # 실시간 데이터 추가
-        lot['available_spots'] = int(available_spots) if available_spots else 0
+        lot['available_spots'] = available_spots if available_spots else 0
         enriched_data.append(lot)
 
     context = {
