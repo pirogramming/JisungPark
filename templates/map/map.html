@@ -43,6 +43,7 @@
                 <i id="delete-btn2" class="ri-close-large-line"></i>
                 <div class="firstline">
                     <span id="parkingTitle"></span>
+                    <i id="toggle-btn" onclick="toggleLike()" class="ri-heart-3-line"></i>
                     <span id="parkingInfo1"></span>
                 </div>
                 <span id="parkingInfo2"></span>
@@ -257,7 +258,7 @@
 
                 return marker;
             }
-            function addparkMarker(position, idx, title, seat) {
+            function addparkMarker(position, idx, title, seat, parking) {
                 if (openInfoWindows[idx]) {
                     openInfoWindows[idx].close();
                 }
@@ -273,9 +274,12 @@
                 });
 
                 infowindow.open(map, marker);
-
                 openInfoWindows.push(infowindow);
                 openInfoWindows[idx] = infowindow;
+
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    showParkingDetail(parking);
+                });
 
                 return marker;
             }
@@ -445,11 +449,7 @@
 
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-
-                    console.log('응....');
-                    console.log(parking.남은자리);
-                    
-                    addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리);
+                    addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
                     
                 });
             }
@@ -462,6 +462,8 @@
             function showClosestParkingLots() {
                 visibleparkinglot = [];  // ⭐ 중복 방지: 리스트 초기화
                 var parkingListEl = document.getElementById('parkingList');
+                var parkingListDelete = document.getElementById("delete-btn");
+                var parkingList = document.getElementById("list-btn");
                 parkingListEl.innerHTML = ""; 
 
                 var hours = parseInt(document.getElementById('hours').value, 10) || 0;
@@ -503,6 +505,11 @@
                     };
                     parkingListEl.appendChild(li);
                 });
+
+                parkingListDelete.addEventListener("click", function () {
+                    parkingListWrap.style.display = "none";
+                    parkingList.style.display = "block"; 
+        });
 
                 document.getElementById('parkingListWrap').style.display = "block"; 
                 document.getElementById('parkingDetailWrap').style.display = "none"; 
@@ -586,6 +593,7 @@
                 document.getElementById('parkingListWrap').style.display = "none"; 
                 document.getElementById('parkingDetailWrap').style.display = "block";
                 deleteBtn.addEventListener("click", function () {
+                    showClosestParkingLots();
                     document.getElementById('parkingListWrap').style.display = "block"; 
                     document.getElementById('parkingDetailWrap').style.display = "none";
                     }); 
@@ -611,7 +619,6 @@
             function toggleParkingList() {
                 var parkingListWrap = document.getElementById("parkingListWrap");
                 var parkingList = document.getElementById("list-btn");
-                var parkingListDelete = document.getElementById("delete-btn");
 
                 if (!selectedPlace) {
                     alert("장소 선정을 먼저 하세요!");
@@ -625,11 +632,6 @@
                 } else {
                     parkingListWrap.style.display = "none"; 
                 }
-
-                parkingListDelete.addEventListener("click", function () {
-                    parkingListWrap.style.display = "none";
-                    parkingList.style.display = "block"; 
-        });
             }
             {% comment %} document.addEventListener('DOMContentLoaded', () => {
                 loadReviews(); // 페이지 로드 시 기존 리뷰 로드
@@ -650,6 +652,22 @@
                     toggleBtn.classList.add('ri-arrow-down-s-fill');
                 }
             }
+
+            function toggleLike() {
+                const heartIcon = document.getElementById("toggle-btn");
+            
+                if (!heartIcon) {
+                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
+                    return;
+                }
+                const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
+
+                heartIcon.classList.toggle("ri-heart-3-line", isLiked);
+                heartIcon.classList.toggle("ri-heart-3-fill", !isLiked);
+
+                heartIcon.style.color = isLiked ? "black" : "red";
+            }
+
             
             function loadReviews() {
                 console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
@@ -711,7 +729,7 @@
             }
             
             function editReview(reviewId, currentRating, currentContent) {
-                
+                console.log("수정할 리뷰 ID:", reviewId); // ✅ 리뷰 ID 값 확인
                 const reviewElement = document.getElementById(`review-${reviewId}`);
                 if (!reviewElement) return;
             
@@ -867,7 +885,20 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
+            function toggleLike() {
+                const heartIcon = document.getElementById("toggle-btn");
+            
+                if (!heartIcon) {
+                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
+                    return;
+                }
+                const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
 
+                heartIcon.classList.toggle("ri-heart-3-line", isLiked);
+                heartIcon.classList.toggle("ri-heart-3-fill", !isLiked);
+
+                heartIcon.style.color = isLiked ? "black" : "red";
+            }
             /* function toggleCommunity() {
                 const community = document.getElementById('community');
                 community.classList.toggle('active');
