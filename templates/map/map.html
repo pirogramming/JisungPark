@@ -633,9 +633,9 @@
                     parkingList.style.display = "block"; 
         });
             }
-            document.addEventListener('DOMContentLoaded', () => {
+            {% comment %} document.addEventListener('DOMContentLoaded', () => {
                 loadReviews(); // 페이지 로드 시 기존 리뷰 로드
-            });
+            });  {% endcomment %}
 
             const reviewContainer = document.querySelector('.review-list');
 
@@ -654,7 +654,6 @@
             }
             
             function loadReviews() {
-
                 console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
 
                 const url = `/api/reviews/${selectedParkingLotId}/`;
@@ -714,8 +713,7 @@
             }
             
             function editReview(reviewId, currentRating, currentContent) {
-                console.log("수정할 리뷰 ID:", reviewId); // ✅ 리뷰 ID 값 확인
-
+                
                 const reviewElement = document.getElementById(`review-${reviewId}`);
                 if (!reviewElement) return;
             
