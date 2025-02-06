@@ -167,6 +167,10 @@
     margin:10px 0 0 10px;
     background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
 }
+#parkingReview {
+    margin-block: 1rem;
+    color: black;
+}
 #placesList .item .marker_1 {background-position: 0 -10px;}
 #placesList .item .marker_2 {background-position: 0 -56px;}
 #placesList .item .marker_3 {background-position: 0 -102px}
@@ -214,6 +218,9 @@
     background: #fff;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
+}
+.review p {
+    margin-block: 1rem;
 }
 .review input,
 .review textarea, .community input{
@@ -302,6 +309,7 @@
 .firstline i{
     font-size: 2rem;
     cursor: pointer;
+    margin-bottom: 0.3rem;
 }
 .star-rating {
     display: flex;

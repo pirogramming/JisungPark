@@ -22,11 +22,11 @@
                 </div>
             </div>
             <div id="favorite" class="favorite">
-                <div id="like-list">
-                <p>favorite</p>
+                <p>Favorite</p>
             </div>
             <div id="myreview" class="myreview">
                 <div id="review-list" class="review-list">
+                    <p>My Review</p>
                 </div>
             </div>
         </div>
@@ -50,13 +50,19 @@
     <script>
         function toggleFavorite() {
             const favorite = document.getElementById('favorite');
-            favorite.classList.toggle('active');
-        }
-        function toggleMyReview() {
             const myreview = document.getElementById('myreview');
-            myreview.classList.toggle('active');
+
+            favorite.classList.toggle('active');
+            myreview.classList.remove('active');
         }
         
+        function toggleMyReview() {
+            const myreview = document.getElementById('myreview');
+            const favorite = document.getElementById('favorite');
+        
+            myreview.classList.toggle('active');
+            favorite.classList.remove('active');
+        }
         const reviewContainer = document.getElementById('review-list'); 
         function loadReviews() {
             fetch('/api/myreviews')
@@ -67,7 +73,7 @@
                         const reviewElement = `
                             <div class="review-item">
                                 <strong>${review.user__username}</strong>
-                                <span>⭐ ${review.rating}</span>
+                                <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                 <p>${review.content || ''}</p>
                             </div>
                         `;

@@ -100,6 +100,7 @@
             var visibleparkinglot = [];
             var parkingTime = null;
             let selectedRating = 0;
+            const currentUser = "{{ user.username }}";
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -689,18 +690,17 @@
                             const reviewElement = `
                                 <div class="review-item" id="review-${review.id}">
                                     <strong>${review.user__username}</strong>
-                                    <div class="star-rating">
-                                        ${[1, 2, 3, 4, 5].map(star => `
-                                            <i class="ri-star-${star <= review.rating ? 'fill' : 'line'}"></i>
-                                        `).join('')}
-                                    </div>
+                                    <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                     <p id="content-${review.id}">${review.content || ''}</p>
-                                    <a href="javascript:void(0);" onclick="deleteReview(${review.id})">
-                                        <i class="ri-delete-bin-6-line"></i> [삭제]
-                                    </a>
-                                    <a href="javascript:void(0);" onclick="editReview(${review.id}, ${review.rating}, '${review.content}')">
-                                        <i class="ri-edit-line"></i> [수정]
-                                    </a>
+
+                                    ${review.user__username === currentUser ? `
+                                        <a href="javascript:void(0);" onclick="deleteReview(${review.id})">
+                                            <i class="ri-delete-bin-6-line"></i> [삭제]
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="editReview(${review.id}, ${review.rating}, '${review.content}')">
+                                            <i class="ri-edit-line"></i> [수정]
+                                        </a>
+                                    ` : ''}
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;
