@@ -22,11 +22,11 @@
                 </div>
             </div>
             <div id="favorite" class="favorite">
-                <p>Favorite</p>
+                <div id="like-list">
+                <p>favorite</p>
             </div>
             <div id="myreview" class="myreview">
                 <div id="review-list" class="review-list">
-                    <p>My Review</p>
                 </div>
             </div>
         </div>
@@ -77,5 +77,42 @@
                 .catch(error => console.error('리뷰 로드 실패:', error));
             }
         document.addEventListener('DOMContentLoaded', loadReviews);
+            
+        
+        const likeContainer = document.getElementById('like-list');
+
+        function loadLikedParking() {
+            fetch('/api/like/')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    likeContainer.innerHTML = '';
+
+                    if (!data.liked_parking_lots || data.liked_parking_lots.length === 0) {
+                        likeContainer.innerHTML = '<p>좋아요한 주차장이 없습니다.</p>';
+                        return;
+                    }
+
+                    data.liked_parking_lots.forEach(parking => {
+                        const likeElement = document.createElement("div");
+                        likeElement.classList.add("liked-item");
+                        likeElement.innerHTML = `
+                            <strong>${parking.name}</strong> 
+                            <span>(${parking.latitude})</span>
+                        `;
+                        // 주차장 이름이랑 주소 넣고 싶움
+
+                        likeContainer.appendChild(likeElement);
+                    });
+                })
+                .catch(error => console.error('❌ 좋아요한 주차장 목록 로드 실패:', error));
+        }
+
+        // 페이지 로드 시 좋아요한 주차장 목록 불러오기
+        document.addEventListener('DOMContentLoaded', loadLikedParking);
+
+                
     </script>
 {% endblock %}

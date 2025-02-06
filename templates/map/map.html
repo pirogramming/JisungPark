@@ -43,6 +43,7 @@
                 <i id="delete-btn2" class="ri-close-large-line"></i>
                 <div class="firstline">
                     <span id="parkingTitle"></span>
+                    <i id="toggle-btn" onclick="toggleLike()" class="ri-heart-3-line"></i>
                     <span id="parkingInfo1"></span>
                 </div>
                 <span id="parkingInfo2"></span>
@@ -871,7 +872,20 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
+            function toggleLike() {
+                const heartIcon = document.getElementById("toggle-btn");
+            
+                if (!heartIcon) {
+                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
+                    return;
+                }
+                const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
 
+                heartIcon.classList.toggle("ri-heart-3-line", isLiked);
+                heartIcon.classList.toggle("ri-heart-3-fill", !isLiked);
+
+                heartIcon.style.color = isLiked ? "black" : "red";
+            }
             /* function toggleCommunity() {
                 const community = document.getElementById('community');
                 community.classList.toggle('active');
