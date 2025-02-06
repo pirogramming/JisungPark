@@ -299,6 +299,10 @@
     color: #007bff;
     font-size: 1.5rem;
 }
+.firstline i{
+    font-size: 2rem;
+    cursor: pointer;
+}
 .star-rating {
     display: flex;
     gap: 5px;
