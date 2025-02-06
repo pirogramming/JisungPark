@@ -25,7 +25,7 @@ def normalize_address(address):
 # Create your views here.
 def get_reviews(request, parking_lot_id):
     reviews = Review.objects.filter(parking_lot_id=parking_lot_id).values(
-        'user__username', 'rating', 'content','id'
+        'user__username', 'rating', 'content', 'id'
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -87,12 +87,12 @@ def load_parking_data(request):
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
             redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
             available_spots = redis_client.get(redis_key)
-            
+
             ### if available_spots!=None:
                 ### print(available_spots)
 
             lot['available_spots'] = (available_spots) if available_spots else 0
-            
+
             ### if lot['available_spots'] != None and lot['available_spots']!=0 and lot['available_spots']!='0':
                 ### print(lot['available_spots'])
 
@@ -244,6 +244,10 @@ def delete_review(request, review_id):
     if request.method == "DELETE":
         try:
             review = Review.objects.get(id=review_id)
+            parking_lot = review.parking_lot
+            review_list = Review.objects.filter(id=review_id)
+            parking_lot.average_rating = (parking_lot.average_rating * (len(review_list) - 1) - review.rating) / (len(review_list)-2)
+            parking_lot.save()
             review.delete()
             return JsonResponse({"message": "리뷰가 삭제되었습니다."}, status=200)
         except Review.DoesNotExist:

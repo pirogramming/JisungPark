@@ -375,10 +375,9 @@
                         '요금정보': place['fee_info'],
                         '주차장유형': place['type'],
                         '장애인전용주차구역보유여부': place['disabled_parking'],
-                        '남은자리': place['available_spots']
+                        '남은자리': parseInt(place['available_spots']) 
                     });
                 });
-                
                 updateParkingDisplay();
             }
 
@@ -387,7 +386,6 @@
                 fetch('/api/real-time-parking/')
                     .then(response => response.json())
                     .then(data => {
-
                         data.forEach(function(realTimeInfo) {
                             parkingData.push({
                                 '소재지지번주소': realTimeInfo['lot_address'],
@@ -395,7 +393,7 @@
                             });
                             const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
-                                parking['남은자리'] = realTimeInfo['available_spots'];
+                                parking['남은자리'] = parseInt(realTimeInfo['available_spots']);
                             }
                             
                         });
@@ -407,7 +405,7 @@
             // 주차장 데이터 표시 (예시)
             function updateParkingDisplay() {
                 parkingData.forEach(function(place) {
-                    // console.log(`주차장: ${place['주차장명']} | 남은 자리: ${place['남은자리']}개`);
+                    //console.log(`주차장: ${place['주차장명']} | 남은 자리: ${place['남은자리']}개`);
                     // 지도 마커 또는 DOM 요소 업데이트
                 });
             }
@@ -448,10 +446,6 @@
 
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-
-                    console.log('응....');
-                    console.log(parking.남은자리);
-                    
                     addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리);
                     
                 });
@@ -634,9 +628,9 @@
                     parkingList.style.display = "block"; 
         });
             }
-            document.addEventListener('DOMContentLoaded', () => {
+            {% comment %} document.addEventListener('DOMContentLoaded', () => {
                 loadReviews(); // 페이지 로드 시 기존 리뷰 로드
-            });
+            });  {% endcomment %}
 
             const reviewContainer = document.querySelector('.review-list');
 
@@ -655,7 +649,6 @@
             }
             
             function loadReviews() {
-
                 console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
 
                 const url = `/api/reviews/${selectedParkingLotId}/`;
@@ -716,7 +709,6 @@
             
             function editReview(reviewId, currentRating, currentContent) {
                 console.log("수정할 리뷰 ID:", reviewId); // ✅ 리뷰 ID 값 확인
-
                 const reviewElement = document.getElementById(`review-${reviewId}`);
                 if (!reviewElement) return;
             
