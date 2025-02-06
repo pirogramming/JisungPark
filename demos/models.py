@@ -29,6 +29,7 @@ class ParkingLot(models.Model):
     disabled_parking = models.BooleanField(default=False)  # 장애인 전용 주차 여부
     average_rating = models.FloatField(null=True, default=None) # 평균 평점
 
+
     def __str__(self):
         return f"{self.name} - {self.road_address}"
 
@@ -81,3 +82,4 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+    
