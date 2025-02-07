@@ -273,7 +273,7 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                var infowindow = new kakao.maps.InfoWindow({
+                infowindow = new kakao.maps.InfoWindow({
                     content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
                 });
 
@@ -368,7 +368,6 @@
             // 주차장 데이터 불러오기
             function loadParkingData() {
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');
-                console.log("원본 데이터:", placeData);
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -406,6 +405,9 @@
                             }
                             
                         });
+                        if(selectedPlace){
+                            updateVisibleParkingMarkers();
+                        }
                         //updateParkingDisplay();
                     })
                     .catch(error => console.error('실시간 데이터 로드 오류:', error));
@@ -435,7 +437,6 @@
                 });
 
             function updateVisibleParkingMarkers() {
-                
                 var bounds = map.getBounds(); 
 
                 removeMarker(); 
@@ -496,7 +497,6 @@
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
                 visibleparkinglot.forEach((parking, index) => {
-                    console.log(`📍 주차장 ${index + 1}:`, parking);
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
