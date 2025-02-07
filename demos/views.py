@@ -244,6 +244,8 @@ def delete_review(request, review_id):
     if request.method == "DELETE":
         try:
             review = Review.objects.get(id=review_id)
+            if (review.user != request.user) and not (request.user.is_superuser):
+                return JsonResponse({"message": "리뷰는 본인만 삭제 가능합니다."}, status=200)
             parking_lot = review.parking_lot
             review_list = Review.objects.filter(id=review_id)
             parking_lot.average_rating = (parking_lot.average_rating * (len(review_list) - 1) - review.rating) / (len(review_list)-2)
