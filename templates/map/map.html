@@ -35,6 +35,8 @@
                         <button onclick="calculateAndSortParkingFees()">요금순</button>
                         <p> ㅣ </p>
                         <button onclick="showClosestParkingLots()">거리순</button>
+                        <p> ㅣ </p>
+                        <button onclick="showRatingParkingLots()">별점순</button>
                     </div>
                 </div>
                 <ul id="parkingList"></ul>
@@ -100,6 +102,7 @@
             var visibleparkinglot = [];
             var parkingTime = null;
             let selectedRating = 0;
+            const currentUser = "{{ user.username }}";
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -140,6 +143,7 @@
                     closeAllInfoWindows();
                     document.getElementById('parkingListWrap').style.display = "none";
                     document.getElementById('parkingDetailWrap').style.display = "none";
+                    document.getElementById('list-btn').style.display = "block";
                     displayPlaces(data); 
                     displayPagination(pagination); 
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -364,7 +368,7 @@
             // 주차장 데이터 불러오기
             function loadParkingData() {
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');
-
+                console.log("원본 데이터:", placeData);
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -379,9 +383,11 @@
                         '주차장유형': place['type'],
                         '장애인전용주차구역보유여부': place['disabled_parking'],
                         '소재지지번주소': place['lot_address'],
-                        '남은자리': parseInt(place['available_spots']) 
+                        '남은자리': parseInt(place['available_spots']),
+                        '별점평균': parseFloat(place['average_rating'])
                     });
-                });
+                }); 
+
                 //updateParkingDisplay();
             }
 
@@ -499,7 +505,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -566,7 +572,7 @@
 
                 sortedParking.forEach((parking, index) => {
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -575,6 +581,65 @@
 
                 document.getElementById('parkingListWrap').style.display = "block";
             }
+
+            function showRatingParkingLots() {
+                var parkingListEl = document.getElementById('parkingList');
+                var parkingListDelete = document.getElementById("delete-btn");
+                var parkingList = document.getElementById("list-btn"); 
+
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; 
+                parkingListEl.innerHTML = "";
+
+                if (parkingTime <= 0) {
+                    parkingTime = null;
+                }
+
+                visibleparkinglot = parkingData.map(parking => {
+                    var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                    var distance = getDistance(selectedPlace, parkingLatLng);
+                    return { ...parking, distance };
+                }).filter((parking, index, self) =>
+                    parking.distance <= 2 &&
+                    index === self.findIndex(p => p.id === parking.id)  
+                );
+
+                if (visibleparkinglot.length === 0) {
+                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
+                    return;
+                }
+                // 별점순 정렬 (같은 별점이면 거리순 정렬)
+                visibleparkinglot.sort((a, b) => {
+                    let ratingDiff = (b.별점평균 || 0) - (a.별점평균 || 0); 
+                    if (ratingDiff !== 0) return ratingDiff; 
+                    return a.distance - b.distance; 
+                });
+
+                visibleparkinglot.forEach((parking, index) => {
+                    var feeText = ""; 
+
+                    if (parkingTime !== null) {
+                        var totalFee = calculateFee(parking, parkingTime);
+                        feeText = ` - 요금: ${totalFee}`;
+                    }
+
+                    var li = document.createElement('li');
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
+                    li.onclick = function () {
+                        showParkingDetail(parking);
+                    };
+                    parkingListEl.appendChild(li);
+                });
+
+                parkingListDelete.addEventListener("click", function () {
+                    parkingListWrap.style.display = "none";
+                    parkingList.style.display = "block"; 
+                });
+
+                document.getElementById('parkingListWrap').style.display = "block"; 
+                document.getElementById('parkingDetailWrap').style.display = "none"; 
+                }
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');
@@ -585,7 +650,9 @@
                 if (titleElement && infoElement1 && infoElement2) {
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
                     infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
-                    infoElement2.innerText = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}`;
+                    infoElement2.innerHTML = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 
+                    장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
+                    남은자리: ${parking.남은자리}`;
                 }
 
                 selectedParkingLotId = parking.id;  
@@ -690,18 +757,17 @@
                             const reviewElement = `
                                 <div class="review-item" id="review-${review.id}">
                                     <strong>${review.user__username}</strong>
-                                    <div class="star-rating">
-                                        ${[1, 2, 3, 4, 5].map(star => `
-                                            <i class="ri-star-${star <= review.rating ? 'fill' : 'line'}"></i>
-                                        `).join('')}
-                                    </div>
+                                    <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                     <p id="content-${review.id}">${review.content || ''}</p>
-                                    <a href="javascript:void(0);" onclick="deleteReview(${review.id})">
-                                        <i class="ri-delete-bin-6-line"></i> [삭제]
-                                    </a>
-                                    <a href="javascript:void(0);" onclick="editReview(${review.id}, ${review.rating}, '${review.content}')">
-                                        <i class="ri-edit-line"></i> [수정]
-                                    </a>
+
+                                    ${review.user__username === currentUser ? `
+                                        <a href="javascript:void(0);" onclick="deleteReview(${review.id})">
+                                            <i class="ri-delete-bin-6-line"></i> [삭제]
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="editReview(${review.id}, ${review.rating}, '${review.content}')">
+                                            <i class="ri-edit-line"></i> [수정]
+                                        </a>
+                                    ` : ''}
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;

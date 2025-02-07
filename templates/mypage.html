@@ -22,27 +22,22 @@
                 </div>
             </div>
             <div id="favorite" class="favorite">
-                <div id="like-list">
-                <p>favorite</p>
+                <p>Favorite</p>
             </div>
             <div id="myreview" class="myreview">
                 <div id="review-list" class="review-list">
+                    <p>My Review</p>
                 </div>
             </div>
         </div>
     </div>
     <footer>
         <div class="footer-top">
-            <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:aboutus' %}">About Us</a>
-            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
-            <a href="{% url 'demos:qna' %}">Q&A</a>
-        </div>
-        <div class="footer-bottom">
-            <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
-            <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
-            <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
-            <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
 {% endblock %}
@@ -50,13 +45,19 @@
     <script>
         function toggleFavorite() {
             const favorite = document.getElementById('favorite');
-            favorite.classList.toggle('active');
-        }
-        function toggleMyReview() {
             const myreview = document.getElementById('myreview');
-            myreview.classList.toggle('active');
+
+            favorite.classList.toggle('active');
+            myreview.classList.remove('active');
         }
         
+        function toggleMyReview() {
+            const myreview = document.getElementById('myreview');
+            const favorite = document.getElementById('favorite');
+        
+            myreview.classList.toggle('active');
+            favorite.classList.remove('active');
+        }
         const reviewContainer = document.getElementById('review-list'); 
         function loadReviews() {
             fetch('/api/myreviews')
@@ -67,7 +68,7 @@
                         const reviewElement = `
                             <div class="review-item">
                                 <strong>${review.user__username}</strong>
-                                <span>⭐ ${review.rating}</span>
+                                <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                 <p>${review.content || ''}</p>
                             </div>
                         `;
