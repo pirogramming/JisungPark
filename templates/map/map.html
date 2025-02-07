@@ -505,7 +505,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (⭐ ${parking.별점평균 || "평점 없음"})`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -572,7 +572,7 @@
 
                 sortedParking.forEach((parking, index) => {
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (⭐ ${parking.별점평균 || "평점 없음"})`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -625,7 +625,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (⭐ ${parking.별점평균 || "평점 없음"})`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
