@@ -30,6 +30,6 @@ urlpatterns = [
     path('qna/delete/<int:pk>', views.qanda_delete, name='qanda_delete'),
     path('comment/delete/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     path('api/real-time-parking/', views.load_parking_data, name='real_time_parking'),  # 실시간 데이터 API
-    path("toggle_favorite/", toggle_favorite, name="toggle_favorite"),
-    path("get_favorites/", get_favorites, name="get_favorites"),
+    path('api/toggle_favorite/', toggle_favorite, name='toggle_favorite'),
+    path("api/favorites/", get_favorites, name="get_favorites"),
 ]

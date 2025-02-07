@@ -952,19 +952,44 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
-            function toggleLike() {
+            function toggleLike() { 
                 const heartIcon = document.getElementById("toggle-btn");
-            
-                if (!heartIcon) {
-                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
+                const parkingId = selectedParkingLotId; 
+                
+                const isLoggedIn = "{{ user.is_authenticated }}" === "True";  
+
+                if (!isLoggedIn) {
+                    alert("로그인이 필요합니다.");
                     return;
                 }
-                const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
+                fetch('/api/toggle_favorite/', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({ parking_id: parkingId })  
+                })
+                .then(response => {
+                    if (response.status === 403) {
+                        alert("로그인이 필요합니다."); 
+                        return Promise.reject("로그인 필요");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.favorited) {
+                        heartIcon.classList.remove("ri-heart-3-line");
+                        heartIcon.classList.add("ri-heart-3-fill");
+                        heartIcon.style.setProperty("color", "red", "important");
+                    } else {
+                        heartIcon.classList.remove("ri-heart-3-fill");
+                        heartIcon.classList.add("ri-heart-3-line");
+                        heartIcon.style.setProperty("color", "black", "important");
 
-                heartIcon.classList.toggle("ri-heart-3-line", isLiked);
-                heartIcon.classList.toggle("ri-heart-3-fill", !isLiked);
-
-                heartIcon.style.color = isLiked ? "black" : "red";
+                    }
+                })
+                .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
             /* function toggleCommunity() {
                 const community = document.getElementById('community');

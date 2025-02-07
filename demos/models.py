@@ -82,7 +82,7 @@ class Comment(models.Model):
     def __str__(self):
         return self.content
     
-class FavoriteParking(models.Model):
+class UserFavoriteParking(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="favorites")
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name="favorited_by")
     created_at = models.DateTimeField(auto_now_add=True)

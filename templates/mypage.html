@@ -83,12 +83,13 @@
         const likeContainer = document.getElementById('like-list');
 
         function loadLikedParking() {
-            fetch('/api/like/')
+            fetch('/api/favorites/')
                 .then(response => {
                     if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
                     return response.json();
                 })
                 .then(data => {
+                    const likeContainer = document.getElementById("favorite"); // 좋아요 가져오기 
                     likeContainer.innerHTML = '';
 
                     if (!data.liked_parking_lots || data.liked_parking_lots.length === 0) {
@@ -101,9 +102,8 @@
                         likeElement.classList.add("liked-item");
                         likeElement.innerHTML = `
                             <strong>${parking.name}</strong> 
-                            <span>(${parking.latitude})</span>
+                            <span>(${parking.address})</span>
                         `;
-                        // 주차장 이름이랑 주소 넣고 싶움
 
                         likeContainer.appendChild(likeElement);
                     });

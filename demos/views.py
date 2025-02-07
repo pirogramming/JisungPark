@@ -4,7 +4,7 @@ import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
-from .models import FavoriteParking, Review, ParkingLot, Post, Comment
+from .models import UserFavoriteParking, Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
@@ -269,22 +269,21 @@ def update_review(request, review_id):
     return JsonResponse({"error": "잘못된 요청 방식입니다."}, status=400)
 
 @csrf_exempt
-@login_required
 def toggle_favorite(request):
-    """
-    사용자가 특정 주차장을 찜하거나 찜을 해제하는 API
-    """
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "로그인이 필요합니다."}) 
+    
     if request.method == "POST":
         data = json.loads(request.body)
-        parking_lot_id = data.get("parking_lot_id")
+        parking_id = data.get("parking_id")
         user = request.user
 
         try:
-            parking_lot = ParkingLot.objects.get(id=parking_lot_id)
+            parking_lot = get_object_or_404(ParkingLot, id=parking_id)
         except ParkingLot.DoesNotExist:
             return JsonResponse({"error": "주차장을 찾을 수 없습니다."}, status=404)
 
-        favorite, created = FavoriteParking.objects.get_or_create(user=user, parking_lot=parking_lot)
+        favorite, created = UserFavoriteParking.objects.get_or_create(user=user, parking_lot=parking_lot)
 
         if not created:
             favorite.delete()
@@ -296,12 +295,9 @@ def toggle_favorite(request):
 
 @login_required
 def get_favorites(request):
-    """
-    로그인한 사용자의 찜한 주차장 목록 반환
-    """
-    favorites = FavoriteParking.objects.filter(user=request.user).select_related("parking_lot")
+    favorites = UserFavoriteParking.objects.filter(user=request.user).select_related("parking_lot")
     favorite_list = [
         {"id": fav.parking_lot.id, "name": fav.parking_lot.name, "address": fav.parking_lot.lot_address}
         for fav in favorites
     ]
-    return JsonResponse({"favorites": favorite_list}, safe=False)
+    return JsonResponse({"liked_parking_lots": favorite_list}, safe=False)
