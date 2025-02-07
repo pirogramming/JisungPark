@@ -384,7 +384,7 @@
                         '장애인전용주차구역보유여부': place['disabled_parking'],
                         '소재지지번주소': place['lot_address'],
                         '남은자리': parseInt(place['available_spots']),
-                        '별점평균': place['average_rating']
+                        '별점평균': parseFloat(place['average_rating'])
                     });
                 }); 
 
@@ -505,7 +505,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (⭐ ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -572,7 +572,7 @@
 
                 sortedParking.forEach((parking, index) => {
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (⭐ ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -585,12 +585,12 @@
             function showRatingParkingLots() {
                 var parkingListEl = document.getElementById('parkingList');
                 var parkingListDelete = document.getElementById("delete-btn");
-                var parkingList = document.getElementById("list-btn");
-                parkingListEl.innerHTML = ""; 
+                var parkingList = document.getElementById("list-btn"); 
 
                 var hours = parseInt(document.getElementById('hours').value, 10) || 0;
                 var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
                 parkingTime = (hours * 60) + minutes; 
+                parkingListEl.innerHTML = "";
 
                 if (parkingTime <= 0) {
                     parkingTime = null;
@@ -602,17 +602,21 @@
                     return { ...parking, distance };
                 }).filter((parking, index, self) =>
                     parking.distance <= 2 &&
-                    index === self.findIndex(p => p.id === parking.id)  // 중복 제거
+                    index === self.findIndex(p => p.id === parking.id)  
                 );
 
                 if (visibleparkinglot.length === 0) {
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
                     return;
                 }
+                // 별점순 정렬 (같은 별점이면 거리순 정렬)
+                visibleparkinglot.sort((a, b) => {
+                    let ratingDiff = (b.별점평균 || 0) - (a.별점평균 || 0); 
+                    if (ratingDiff !== 0) return ratingDiff; 
+                    return a.distance - b.distance; 
+                });
 
-                visibleparkinglot.sort((a, b) => (b.별점평균) - (a.별점평균));
                 visibleparkinglot.forEach((parking, index) => {
-                    console.log(`📍 주차장 ${index + 1}:`, parking);
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
@@ -635,8 +639,7 @@
 
                 document.getElementById('parkingListWrap').style.display = "block"; 
                 document.getElementById('parkingDetailWrap').style.display = "none"; 
-            }
-
+                }
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');
