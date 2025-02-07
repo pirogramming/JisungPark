@@ -37,10 +37,18 @@ footer {
 }
 
 .footer-top a , .footer-bottom a{
-    margin: 0 1rem;
-    font-size: 1.3rem;
+    margin: 0 2.5rem;
+    font-size: 2rem;
 }
-
+.footer-bottom a {
+    margin: 0 1rem;
+}
+.home-container {
+    height: 100%;
+}
+.signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
+    height: 95%;
+}
 .home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
     justify-content: center;
     align-items: center;
@@ -48,7 +56,6 @@ footer {
     font-size: 1.6rem;
     line-height: 1.5;
     width: 390px;
-    height: 100%;
     margin: auto;
     background-image: url('../img/back.png');
     background-size: cover;
@@ -116,7 +123,7 @@ p{
     border-radius: 1rem;
     margin-top: 1rem;
 }
-.signup_container, .login_container {
+.signup_container, .login_container{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -130,6 +137,10 @@ p{
     text-align: center;
 }
 .introduce_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     padding: 30px auto;
     border-radius: 10px;
