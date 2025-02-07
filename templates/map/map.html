@@ -35,6 +35,8 @@
                         <button onclick="calculateAndSortParkingFees()">요금순</button>
                         <p> ㅣ </p>
                         <button onclick="showClosestParkingLots()">거리순</button>
+                        <p> ㅣ </p>
+                        <button onclick="showRatingParkingLots()">별점순</button>
                     </div>
                 </div>
                 <ul id="parkingList"></ul>
@@ -141,6 +143,7 @@
                     closeAllInfoWindows();
                     document.getElementById('parkingListWrap').style.display = "none";
                     document.getElementById('parkingDetailWrap').style.display = "none";
+                    document.getElementById('list-btn').style.display = "block";
                     displayPlaces(data); 
                     displayPagination(pagination); 
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -365,7 +368,7 @@
             // 주차장 데이터 불러오기
             function loadParkingData() {
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');
-
+                console.log("원본 데이터:", placeData);
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -380,9 +383,11 @@
                         '주차장유형': place['type'],
                         '장애인전용주차구역보유여부': place['disabled_parking'],
                         '소재지지번주소': place['lot_address'],
-                        '남은자리': parseInt(place['available_spots']) 
+                        '남은자리': parseInt(place['available_spots']),
+                        '별점평균': place['average_rating']
                     });
-                });
+                }); 
+
                 //updateParkingDisplay();
             }
 
@@ -576,6 +581,62 @@
 
                 document.getElementById('parkingListWrap').style.display = "block";
             }
+
+            function showRatingParkingLots() {
+                var parkingListEl = document.getElementById('parkingList');
+                var parkingListDelete = document.getElementById("delete-btn");
+                var parkingList = document.getElementById("list-btn");
+                parkingListEl.innerHTML = ""; 
+
+                var hours = parseInt(document.getElementById('hours').value, 10) || 0;
+                var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
+                parkingTime = (hours * 60) + minutes; 
+
+                if (parkingTime <= 0) {
+                    parkingTime = null;
+                }
+
+                visibleparkinglot = parkingData.map(parking => {
+                    var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                    var distance = getDistance(selectedPlace, parkingLatLng);
+                    return { ...parking, distance };
+                }).filter((parking, index, self) =>
+                    parking.distance <= 2 &&
+                    index === self.findIndex(p => p.id === parking.id)  // 중복 제거
+                );
+
+                if (visibleparkinglot.length === 0) {
+                    parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
+                    return;
+                }
+
+                visibleparkinglot.sort((a, b) => (b.별점평균) - (a.별점평균));
+                visibleparkinglot.forEach((parking, index) => {
+                    console.log(`📍 주차장 ${index + 1}:`, parking);
+                    var feeText = ""; 
+
+                    if (parkingTime !== null) {
+                        var totalFee = calculateFee(parking, parkingTime);
+                        feeText = ` - 요금: ${totalFee}`;
+                    }
+
+                    var li = document.createElement('li');
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (⭐ ${parking.별점평균 || "평점 없음"})`;
+                    li.onclick = function () {
+                        showParkingDetail(parking);
+                    };
+                    parkingListEl.appendChild(li);
+                });
+
+                parkingListDelete.addEventListener("click", function () {
+                    parkingListWrap.style.display = "none";
+                    parkingList.style.display = "block"; 
+                });
+
+                document.getElementById('parkingListWrap').style.display = "block"; 
+                document.getElementById('parkingDetailWrap').style.display = "none"; 
+            }
+
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');

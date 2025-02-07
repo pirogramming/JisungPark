@@ -87,7 +87,6 @@ def load_parking_data(request):
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
             redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
             available_spots = redis_client.get(redis_key)
-
             ### if available_spots!=None:
                 ### print(available_spots)
 
