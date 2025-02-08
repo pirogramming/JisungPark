@@ -256,7 +256,7 @@
 .review-item {
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-block: 20px;
+    margin-block: 10px;
     width: 25rem;
     border-radius: 4px;
 }

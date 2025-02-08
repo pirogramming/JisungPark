@@ -2,7 +2,6 @@ from pathlib import Path
 import environ
 import os
 import logging
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -96,12 +95,13 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}'''
+
 
 
 # Password validation
@@ -167,7 +167,20 @@ GOOGLE_SECRET = env('GOOGLE_SECRET')
 NAVER_ID = env('NAVER_ID')
 NAVER_SECRET = env('NAVER_SECRET')
 KAKAO_ID = env('KAKAO_ID')
+DB_ID = env('DB_USER')
+DB_SECRET = env('DB_PASSWORD')
+DB_NAME = env('DB_NAME')
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'jisungpark',
+        'USER': (f"{DB_ID}"),
+        'PASSWORD': (f"{DB_SECRET}"),
+        'HOST': (f"{DB_NAME}"),
+        'PORT': '3306'
+    }
+}
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
     <div class="aboutus-container">
@@ -7,7 +8,9 @@
             <div class="photo">우리 사진 찌거요</div>
             <div>
                 <ul class="mem">
-                    <div class="mem1_img"></div>
+                    <div class="mem_img">
+                        <img src="{% static 'img/jwj.png' %}" alt="kakao Login">
+                    </div>
                     <p>정원준(PM)</p>
                         <li>기획, 백엔드</li>
                         <li>email: dietken1@naver.com</li>
@@ -15,7 +18,9 @@
                         <li>지성 있는 사람들을 이끄는 사람<li>
                 </ul>
                 <ul class="mem">
-                    <div class="mem2_img"></div>
+                    <div class="mem_img">
+                        <img src="{% static 'img/khj.png' %}" alt="kakao Login">
+                    </div>
                     <p>김현진</p>
                         <li>백엔드</li>
                         <li>khj32201270@dankook.ac.kr</li>
@@ -23,7 +28,9 @@
                         <li>나는 감자<li>
                 </ul>
                 <ul class="mem">
-                    <div class="mem3_img"></div>
+                    <div class="mem_img">
+                        <img src="{% static 'img/lyj.png' %}" alt="kakao Login">
+                    </div>
                     <p>임유지</p>
                         <li>프론트엔드, 디자인</li>
                         <li>limyuji01@naver.com</li>
@@ -31,7 +38,9 @@
                         <li>나는 고구마가 좋아<li>
                 </ul>
                 <ul class="mem">
-                    <div class="mem4_img"></div>
+                    <div class="mem_img">
+                        <img src="{% static 'img/ktr.png' %}" alt="kakao Login">
+                    </div>
                     <p>김태린</p>
                         <li>백엔드</li>
                         <li>redgreenyell@naver.com</li>
@@ -39,7 +48,9 @@
                         <li><li>
                 </ul>
                 <ul class="mem">
-                    <div class="mem5_img"></div>
+                    <div class="mem_img">
+                        <img src="{% static 'img/pth.png' %}" alt="kakao Login">
+                    </div>
                     <p>박태희</p>
                         <li>프론트엔드</li>
                         <li>suk05553@naver.com</li>
@@ -50,7 +61,8 @@
 
         </div>
     </div>
-
+    {% endblock %}
+    {% block footer %}
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
@@ -60,7 +72,9 @@
             <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
-    <script>
-        
-    </script>
+    <style>
+        .ri-team-fill{
+            color: var(--icon);
+        }
+    </style>
 {% endblock %} 

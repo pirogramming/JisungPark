@@ -27,8 +27,13 @@ header {
 
 footer {
     background: white;
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: 1rem;
 }
-.footer-top, .footer-bottom  {
+.footer-bottom  {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,19 +48,13 @@ footer {
 .footer-bottom a {
     margin: 0 1rem;
 }
-.home-container {
-    height: 100%;
-}
-.signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
-    height: 95%;
-}
 .home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
     justify-content: center;
     align-items: center;
     color: #333;
     font-size: 1.6rem;
     line-height: 1.5;
-    width: 390px;
+    max-width: 480px;
     margin: auto;
     background-image: url('../img/back.png');
     background-size: cover;
@@ -63,6 +62,7 @@ footer {
     background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .menu-icon {
     cursor: pointer;
@@ -638,3 +638,11 @@ h6 {
 .reply-form button:hover {
     background: #218838;
 }
+
+.mem_img img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover; 
+}
+

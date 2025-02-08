@@ -26,7 +26,7 @@
                             <strong>{{ comment.writer }}</strong>: {{ comment.content }}
                             <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                             <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
-                            <button class="reply-form-create-btn">댓글 달기</button>
+                            <button class="reply-form-create-btn">답글 달기</button>
 
                             <!-- 대댓글 목록 -->
                             <ul class="replies">
@@ -61,6 +61,8 @@
             </div>
         </div>
     </div>
+    {% endblock %}
+    {% block footer %}
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
@@ -70,6 +72,8 @@
             <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
+    {% endblock %}
+    {% block script %}
 
     <script>
    document.addEventListener("DOMContentLoaded", () => {
