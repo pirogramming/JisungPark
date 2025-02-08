@@ -95,12 +95,12 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-'''DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}'''
+}
 
 
 
@@ -171,7 +171,7 @@ DB_ID = env('DB_USER')
 DB_SECRET = env('DB_PASSWORD')
 DB_NAME = env('DB_NAME')
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jisungpark',
@@ -180,7 +180,7 @@ DATABASES = {
         'HOST': (f"{DB_NAME}"),
         'PORT': '3306'
     }
-}
+}'''
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
