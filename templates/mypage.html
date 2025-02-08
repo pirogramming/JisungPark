@@ -31,6 +31,8 @@
             </div>
         </div>
     </div>
+    {% endblock %}
+    {% block footer %}
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
@@ -101,8 +103,10 @@
                         const likeElement = document.createElement("div");
                         likeElement.classList.add("liked-item");
                         likeElement.innerHTML = `
+                        <div class="review-item">
                             <strong>${parking.name}</strong> 
                             <span>(${parking.address})</span>
+                        </div>
                         `;
 
                         likeContainer.appendChild(likeElement);

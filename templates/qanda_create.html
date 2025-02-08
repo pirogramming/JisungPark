@@ -22,6 +22,8 @@
         </div>
         </div>
     </div>
+    {% endblock %}
+    {% block footer %}
     <footer>
         <div class="footer-top">
             <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
@@ -31,4 +33,10 @@
             <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
+
+    <style>
+        .ri-question-answer-fill{
+            color: var(--icon);
+        }
+    </style>
 {% endblock %}
