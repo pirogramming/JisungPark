@@ -33,16 +33,11 @@
     </div>
     <footer>
         <div class="footer-top">
-            <a href="{% url 'demos:introduce' %}">Service</a>
-            <a href="{% url 'demos:aboutus' %}">About Us</a>
-            <a href="{% url 'demos:guidemap' %}">Guide Map</a>
-            <a href="{% url 'demos:qna' %}">Q&A</a>
-        </div>
-        <div class="footer-bottom">
-            <a href="{% url 'demos:github' %}"><i class="ri-github-fill"></i></a>
-            <a href="{% url 'demos:email' %}"><i class="ri-mail-line"></i></a>
-            <a href="{% url 'demos:insta' %}"><i class="ri-instagram-line"></i></a>
-            <a href="{% url 'demos:facebook' %}"><i class="ri-facebook-circle-fill"></i></a>
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
 {% endblock %}
@@ -88,12 +83,13 @@
         const likeContainer = document.getElementById('like-list');
 
         function loadLikedParking() {
-            fetch('/api/like/')
+            fetch('/api/favorites/')
                 .then(response => {
                     if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
                     return response.json();
                 })
                 .then(data => {
+                    const likeContainer = document.getElementById("favorite"); // 좋아요 가져오기 
                     likeContainer.innerHTML = '';
 
                     if (!data.liked_parking_lots || data.liked_parking_lots.length === 0) {
@@ -106,9 +102,8 @@
                         likeElement.classList.add("liked-item");
                         likeElement.innerHTML = `
                             <strong>${parking.name}</strong> 
-                            <span>(${parking.latitude})</span>
+                            <span>(${parking.address})</span>
                         `;
-                        // 주차장 이름이랑 주소 넣고 싶움
 
                         likeContainer.appendChild(likeElement);
                     });

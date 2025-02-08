@@ -273,7 +273,7 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                var infowindow = new kakao.maps.InfoWindow({
+                infowindow = new kakao.maps.InfoWindow({
                     content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
                 });
 
@@ -368,7 +368,6 @@
             // 주차장 데이터 불러오기
             function loadParkingData() {
                 var placeData = JSON.parse('{{ parking_data|escapejs }}');
-                console.log("원본 데이터:", placeData);
                 placeData.forEach(function(place) {
                     parkingData.push({
                         'id': place['id'], 
@@ -384,7 +383,7 @@
                         '장애인전용주차구역보유여부': place['disabled_parking'],
                         '소재지지번주소': place['lot_address'],
                         '남은자리': parseInt(place['available_spots']),
-                        '별점평균': place['average_rating']
+                        '별점평균': parseFloat(place['average_rating'])
                     });
                 }); 
 
@@ -406,6 +405,9 @@
                             }
                             
                         });
+                        if(selectedPlace){
+                            updateVisibleParkingMarkers();
+                        }
                         //updateParkingDisplay();
                     })
                     .catch(error => console.error('실시간 데이터 로드 오류:', error));
@@ -435,7 +437,6 @@
                 });
 
             function updateVisibleParkingMarkers() {
-                
                 var bounds = map.getBounds(); 
 
                 removeMarker(); 
@@ -496,7 +497,6 @@
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
                 visibleparkinglot.forEach((parking, index) => {
-                    console.log(`📍 주차장 ${index + 1}:`, parking);
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
@@ -505,7 +505,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -572,7 +572,7 @@
 
                 sortedParking.forEach((parking, index) => {
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee}`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -585,12 +585,12 @@
             function showRatingParkingLots() {
                 var parkingListEl = document.getElementById('parkingList');
                 var parkingListDelete = document.getElementById("delete-btn");
-                var parkingList = document.getElementById("list-btn");
-                parkingListEl.innerHTML = ""; 
+                var parkingList = document.getElementById("list-btn"); 
 
                 var hours = parseInt(document.getElementById('hours').value, 10) || 0;
                 var minutes = parseInt(document.getElementById('minutes').value, 10) || 0;
                 parkingTime = (hours * 60) + minutes; 
+                parkingListEl.innerHTML = "";
 
                 if (parkingTime <= 0) {
                     parkingTime = null;
@@ -602,17 +602,21 @@
                     return { ...parking, distance };
                 }).filter((parking, index, self) =>
                     parking.distance <= 2 &&
-                    index === self.findIndex(p => p.id === parking.id)  // 중복 제거
+                    index === self.findIndex(p => p.id === parking.id)  
                 );
 
                 if (visibleparkinglot.length === 0) {
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
                     return;
                 }
+                // 별점순 정렬 (같은 별점이면 거리순 정렬)
+                visibleparkinglot.sort((a, b) => {
+                    let ratingDiff = (b.별점평균 || 0) - (a.별점평균 || 0); 
+                    if (ratingDiff !== 0) return ratingDiff; 
+                    return a.distance - b.distance; 
+                });
 
-                visibleparkinglot.sort((a, b) => (b.별점평균) - (a.별점평균));
                 visibleparkinglot.forEach((parking, index) => {
-                    console.log(`📍 주차장 ${index + 1}:`, parking);
                     var feeText = ""; 
 
                     if (parkingTime !== null) {
@@ -621,7 +625,7 @@
                     }
 
                     var li = document.createElement('li');
-                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (⭐ ${parking.별점평균 || "평점 없음"})`;
+                    li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
                     };
@@ -635,8 +639,7 @@
 
                 document.getElementById('parkingListWrap').style.display = "block"; 
                 document.getElementById('parkingDetailWrap').style.display = "none"; 
-            }
-
+                }
 
             function showParkingDetail(parking) { 
                 var titleElement = document.getElementById('parkingTitle');
@@ -647,7 +650,9 @@
                 if (titleElement && infoElement1 && infoElement2) {
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
                     infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
-                    infoElement2.innerText = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}`;
+                    infoElement2.innerHTML = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 
+                    장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
+                    남은자리: ${parking.남은자리}`;
                 }
 
                 selectedParkingLotId = parking.id;  
@@ -729,6 +734,7 @@
 
                 heartIcon.style.color = isLiked ? "black" : "red";
             }
+
 
             
             function loadReviews() {
@@ -946,19 +952,44 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
-            function toggleLike() {
+            function toggleLike() { 
                 const heartIcon = document.getElementById("toggle-btn");
-            
-                if (!heartIcon) {
-                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
+                const parkingId = selectedParkingLotId; 
+                
+                const isLoggedIn = "{{ user.is_authenticated }}" === "True";  
+
+                if (!isLoggedIn) {
+                    alert("로그인이 필요합니다.");
                     return;
                 }
-                const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
+                fetch('/api/toggle_favorite/', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: JSON.stringify({ parking_id: parkingId })  
+                })
+                .then(response => {
+                    if (response.status === 403) {
+                        alert("로그인이 필요합니다."); 
+                        return Promise.reject("로그인 필요");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.favorited) {
+                        heartIcon.classList.remove("ri-heart-3-line");
+                        heartIcon.classList.add("ri-heart-3-fill");
+                        heartIcon.style.setProperty("color", "red", "important");
+                    } else {
+                        heartIcon.classList.remove("ri-heart-3-fill");
+                        heartIcon.classList.add("ri-heart-3-line");
+                        heartIcon.style.setProperty("color", "black", "important");
 
-                heartIcon.classList.toggle("ri-heart-3-line", isLiked);
-                heartIcon.classList.toggle("ri-heart-3-fill", !isLiked);
-
-                heartIcon.style.color = isLiked ? "black" : "red";
+                    }
+                })
+                .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
             /* function toggleCommunity() {
                 const community = document.getElementById('community');

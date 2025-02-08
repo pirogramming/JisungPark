@@ -4,7 +4,7 @@ import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
-from .models import Review, ParkingLot, Post, Comment
+from .models import UserFavoriteParking, Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
@@ -103,7 +103,7 @@ def load_parking_data(request):
 
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking")
+    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating")
 
     enriched_data = []
     for lot in parking_data:
@@ -205,6 +205,7 @@ def qanda_create(request):
         )
         return redirect("demos:qna_detail", pk=post.pk)
     return render(request, 'qanda_create.html')
+
 @login_required
 def qanda_update(request, pk):
     post = get_object_or_404(Post, id=pk)
@@ -268,3 +269,37 @@ def update_review(request, review_id):
         except Review.DoesNotExist:
             return JsonResponse({"error": "리뷰를 찾을 수 없습니다."}, status=404)
     return JsonResponse({"error": "잘못된 요청 방식입니다."}, status=400)
+
+@csrf_exempt
+def toggle_favorite(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "로그인이 필요합니다."}) 
+    
+    if request.method == "POST":
+        data = json.loads(request.body)
+        parking_id = data.get("parking_id")
+        user = request.user
+
+        try:
+            parking_lot = get_object_or_404(ParkingLot, id=parking_id)
+        except ParkingLot.DoesNotExist:
+            return JsonResponse({"error": "주차장을 찾을 수 없습니다."}, status=404)
+
+        favorite, created = UserFavoriteParking.objects.get_or_create(user=user, parking_lot=parking_lot)
+
+        if not created:
+            favorite.delete()
+            return JsonResponse({"message": "찜이 해제되었습니다.", "favorited": False})
+
+        return JsonResponse({"message": "주차장이 찜되었습니다.", "favorited": True})
+
+    return JsonResponse({"error": "잘못된 요청 방식입니다."}, status=400)
+
+@login_required
+def get_favorites(request):
+    favorites = UserFavoriteParking.objects.filter(user=request.user).select_related("parking_lot")
+    favorite_list = [
+        {"id": fav.parking_lot.id, "name": fav.parking_lot.name, "address": fav.parking_lot.lot_address}
+        for fav in favorites
+    ]
+    return JsonResponse({"liked_parking_lots": favorite_list}, safe=False)
