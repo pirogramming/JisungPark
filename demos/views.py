@@ -313,7 +313,9 @@ def get_parking(request, parking_lot_id):
             "주차장명": parking.name,
             "요금정보": parking.fee_info,
             "주차장유형": parking.type,
-            "장애인전용주차구역보유여부": parking.disabled_parking,  # boolean 값
+            "장애인전용주차구역보유여부": parking.disabled_parking, 
+            "남은자리": parking.available_spots if parking.available_spots is not None else "정보 없음"
+
         }
         return JsonResponse(parking_data)
     except ParkingLot.DoesNotExist:
