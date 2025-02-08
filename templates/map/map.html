@@ -661,10 +661,15 @@
                 document.getElementById('parkingListWrap').style.display = "none"; 
                 document.getElementById('parkingDetailWrap').style.display = "block";
                 deleteBtn.addEventListener("click", function () {
+                    if (!selectedPlace) {
+                        document.getElementById('parkingDetailWrap').style.display = "none";
+                        return;
+                    }
+                    else{
                     showClosestParkingLots();
                     document.getElementById('parkingListWrap').style.display = "block"; 
                     document.getElementById('parkingDetailWrap').style.display = "none";
-                    }); 
+                } }); 
                 loadReviews(); 
             }
             document.addEventListener("DOMContentLoaded", function () {
@@ -675,8 +680,7 @@
                     fetch(`/api/get_parking/${parkingId}/`)  // 주차장 정보를 가져오는 API 호출
                         .then(response => response.json())
                         .then(parking => {
-                            showParkingDetail(parking); 
-                            // 가져온 주차장 정보로 showParkingDetail 실행
+                            showParkingDetail(parking); // 가져온 주차장 정보로 showParkingDetail 실행
                             loadReviews(parkingId); // 주차장 정보를 가져온 후 리뷰 로드 실행
                         })
                         .catch(error => console.error("❌ 주차장 정보 로드 실패:", error));
