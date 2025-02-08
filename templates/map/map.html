@@ -656,6 +656,7 @@
                 }
 
                 selectedParkingLotId = parking.id;  
+
                 
                 document.getElementById('parkingListWrap').style.display = "none"; 
                 document.getElementById('parkingDetailWrap').style.display = "block";
@@ -666,6 +667,23 @@
                     }); 
                 loadReviews(); 
             }
+            document.addEventListener("DOMContentLoaded", function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const parkingId = urlParams.get("parking_id");
+            
+                if (parkingId) {
+                    fetch(`/api/get_parking/${parkingId}/`)  // 주차장 정보를 가져오는 API 호출
+                        .then(response => response.json())
+                        .then(parking => {
+                            showParkingDetail(parking); 
+                            // 가져온 주차장 정보로 showParkingDetail 실행
+                            loadReviews(parkingId); // 주차장 정보를 가져온 후 리뷰 로드 실행
+                        })
+                        .catch(error => console.error("❌ 주차장 정보 로드 실패:", error));
+                }
+            });
+            
+            
 
             const DEG_TO_RAD = Math.PI / 180;
 

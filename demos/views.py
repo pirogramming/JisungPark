@@ -302,12 +302,25 @@ def get_favorites(request):
     ]
     return JsonResponse({"liked_parking_lots": favorite_list}, safe=False)
 
-# def review_page(request, parking_lot_id):
-#     parking_lot = get_object_or_404(ParkingLot, id=parking_lot_id)
-#     reviews = Review.objects.filter(parking_lot=parking_lot)
+def get_parking(request, parking_lot_id):
+    """
+    특정 주차장의 상세 정보를 반환하는 API
+    """
+    try:
+        parking = ParkingLot.objects.get(id=parking_lot_id)
+        parking_data = {
+            "id": parking.id,
+            "주차장명": parking.name,
+            "요금정보": parking.fee_info,
+            "주차장유형": parking.type,
+            "장애인전용주차구역보유여부": parking.disabled_parking,  # boolean 값
+        }
+        return JsonResponse(parking_data)
+    except ParkingLot.DoesNotExist:
+        return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
 
-#     context = {
-#         "parking_lot": parking_lot,
-#         "reviews": reviews
-#     }
-#     return render(request, "reviews/review_page.html", context)
+
+# def review_page(request, parking_lot_id):
+#     parking_lot = get_object_or_404(ParkingLot, id=parking_lot_id)  # 주차장 정보 가져오기
+#     reviews = Review.objects.filter(parking_lot=parking_lot)  # 해당 주차장의 리뷰 가져오기
+#     return render(request, 'demos:map', {'parking_lot': parking_lot, 'reviews': reviews})

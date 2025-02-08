@@ -106,8 +106,7 @@
                         </div>
                 `;
                 likeElement.addEventListener("click", function() {
-                    const parkingId = parking.id;
-                    window.location.href = `/map/?parking_lot_id=${parkingId}`
+                    window.location.href = `/map/?parking_id=${parking.id}`; 
                 });
                         likeContainer.appendChild(likeElement);
                     });
