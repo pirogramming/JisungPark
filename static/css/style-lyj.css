@@ -54,7 +54,7 @@ footer {
     color: #333;
     font-size: 1.6rem;
     line-height: 1.5;
-    width: 390px;
+    max-width: 480px;
     margin: auto;
     background-image: url('../img/back.png');
     background-size: cover;
