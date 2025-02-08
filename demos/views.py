@@ -301,3 +301,13 @@ def get_favorites(request):
         for fav in favorites
     ]
     return JsonResponse({"liked_parking_lots": favorite_list}, safe=False)
+
+# def review_page(request, parking_lot_id):
+#     parking_lot = get_object_or_404(ParkingLot, id=parking_lot_id)
+#     reviews = Review.objects.filter(parking_lot=parking_lot)
+
+#     context = {
+#         "parking_lot": parking_lot,
+#         "reviews": reviews
+#     }
+#     return render(request, "reviews/review_page.html", context)

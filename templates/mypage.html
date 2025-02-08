@@ -101,10 +101,14 @@
                         const likeElement = document.createElement("div");
                         likeElement.classList.add("liked-item");
                         likeElement.innerHTML = `
-                            <strong>${parking.name}</strong> 
-                            <span>(${parking.address})</span>
-                        `;
-
+                        <div class="review-item" data-parking-id="${parking.id}">
+                        <strong>${parking.name}</strong>
+                        </div>
+                `;
+                likeElement.addEventListener("click", function() {
+                    const parkingId = parking.id;
+                    window.location.href = `/map/?parking_lot_id=${parkingId}`
+                });
                         likeContainer.appendChild(likeElement);
                     });
                 })
@@ -117,3 +121,8 @@
                 
     </script>
 {% endblock %}
+
+{% comment %} likeElement.addEventListener("click", function() {
+                            const parkingId = parking.id;
+                            window.location.href = `/map/?parking_lot_id=${parkingId}`; 
+                        }); {% endcomment %}
