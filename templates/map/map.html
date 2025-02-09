@@ -471,9 +471,14 @@
             }
             function addFavoriteMarker(position, idx, title, seat, parking) {
                 if (openInfoWindows[idx]) {
-                    openInfoWindows[idx].close();
+                    if (openInfoWindows[idx] instanceof kakao.maps.InfoWindow) {
+                        openInfoWindows[idx].close();
+                    } else {
+                        openInfoWindows[idx].setMap(null);
+                    }
                 }
-                let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 🔥 찜한 주차장 마커 이미지
+
+                let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 찜한 주차장 마커 이미지
                 let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 35));
 
                 let marker = new kakao.maps.Marker({
@@ -484,13 +489,22 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
+                let textColor = "red"; 
+                if (seat > 10) textColor = "green";
+                else if (seat > 5) textColor = "orange";
+
+                let overlayContent = `<div style="position:relative;width:17px;height:17px;text-align:center;
+                                        color:${textColor};font-weight:bold;background:white;border-radius:50%;
+                                        line-height:20px;font-size:13px;bottom:23px;">${seat}</div>`;
+
+                let overlay = new kakao.maps.CustomOverlay({
+                    content: overlayContent,
+                    position: position,
+                    yAnchor: 0.5
                 });
 
-                infowindow.open(map, marker);
-                openInfoWindows.push(infowindow);
-                openInfoWindows[idx] = infowindow;
+                overlay.setMap(map);
+                openInfoWindows[idx] = overlay;
 
                 kakao.maps.event.addListener(marker, 'click', function () {
                     showParkingDetail(parking);
@@ -501,8 +515,13 @@
 
             function addDefaultMarker(position, idx, title, seat, parking) {
                 if (openInfoWindows[idx]) {
-                    openInfoWindows[idx].close();
+                    if (openInfoWindows[idx] instanceof kakao.maps.InfoWindow) {
+                        openInfoWindows[idx].close();
+                    } else {
+                        openInfoWindows[idx].setMap(null);
+                    }
                 }
+
                 var marker = new kakao.maps.Marker({
                     position: position, 
                 });
@@ -510,13 +529,22 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
+                let textColor = "red"; 
+                if (seat > 10) textColor = "green";
+                else if (seat > 5) textColor = "orange";
+
+                let overlayContent = `<div style="position:relative;width:17px;height:17px;text-align:center;
+                                        color:${textColor};font-weight:bold;background:white;border-radius:50%;
+                                        line-height:20px;font-size:13px;bottom:27px;">${seat}</div>`;
+
+                let overlay = new kakao.maps.CustomOverlay({
+                    content: overlayContent,
+                    position: position,
+                    yAnchor: 0.5
                 });
 
-                infowindow.open(map, marker);
-                openInfoWindows.push(infowindow);
-                openInfoWindows[idx] = infowindow;
+                overlay.setMap(map);
+                openInfoWindows[idx] = overlay;
 
                 kakao.maps.event.addListener(marker, 'click', function () {
                     showParkingDetail(parking);
