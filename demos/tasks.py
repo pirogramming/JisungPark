@@ -65,7 +65,7 @@ def fetch_parking_data_from_api(self):
                                       ,"current_vehicles": current_vehicles})
                         continue
                     else:
-                        queue["total_capacity"] += total_capacity
+                        queue[-1]["total_capacity"] += total_capacity
                         continue
                 elif not queue[-1]["saved"]:
                     queue[-1]["saved"] = True
