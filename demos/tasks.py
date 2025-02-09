@@ -60,7 +60,7 @@ def fetch_parking_data_from_api(self):
 
                 # 한 자리씩 여러 개가 존재하는 경우
                 if item_type == '노상 주차장':
-                    if parking_addr not in queue and queue[-1]["saved"] and len(queue) > 0: # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
+                    if queue and parking_addr not in queue and queue[-1]["saved"]: # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                         queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
                                       ,"current_vehicles": current_vehicles})
                         continue
