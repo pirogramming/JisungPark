@@ -42,6 +42,7 @@
                 <ul id="parkingList"></ul>
             </div>
             <div id="parkingDetailWrap" style="display: none;">
+                <i id="return-btn"class="ri-arrow-go-back-line"></i>
                 <i id="delete-btn2" class="ri-close-large-line"></i>
                 <div class="firstline">
                     <span id="parkingTitle"></span>
@@ -649,6 +650,7 @@
                 var infoElement2 = document.getElementById('parkingInfo2');
                 var infoElement3 = document.getElementById('parkingInfo3');
                 var infoElement4 = document.getElementById('parkingInfo4');
+                var returnBtn = document.getElementById('return-btn');
                 var deleteBtn = document.getElementById('delete-btn2');
 
                 if (titleElement && infoElement1 && infoElement2) {
@@ -671,6 +673,18 @@
                 document.getElementById('parkingListWrap').style.display = "none"; 
                 document.getElementById('parkingDetailWrap').style.display = "block";
                 deleteBtn.addEventListener("click", function () {
+                    if (!selectedPlace) {
+                        document.getElementById('parkingDetailWrap').style.display = "none";
+                        return;
+                    }
+                    else{
+                    showClosestParkingLots();
+                    document.getElementById('parkingListWrap').style.display = "block"; 
+                    document.getElementById('parkingDetailWrap').style.display = "none";
+                } }); 
+                loadReviews(); 
+                
+                returnBtn.addEventListener("click", function () {
                     if (!selectedPlace) {
                         document.getElementById('parkingDetailWrap').style.display = "none";
                         return;
