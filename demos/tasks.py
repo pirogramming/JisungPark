@@ -40,6 +40,7 @@ def fetch_parking_data_from_api(self):
                 parking_addr = normalize_address(parking_addr)
                 total_capacity = item.get('TPKCT', 0)
                 current_vehicles = item.get('NOW_PRK_VHCL_CNT', 0)
+                phone_num = item.get('TELNO', '')
 
                 # 데이터 타입 검증
                 if not isinstance(total_capacity, (int, float)):
@@ -50,9 +51,13 @@ def fetch_parking_data_from_api(self):
                 available_spots = max(0, total_capacity - current_vehicles)  # 음수 방지
 
                 # redis에 저장
-                redis_key = f'parking_availability:{parking_addr}'  # 인코딩 제거
-                redis_client.setex(redis_key, 60, available_spots)
+                # 기본 Key에 데이터 저장
+                redis_key_main = f'parking_info:{parking_addr}'
+                redis_client.setex(redis_key_main, 60, available_spots)  # 1분 TTL 설정
 
+                # 별칭 Key(phone_num)도 동일한 데이터 가리키도록 설정
+                redis_key_alias = f'parking_info:{phone_num}'
+                redis_client.setex(redis_key_alias, 60, available_spots)  # 1분 TTL 설정
 
                 logger.info(f"주차장주소 '{parking_addr}' 데이터 저장 완료 (남은 자리: {available_spots})")
 

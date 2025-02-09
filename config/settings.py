@@ -5,8 +5,35 @@ import logging
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+env = environ.Env(
+    DEBUG=(bool, False)  # DEBUG 값 기본 False 설정
+)
+
+# .env 파일이 존재하면 로드
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# 환경 변수 적용
+DJANGO_KEY = env('DJANGO_KEY')
+MAP_KEY = env('MAP_KEY')
+SEOUL_KEY = env('SEOUL_KEY')
+GYENG_KEY = env('GYENG_KEY')
+GOOGLE_ID = env('GOOGLE_ID')
+GOOGLE_SECRET = env('GOOGLE_SECRET')
+NAVER_ID = env('NAVER_ID')
+NAVER_SECRET = env('NAVER_SECRET')
+KAKAO_ID = env('KAKAO_ID')
+DB_ID = env('DB_USER')
+DB_SECRET = env('DB_PASSWORD')
+DB_NAME = env('DB_NAME')
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7&z*shvn=2hqrck==zr*ih*y%t-9%(tu@@a5*+$zao)1q!j+u3'
+SECRET_KEY = DJANGO_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -146,31 +173,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-env = environ.Env(
-    DEBUG=(bool, False)  # DEBUG 값 기본 False 설정
-)
-
-# .env 파일이 존재하면 로드
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-# 환경 변수 적용
-MAP_KEY = env('MAP_KEY')
-SEOUL_KEY = env('SEOUL_KEY')
-GYENG_KEY = env('GYENG_KEY')
-GOOGLE_ID = env('GOOGLE_ID')
-GOOGLE_SECRET = env('GOOGLE_SECRET')
-NAVER_ID = env('NAVER_ID')
-NAVER_SECRET = env('NAVER_SECRET')
-KAKAO_ID = env('KAKAO_ID')
-DB_ID = env('DB_USER')
-DB_SECRET = env('DB_PASSWORD')
-DB_NAME = env('DB_NAME')
 
 #‼️✔️✔️✔️📢📢📢📢📢📢호스팅 할 때는 주석 처리 풀어줘요
 '''DATABASES = {
