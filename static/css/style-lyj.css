@@ -313,6 +313,12 @@ p{
 .favorite, .myreview {
     display: none;
 }
+.mypage_heart a, .mypage_review a {
+    color: black;
+}
+.mypage_heart a.active, .mypage_review a.active{
+    color: var(--icon);
+}
 .favorite.active, .myreview.active {
     display: flex;
     flex-direction: column;

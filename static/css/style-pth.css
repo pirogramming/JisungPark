@@ -211,7 +211,7 @@
     display: flex;
     margin-block: 20px;
     font-size: 15px;
-    padding-block: 30px;
+    padding-block: 10px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -327,4 +327,7 @@
 
 .star-rating i, .ri-star-fill {
     color: gold;
+}
+.ri-heart-3-line, .ri-heart-3-fill{
+    transition: color 0.3s ease-in-out;
 }

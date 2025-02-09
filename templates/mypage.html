@@ -42,24 +42,48 @@
             <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
         </div>
     </footer>
+    <style>
+        .gotomypage{
+            color: var(--icon);
+        }
+    </style>
 {% endblock %}
 {% block scripts %}
     <script>
         function toggleFavorite() {
             const favorite = document.getElementById('favorite');
             const myreview = document.getElementById('myreview');
-
-            favorite.classList.toggle('active');
+            const favoriteLink = document.querySelector(".mypage_heart a");
+            const reviewLink = document.querySelector(".mypage_review a");
+        
+            // `.active` 클래스 토글
+            const isActive = favorite.classList.contains('active');
+        
+            favorite.classList.toggle('active', !isActive);
             myreview.classList.remove('active');
+        
+            // 글씨 색 변경
+            favoriteLink.classList.toggle('active', !isActive);
+            reviewLink.classList.remove('active');
         }
         
         function toggleMyReview() {
             const myreview = document.getElementById('myreview');
             const favorite = document.getElementById('favorite');
+            const reviewLink = document.querySelector(".mypage_review a");
+            const favoriteLink = document.querySelector(".mypage_heart a");
         
-            myreview.classList.toggle('active');
+            // `.active` 클래스 토글
+            const isActive = myreview.classList.contains('active');
+        
+            myreview.classList.toggle('active', !isActive);
             favorite.classList.remove('active');
+        
+            // 글씨 색 변경
+            reviewLink.classList.toggle('active', !isActive);
+            favoriteLink.classList.remove('active');
         }
+        
         const reviewContainer = document.getElementById('review-list'); 
         function loadReviews() {
             fetch('/api/myreviews')

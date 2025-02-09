@@ -1,5 +1,5 @@
 .container {
-  width: 480px;
+  width: 400px;
   height: 100dvh;
   margin: auto;
   display: flex;
@@ -8,8 +8,7 @@
 }
 
 main {
-  flex-grow: 1;
-  height: 100dvh;
+  height: 100%;
 }
 
 :root {
@@ -27,5 +26,5 @@ main {
   --btn: #AADBFF;
   --white: #fff;
   --gray: #c4c4c4;
-  --icon: #4BCFEA;
+  --icon: blueviolet;
 }
