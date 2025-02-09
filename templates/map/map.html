@@ -106,6 +106,7 @@
             var parkingTime = null;
             let selectedRating = 0;
             const currentUser = "{{ user.username }}";
+            let favoriteParkingIds = [];
 
             var mapContainer = document.getElementById('map'), 
                 mapOption = {
@@ -122,6 +123,30 @@
 
             searchPlaces(); 
             loadParkingData();
+
+            async function loadUserFavorites() {
+                try {
+                    const response = await fetch('/api/favorites/');
+                    if (response.status === 403) {
+                        alert("로그인이 필요합니다. 로그인 후 다시 시도하세요.");
+                        return;
+                    }
+
+                    if (!response.ok) throw new Error("찜한 주차장 정보를 불러오지 못했습니다.");
+                    
+                    const data = await response.json();
+
+                    favoriteParkingIds = data.liked_parking_lots.map(lot => lot.id);
+
+                    if (selectedPlace) {
+                        updateVisibleParkingMarkers();
+                    }
+                } catch (error) {
+                    console.error("🚨 찜한 주차장 로드 실패:", error);
+                }
+            }
+            // 페이지가 로드될 때 찜한 주차장 정보를 불러오기
+            document.addEventListener("DOMContentLoaded", loadUserFavorites);
 
             function searchPlaces() {
                 selectedPlace = null;
@@ -365,7 +390,7 @@
                 var lat = marker.getPosition().getLat();
                 var lng = marker.getPosition().getLng();
                 selectedPlaceMarker = addSelectedMarker(lat, lng);
-                updateVisibleParkingMarkers();
+                loadUserFavorites();
             }
 
             // 주차장 데이터 불러오기
@@ -459,8 +484,40 @@
 
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-                    addparkMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
-                    
+                    if (favoriteParkingIds.includes(parking.id)) {
+                        addFavoriteMarker(parkingLatLng, index, parking);
+                    } else {
+                        addDefaultMarker(parkingLatLng, index, parking);
+                    }
+                });
+            }
+            function addFavoriteMarker(position, idx, parking) {
+                let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 🔥 찜한 주차장 마커 이미지
+                let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 35));
+
+                let marker = new kakao.maps.Marker({
+                    position: position,
+                    image: markerImage
+                });
+
+                marker.setMap(map);
+                markers.push(marker);
+
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    showParkingDetail(parking);
+                });
+            }
+
+            function addDefaultMarker(position, idx, parking) {
+                let marker = new kakao.maps.Marker({
+                    position: position
+                });
+
+                marker.setMap(map);
+                markers.push(marker);
+
+                kakao.maps.event.addListener(marker, 'click', function () {
+                    showParkingDetail(parking);
                 });
             }
 
