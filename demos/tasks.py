@@ -24,10 +24,17 @@ def normalize_address(address):
     return address
 
 def normalize_phonenumber(number):
-    # 한국 전화번호 형식 변환 (지역번호 포함)
-    pattern = r'(\d{2,3})[-)]?(\d{3,4})[-]?(\d{4})'
-    number = re.sub(pattern, r'\1\2\3', number)
+    # 지역번호 포함 전화번호 처리
+    pattern = r'(\d{2,3})[-)]?(\d{3,4})[-]?(\d{4})' #010 or 02 - 3333 - 3333
+    representative_pattern = r'(\d{4})[-]?(\d{4})'  # 1544-5555 같은 패턴
+
+    if re.fullmatch(representative_pattern, number):
+        number = re.sub(representative_pattern, r'\1\2', number)
+    else:
+        number = re.sub(pattern, r'\1\2\3', number)
+
     return number
+
 
 @app.task(bind=True, max_retries=3, default_retry_delay=60)  # 자동 재시도 설정
 def fetch_parking_data_from_api(self):
