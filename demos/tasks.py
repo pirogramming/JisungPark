@@ -67,7 +67,7 @@ def fetch_parking_data_from_api(self):
                     else:
                         queue["total_capacity"] += total_capacity
                         continue
-                elif queue[-1]["saved"]:
+                elif not queue[-1]["saved"]:
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
