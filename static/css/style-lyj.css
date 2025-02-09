@@ -358,6 +358,12 @@ p{
     top: 10px;
     right: 10px;
 }
+.ri-arrow-go-back-line {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    right: 40px;
+}
 .qna_container {
     position: relative;
     width: 100%;
