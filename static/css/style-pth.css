@@ -38,13 +38,14 @@
 .list-button{
     border: none;
     width: 25%;
-    height: 100%;
     background: var(--btn);
     cursor: pointer;
     font-size: 1.2rem;
     border-radius: 4px;
     font-size: 1.3rem;
     margin-bottom: 2rem;
+    color: black;
+    padding: 10px;
 }
 .off-button{
     margin-top: 2.5rem;
@@ -309,9 +310,11 @@
 #parkingInfo1{
     color: #789;
 }
-#parkingInfo2{
+#parkingInfo2, #parkingInfo3, #parkingInfo4{
     color: #007bff;
     font-size: 1.5rem;
+    display: flex;
+    margin-bottom: 0.2rem;
 }
 .firstline i{
     font-size: 2rem;

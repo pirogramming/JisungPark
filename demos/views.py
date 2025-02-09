@@ -326,7 +326,7 @@ def get_favorites(request):
 
 def get_parking(request, parking_lot_id):
     """
-    특정 주차장의 상세 정보를 반환하는 API
+    특정 주차장 상세 정보를 반환하는 API
     """
     try:
         parking = ParkingLot.objects.get(id=parking_lot_id)

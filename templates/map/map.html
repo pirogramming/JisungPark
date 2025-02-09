@@ -42,6 +42,7 @@
                 <ul id="parkingList"></ul>
             </div>
             <div id="parkingDetailWrap" style="display: none;">
+                <i id="return-btn"class="ri-arrow-go-back-line"></i>
                 <i id="delete-btn2" class="ri-close-large-line"></i>
                 <div class="firstline">
                     <span id="parkingTitle"></span>
@@ -49,6 +50,8 @@
                     <span id="parkingInfo1"></span>
                 </div>
                 <span id="parkingInfo2"></span>
+                <span id="parkingInfo3"></span>
+                <span id="parkingInfo4"></span>
                 <p id="parkingReview">리뷰
                     <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
                 </p>
@@ -645,14 +648,23 @@
                 var titleElement = document.getElementById('parkingTitle');
                 var infoElement1 = document.getElementById('parkingInfo1'); 
                 var infoElement2 = document.getElementById('parkingInfo2');
+                var infoElement3 = document.getElementById('parkingInfo3');
+                var infoElement4 = document.getElementById('parkingInfo4');
+                var returnBtn = document.getElementById('return-btn');
                 var deleteBtn = document.getElementById('delete-btn2');
 
                 if (titleElement && infoElement1 && infoElement2) {
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
                     infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
-                    infoElement2.innerHTML = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 
+                    infoElement2.innerHTML = `
+                    주차장 유형: ${parking.주차장유형 || "유형 정보 없음"}<br>
+                    `;
+                    infoElement3.innerHTML = `
                     장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
-                    남은자리: ${parking.남은자리}`;
+                    `;
+                    infoElement4.innerHTML = `
+                    남은자리: ${parking.남은자리}
+                    `;
                 }
 
                 selectedParkingLotId = parking.id;  
@@ -661,6 +673,18 @@
                 document.getElementById('parkingListWrap').style.display = "none"; 
                 document.getElementById('parkingDetailWrap').style.display = "block";
                 deleteBtn.addEventListener("click", function () {
+                    if (!selectedPlace) {
+                        document.getElementById('parkingDetailWrap').style.display = "none";
+                        return;
+                    }
+                    else{
+                    showClosestParkingLots();
+                    document.getElementById('parkingListWrap').style.display = "block"; 
+                    document.getElementById('parkingDetailWrap').style.display = "none";
+                } }); 
+                loadReviews(); 
+
+                returnBtn.addEventListener("click", function () {
                     if (!selectedPlace) {
                         document.getElementById('parkingDetailWrap').style.display = "none";
                         return;
@@ -790,6 +814,7 @@
                                             <i class="ri-edit-line"></i> [수정]
                                         </a>
                                     ` : ''}
+                                <hr>
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;
