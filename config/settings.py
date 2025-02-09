@@ -244,3 +244,4 @@ CELERY_TIMEZONE = 'Asia/Seoul'
 CELERY_ENABLE_UTC = False
 
 #서버 로그 확인
+CSRF_TRUSTED_ORIGINS = ['https://jisungpark.kro.kr/']
