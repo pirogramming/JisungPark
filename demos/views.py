@@ -8,6 +8,8 @@ from .models import UserFavoriteParking, Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
+from .tasks import normalize_phonenumber
+
 
 # 주소 비교
 def normalize_address(address):
@@ -90,6 +92,7 @@ def load_parking_data(request):
             redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
             available_spots = redis_client.get(redis_key)
             if phone_num != '':
+                phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
                 second_available_spots = redis_client.get(redis_subkey)
 
@@ -127,6 +130,7 @@ def map(request):   # 페이지 로드시 사용
         redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
         available_spots = redis_client.get(redis_key)
         if phone_num != '':
+            phone_num = normalize_phonenumber(phone_num)
             redis_subkey = f'parking_info:{phone_num}'
             second_available_spots = redis_client.get(redis_subkey)
 

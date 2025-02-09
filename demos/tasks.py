@@ -23,6 +23,12 @@ def normalize_address(address):
 
     return address
 
+def normalize_phonenumber(number):
+    # 한국 전화번호 형식 변환 (지역번호 포함)
+    pattern = r'(\d{2,3})[-)]?(\d{3,4})[-]?(\d{4})'
+    number = re.sub(pattern, r'\1\2\3', number)
+    return number
+
 @app.task(bind=True, max_retries=3, default_retry_delay=60)  # 자동 재시도 설정
 def fetch_parking_data_from_api(self):
     try:
@@ -41,6 +47,7 @@ def fetch_parking_data_from_api(self):
                 total_capacity = item.get('TPKCT', 0)
                 current_vehicles = item.get('NOW_PRK_VHCL_CNT', 0)
                 phone_num = item.get('TELNO', '')
+                phone_num = normalize_phonenumber(phone_num)
 
                 # 데이터 타입 검증
                 if not isinstance(total_capacity, (int, float)):
