@@ -95,6 +95,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+#✔️‼️📢📢📢📢📢📢호스팅 할 때는 주석 처리하고 올려줘요
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -171,6 +172,7 @@ DB_ID = env('DB_USER')
 DB_SECRET = env('DB_PASSWORD')
 DB_NAME = env('DB_NAME')
 
+#‼️✔️✔️✔️📢📢📢📢📢📢호스팅 할 때는 주석 처리 풀어줘요
 '''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
