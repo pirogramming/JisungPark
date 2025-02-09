@@ -13,14 +13,11 @@ from .tasks import normalize_phonenumber
 
 # 주소 비교
 def normalize_address(address):
-    # "서울특별시" 제거
-    address = re.sub(r'^서울특별시\s*', '', address)
+    # 광역지자체명(서울시, 경기도 등) 제거
+    address = re.sub(r'^(서울시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
 
-    # 숫자 뒤에 "-"가 오고 또 숫자가 올 경우, 첫 번째 숫자만 남김
-    address = re.sub(r'(\d+)-\d+', r'\1', address)
-
-    # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
-    address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
+    # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
+    address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
 
     return address
 
