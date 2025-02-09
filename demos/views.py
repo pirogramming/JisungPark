@@ -11,7 +11,7 @@ from .forms import CommentForm
 from .tasks import normalize_phonenumber
 import logging
 
-
+logger = logging.getLogger(__name__)
 # 주소 비교
 def normalize_address(address):
     # 광역지자체명(서울시, 경기도 등) 제거
