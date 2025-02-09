@@ -113,7 +113,7 @@ def load_parking_data(request):
 
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating")
+    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone")
 
     enriched_data = []
     for lot in parking_data:
