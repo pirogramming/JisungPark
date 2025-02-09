@@ -20,7 +20,7 @@ def normalize_address(address):
 
     # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
     address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
-
+    print(address)
     return address
 
 def normalize_phonenumber(number):
