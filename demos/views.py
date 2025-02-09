@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from .forms import CommentForm
 from .tasks import normalize_phonenumber
+import logging
 
 
 # 주소 비교
@@ -18,7 +19,7 @@ def normalize_address(address):
 
     # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
     address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
-
+    logger.info(f'주차장주소 : {address}')
     return address
 
 # Create your views here.
