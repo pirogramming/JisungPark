@@ -14,7 +14,7 @@ from .tasks import normalize_phonenumber
 # 주소 비교
 def normalize_address(address):
     # 광역지자체명(서울시, 경기도 등) 제거
-    address = re.sub(r'^(서울시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
+    address = re.sub(r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
 
     # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
     address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
