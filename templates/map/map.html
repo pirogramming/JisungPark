@@ -683,7 +683,7 @@
                     document.getElementById('parkingDetailWrap').style.display = "none";
                 } }); 
                 loadReviews(); 
-                
+
                 returnBtn.addEventListener("click", function () {
                     if (!selectedPlace) {
                         document.getElementById('parkingDetailWrap').style.display = "none";
@@ -814,6 +814,7 @@
                                             <i class="ri-edit-line"></i> [수정]
                                         </a>
                                     ` : ''}
+                                <hr>
                                 </div>
                             `;
                             reviewContainer.innerHTML += reviewElement;
