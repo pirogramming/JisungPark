@@ -60,9 +60,30 @@ def fetch_parking_data_from_api(self):
 
                 # 한 자리씩 여러 개가 존재하는 경우
                 if type == '노상 주차장':
-                    if parking_addr not in queue:
+                    if parking_addr not in queue and queue[-1]["saved"] and len(queue) > 0:
                         queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
                                       ,"current_vehicles": current_vehicles})
+                        continue
+                    elif not queue[-1]["saved"]:
+                        queue[-1]["saved"] = True
+                        if not isinstance(queue[-1]["total_capacity"], (int, float)):
+                            queue[-1]["total_capacity"] = 0
+                        if not isinstance(queue[-1]["current_vehicles"], (int, float)):
+                            queue[-1]["current_vehicles"] = 0
+                        available_spots = max(0, queue[-1]["total_capacity"] - queue[-1]["current_vehicles"])
+
+                        redis_key_main = f'parking_availability:{queue[-1]["parking_addr"]}'
+                        redis_client.setex(redis_key_main, 60, available_spots)  # 1분 TTL 설정
+
+                        # 별칭 Key(phone_num)도 동일한 데이터 가리키도록 설정
+                        redis_key_alias = f'parking_info:{queue[-1]["phone_num"]}'
+                        redis_client.setex(redis_key_alias, 60, available_spots)  # 1분 TTL 설정
+
+                        logger.info(f'주차장주소 {queue[-1]["parking_addr"]} 데이터 저장 완료 (남은 자리: {available_spots})')
+                        queue.append(
+                            {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
+                             "saved": False
+                                , "current_vehicles": current_vehicles})
                         continue
                     else:
                         queue[-1]["total_capacity"] += total_capacity
