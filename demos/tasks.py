@@ -18,6 +18,9 @@ def normalize_address(address):
     # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
     address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
 
+    # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
+    address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
+
     return address
 
 def normalize_phonenumber(number):
@@ -44,6 +47,7 @@ def fetch_parking_data_from_api(self):
 
         if response.status_code == 200:
             data = response.json().get('GetParkingInfo', {}).get('row', [])
+            queue = []
             for item in data:
                 # 데이터 유효성 검사
                 parking_addr = item.get('ADDR', 'unknown').strip().lower()  # 공백 제거 및 소문자 변환
@@ -52,6 +56,33 @@ def fetch_parking_data_from_api(self):
                 current_vehicles = item.get('NOW_PRK_VHCL_CNT', 0)
                 phone_num = item.get('TELNO', '')
                 phone_num = normalize_phonenumber(phone_num)
+                type = item.get("PRK_TYPE_NM", '')
+
+                # 한 자리씩 여러 개가 존재하는 경우
+                if type == '노상 주차장':
+                    if parking_addr not in queue:
+                        queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
+                                      ,"current_vehicles": current_vehicles})
+                        continue
+                    else:
+                        queue["total_capacity"] += total_capacity
+                        continue
+                elif queue[-1]["saved"]:
+                    queue[-1]["saved"] = True
+                    if not isinstance(queue[-1]["total_capacity"], (int, float)):
+                        queue[-1]["total_capacity"] = 0
+                    if not isinstance(queue[-1]["current_vehicles"], (int, float)):
+                        queue[-1]["current_vehicles"] = 0
+                    available_spots = max(0, queue[-1]["total_capacity"] - queue[-1]["current_vehicles"])
+
+                    redis_key_main = f'parking_availability:{queue[-1]["parking_addr"]}'
+                    redis_client.setex(redis_key_main, 60, available_spots)  # 1분 TTL 설정
+
+                    # 별칭 Key(phone_num)도 동일한 데이터 가리키도록 설정
+                    redis_key_alias = f'parking_info:{queue[-1]["phone_num"]}'
+                    redis_client.setex(redis_key_alias, 60, available_spots)  # 1분 TTL 설정
+
+                    logger.info(f'주차장주소 {queue[-1]["parking_addr"]} 데이터 저장 완료 (남은 자리: {available_spots})')
 
                 # 데이터 타입 검증
                 if not isinstance(total_capacity, (int, float)):
