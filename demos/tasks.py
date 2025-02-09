@@ -56,10 +56,10 @@ def fetch_parking_data_from_api(self):
                 current_vehicles = item.get('NOW_PRK_VHCL_CNT', 0)
                 phone_num = item.get('TELNO', '')
                 phone_num = normalize_phonenumber(phone_num)
-                type = item.get("PRK_TYPE_NM", '')
+                item_type = item.get("PRK_TYPE_NM", '')
 
                 # 한 자리씩 여러 개가 존재하는 경우
-                if type == '노상 주차장':
+                if item_type == '노상 주차장':
                     if parking_addr not in queue and queue[-1]["saved"] and len(queue) > 0: # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                         queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
                                       ,"current_vehicles": current_vehicles})
