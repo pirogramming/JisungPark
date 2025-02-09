@@ -52,7 +52,7 @@ def fetch_parking_data_from_api(self):
 
                 # redis에 저장
                 # 기본 Key에 데이터 저장
-                redis_key_main = f'parking_info:{parking_addr}'
+                redis_key_main = f'parking_availability:{parking_addr}'
                 redis_client.setex(redis_key_main, 60, available_spots)  # 1분 TTL 설정
 
                 # 별칭 Key(phone_num)도 동일한 데이터 가리키도록 설정
