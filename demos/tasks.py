@@ -94,7 +94,7 @@ def fetch_parking_data_from_api(self):
                     else: # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
                         queue[-1]["total_capacity"] += total_capacity
                         continue
-                elif not queue[-1]["saved"]: #노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우
+                elif not queue[-1]["saved"] and len(queue) > 0: #노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
