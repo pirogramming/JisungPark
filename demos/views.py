@@ -80,17 +80,27 @@ def load_parking_data(request):
         parking_data = list(ParkingLot.objects.values(
             "id", "name", "lot_address", "latitude", "longitude",
             "base_time", "base_fee", "extra_time", "extra_fee",
-            "fee_info", "type", "disabled_parking", "average_rating"
+            "fee_info", "type", "disabled_parking", "average_rating", "phone"
         ))
         for lot in parking_data:
             parking_addr = lot['lot_address']
+            phone_num = lot['phone']
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
             redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
+            redis_subkey = f'parking_info:{phone_num}'
             available_spots = redis_client.get(redis_key)
+            second_available_spots = redis_client.get(redis_subkey)
             ### if available_spots!=None:
                 ### print(available_spots)
 
-            lot['available_spots'] = (available_spots) if available_spots else 0
+            if available_spots:
+                lot['available_spots'] = available_spots
+            elif second_available_spots:
+                lot['available_spots'] = second_available_spots
+            else:
+                lot['available_spots'] = 0
+
+            #lot['available_spots'] = (available_spots) if available_spots else 0
 
             ### if lot['available_spots'] != None and lot['available_spots']!=0 and lot['available_spots']!='0':
                 ### print(lot['available_spots'])
@@ -108,11 +118,21 @@ def map(request):   # 페이지 로드시 사용
     enriched_data = []
     for lot in parking_data:
         parking_addr = lot['lot_address']
-        redis_key = f'parking_availability:{parking_addr}'
+        phone_num = lot['phone']
+        parking_addr = normalize_address(parking_addr)  # 주소 정규화
+        redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
+        redis_subkey = f'parking_info:{phone_num}'
         available_spots = redis_client.get(redis_key)
+        second_available_spots = redis_client.get(redis_subkey)
+        ### if available_spots!=None:
+        ### print(available_spots)
 
-        # 실시간 데이터 추가
-        lot['available_spots'] = available_spots if available_spots else 0
+        if available_spots:
+            lot['available_spots'] = available_spots
+        elif second_available_spots:
+            lot['available_spots'] = second_available_spots
+        else:
+            lot['available_spots'] = 0
         enriched_data.append(lot)
 
     context = {
@@ -323,8 +343,3 @@ def get_parking(request, parking_lot_id):
     except ParkingLot.DoesNotExist:
         return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
 
-
-# def review_page(request, parking_lot_id):
-#     parking_lot = get_object_or_404(ParkingLot, id=parking_lot_id)  # 주차장 정보 가져오기
-#     reviews = Review.objects.filter(parking_lot=parking_lot)  # 해당 주차장의 리뷰 가져오기
-#     return render(request, 'demos:map', {'parking_lot': parking_lot, 'reviews': reviews})

@@ -1013,38 +1013,5 @@
                 })
                 .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
-            /* function toggleCommunity() {
-                const community = document.getElementById('community');
-                community.classList.toggle('active');
-                const toggleBtn=document.getElementById('toggle-btn2');
-
-                if (community.classList.contains('active')) {
-                    toggleBtn.classList.remove('ri-arrow-down-s-fill');
-                    toggleBtn.classList.add('ri-arrow-up-s-fill');
-                } else {
-                    toggleBtn.classList.remove('ri-arrow-up-s-fill');
-                    toggleBtn.classList.add('ri-arrow-down-s-fill');
-                }
-            }
-            const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
-
-            chatSocket.onmessage = function(e) {
-                const data = JSON.parse(e.data);
-                const messagesDiv = document.getElementById('messages');
-                const newMessage = document.createElement('div');
-                newMessage.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
-                messagesDiv.appendChild(newMessage);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;  // 스크롤 자동 이동
-            };
-
-            function sendMessage() {
-                const inputBox = document.getElementById('message-input');
-                const message = inputBox.value;
-                chatSocket.send(JSON.stringify({
-                    'message': message,
-                    'username': '익명'  // 사용자 이름 추가 가능
-                }));
-                inputBox.value = '';
-            }*/
         </script>
         {% endblock %}
