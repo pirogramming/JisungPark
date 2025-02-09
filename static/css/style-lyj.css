@@ -122,6 +122,7 @@ p{
     padding:1rem;
     border-radius: 1rem;
     margin-top: 1rem;
+    color: black;
 }
 .signup_container, .login_container{
     display: flex;
@@ -176,7 +177,7 @@ p{
     display: inline-block;
     margin-right: 5px;
     text-align: right;
-    width: 8rem;
+    width: 7rem;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     color: #555;
@@ -233,30 +234,11 @@ p{
     cursor: pointer;
     width: 40px;
     height: 40px;
-}
-.google, .naver, .kakao {
     border-radius: 50%;
-    width: 50px;
-    height:50px;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
-.google {
-    background-color:#fff;
-}
-.google:hover {
-    background-color: #F1F1F1;
-}
-.naver {
-    background-color: #03C75A;
-}
-.naver:hover {
-    background-color: #16A344;
-}
-.kakao {
-    background-color: #FFEB00;
-}
-.kakao:hover {
-    background-color: #FDD835;
-}
+
+
 .login-add {
     display:flex;
     flex-direction: column;
