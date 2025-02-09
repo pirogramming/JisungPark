@@ -36,7 +36,7 @@ def get_reviews(request, parking_lot_id):
 def get_myreviews(request):
     user = request.user
     myreviews = Review.objects.filter(user=user).values(
-        'user__username', 'rating', 'content', 'id'
+        'user__username', 'rating', 'content', 'id','parking_lot__id' 
     )  # 필요한 필드만 가져오기
     reviews_list = list(myreviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})

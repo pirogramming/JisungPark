@@ -91,15 +91,23 @@
                 .then(data => {
                     reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
                     data.reviews.forEach(review => {
-                        const reviewElement = `
-                            <div class="review-item">
-                                <strong><i class="ri-user-fill"></i>  ${review.user__username}</strong>
-                                <span><i class="ri-star-fill"></i> ${review.rating}</span>
-                                <p>${review.content || ''}</p>
-                                <hr>
-                            </div>
+                                // div 요소 생성
+                        const reviewElement = document.createElement("div");
+                        reviewElement.classList.add("review-item");
+                        reviewElement.setAttribute("data-review-id", review.id); // 리뷰 id 추가가
+                        
+                        // 내부 html
+                        reviewElement.innerHTML = `
+                            <strong><i class="ri-user-fill"></i> ${review.user__username}</strong>
+                            <span><i class="ri-star-fill"></i> ${review.rating}</span>
+                            <p>${review.content || ''}</p>
+                            <hr>
                         `;
-                        reviewContainer.innerHTML += reviewElement;
+                            // 클릭 시 해당 주차장 상세 페이지 이동
+                    reviewElement.addEventListener("click", function() {
+                    window.location.href = `/map/?parking_id=${review.parking_lot__id}`; 
+                    });
+                        reviewContainer.appendChild(reviewElement);
                     });
                 })
                 .catch(error => console.error('리뷰 로드 실패:', error));
@@ -148,8 +156,3 @@
                 
     </script>
 {% endblock %}
-
-{% comment %} likeElement.addEventListener("click", function() {
-                            const parkingId = parking.id;
-                            window.location.href = `/map/?parking_lot_id=${parkingId}`; 
-                        }); {% endcomment %}
