@@ -22,8 +22,9 @@ main {
 
   /* color */
   --blue:	#CEDFF1;
-  --btn: #AADBFF;
+  --btn: #8BE0F1;
+  --yellow: #FFFABB;
   --white: #fff;
   --gray: #c4c4c4;
-  --icon: blueviolet;
+  --icon: #FFDCE1;
 }
