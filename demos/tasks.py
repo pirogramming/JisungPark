@@ -60,17 +60,17 @@ def fetch_parking_data_from_api(self):
 
                 # 한 자리씩 여러 개가 존재하는 경우
                 if type == '노상 주차장':
-                    if parking_addr not in queue and queue[-1]["saved"] and len(queue) > 0:
+                    if parking_addr not in queue and queue[-1]["saved"] and len(queue) > 0: # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                         queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
                                       ,"current_vehicles": current_vehicles})
                         continue
-                    elif parking_addr not in queue and len(queue) == 0:
+                    elif parking_addr not in queue and len(queue) == 0: # 신규 주차장이며 큐 맨 앞에 들어오는 경우
                         queue.append(
                             {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                              "saved": False
                                 , "current_vehicles": current_vehicles})
                         continue
-                    elif not queue[-1]["saved"]:
+                    elif parking_addr not in queue and not queue[-1]["saved"]: # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
                         queue[-1]["saved"] = True
                         if not isinstance(queue[-1]["total_capacity"], (int, float)):
                             queue[-1]["total_capacity"] = 0
@@ -91,10 +91,10 @@ def fetch_parking_data_from_api(self):
                              "saved": False
                                 , "current_vehicles": current_vehicles})
                         continue
-                    else:
+                    else: # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
                         queue[-1]["total_capacity"] += total_capacity
                         continue
-                elif not queue[-1]["saved"]:
+                elif not queue[-1]["saved"]: #노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
@@ -110,7 +110,7 @@ def fetch_parking_data_from_api(self):
                     redis_client.setex(redis_key_alias, 60, available_spots)  # 1분 TTL 설정
 
                     logger.info(f'주차장주소 {queue[-1]["parking_addr"]} 데이터 저장 완료 (남은 자리: {available_spots})')
-
+                # 노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장된 경우
                 # 데이터 타입 검증
                 if not isinstance(total_capacity, (int, float)):
                     total_capacity = 0
