@@ -140,11 +140,13 @@
 
                     if (selectedPlace) {
                         updateVisibleParkingMarkers();
-                    }
+                    } 
                 } catch (error) {
                     console.error("🚨 찜한 주차장 로드 실패:", error);
                 }
             }
+
+
             // 페이지가 로드될 때 찜한 주차장 정보를 불러오기
             document.addEventListener("DOMContentLoaded", loadUserFavorites);
 
@@ -290,31 +292,7 @@
 
                 return marker;
             }
-            function addparkMarker(position, idx, title, seat, parking) {
-                if (openInfoWindows[idx]) {
-                    openInfoWindows[idx].close();
-                }
-                var marker = new kakao.maps.Marker({
-                    position: position, 
-                });
-
-                marker.setMap(map);
-                markers.push(marker);
-
-                infowindow = new kakao.maps.InfoWindow({
-                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
-                });
-
-                infowindow.open(map, marker);
-                openInfoWindows.push(infowindow);
-                openInfoWindows[idx] = infowindow;
-
-                kakao.maps.event.addListener(marker, 'click', function () {
-                    showParkingDetail(parking);
-                });
-
-                return marker;
-            }
+            
             function addSelectedMarker(lat, lng) {
                 var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markers_sprites2.png';
                 markerImageSize = new kakao.maps.Size(36, 37), 
@@ -485,13 +463,16 @@
                 visibleParking.forEach((parking, index) => {
                     var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
                     if (favoriteParkingIds.includes(parking.id)) {
-                        addFavoriteMarker(parkingLatLng, index, parking);
+                        addFavoriteMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
                     } else {
-                        addDefaultMarker(parkingLatLng, index, parking);
+                        addDefaultMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
                     }
                 });
             }
-            function addFavoriteMarker(position, idx, parking) {
+            function addFavoriteMarker(position, idx, title, seat, parking) {
+                if (openInfoWindows[idx]) {
+                    openInfoWindows[idx].close();
+                }
                 let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 🔥 찜한 주차장 마커 이미지
                 let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 35));
 
@@ -503,22 +484,45 @@
                 marker.setMap(map);
                 markers.push(marker);
 
+                infowindow = new kakao.maps.InfoWindow({
+                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
+                });
+
+                infowindow.open(map, marker);
+                openInfoWindows.push(infowindow);
+                openInfoWindows[idx] = infowindow;
+
                 kakao.maps.event.addListener(marker, 'click', function () {
                     showParkingDetail(parking);
                 });
+
+                return marker;
             }
 
-            function addDefaultMarker(position, idx, parking) {
-                let marker = new kakao.maps.Marker({
-                    position: position
+            function addDefaultMarker(position, idx, title, seat, parking) {
+                if (openInfoWindows[idx]) {
+                    openInfoWindows[idx].close();
+                }
+                var marker = new kakao.maps.Marker({
+                    position: position, 
                 });
 
                 marker.setMap(map);
                 markers.push(marker);
 
+                infowindow = new kakao.maps.InfoWindow({
+                    content: `<div style="padding:5px; font-size:12px; width:150px; height:50px; text-align:center; display:flex; align-items:center; justify-content:center;">${title}<br>남은자리: ${seat}</div>` 
+                });
+
+                infowindow.open(map, marker);
+                openInfoWindows.push(infowindow);
+                openInfoWindows[idx] = infowindow;
+
                 kakao.maps.event.addListener(marker, 'click', function () {
                     showParkingDetail(parking);
                 });
+
+                return marker;
             }
 
             function removeAllChildNods(el) {
