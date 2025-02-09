@@ -93,9 +93,10 @@
                     data.reviews.forEach(review => {
                         const reviewElement = `
                             <div class="review-item">
-                                <strong>${review.user__username}</strong>
+                                <strong><i class="ri-user-fill"></i>  ${review.user__username}</strong>
                                 <span><i class="ri-star-fill"></i> ${review.rating}</span>
                                 <p>${review.content || ''}</p>
+                                <hr>
                             </div>
                         `;
                         reviewContainer.innerHTML += reviewElement;
@@ -128,7 +129,7 @@
                         likeElement.classList.add("liked-item");
                         likeElement.innerHTML = `
                         <div class="review-item" data-parking-id="${parking.id}">
-                        <strong>${parking.name}</strong>
+                        <strong><i class="ri-parking-box-fill"></i> ${parking.name}</strong>
                         </div>
                 `;
                 likeElement.addEventListener("click", function() {

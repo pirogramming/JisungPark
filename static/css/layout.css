@@ -4,7 +4,6 @@
   margin: auto;
   display: flex;
   flex-direction: column;
-  background-color: var(--blue);
 }
 
 main {
