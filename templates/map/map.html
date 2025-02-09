@@ -650,9 +650,11 @@
                 if (titleElement && infoElement1 && infoElement2) {
                     titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
                     infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
-                    infoElement2.innerHTML = `주차장 유형: ${parking.주차장유형 || "유형 정보 없음"} | 
+                    infoElement2.innerHTML = `
+                    주차장 유형: ${parking.주차장유형 || "유형 정보 없음"}<br>
                     장애인전용주차구역: ${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
-                    남은자리: ${parking.남은자리}`;
+                    남은자리: ${parking.남은자리}
+                    `;
                 }
 
                 selectedParkingLotId = parking.id;  
