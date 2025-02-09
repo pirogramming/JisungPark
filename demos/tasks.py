@@ -64,6 +64,12 @@ def fetch_parking_data_from_api(self):
                         queue.append({"parking_addr":parking_addr, "total_capacity": total_capacity, "phone_num": phone_num ,"saved" : False
                                       ,"current_vehicles": current_vehicles})
                         continue
+                    elif parking_addr not in queue and len(queue) == 0:
+                        queue.append(
+                            {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
+                             "saved": False
+                                , "current_vehicles": current_vehicles})
+                        continue
                     elif not queue[-1]["saved"]:
                         queue[-1]["saved"] = True
                         if not isinstance(queue[-1]["total_capacity"], (int, float)):
