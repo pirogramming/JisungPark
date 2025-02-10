@@ -54,19 +54,19 @@ def response_handle(response):
             print(queue)
             # 한 자리씩 여러 개가 존재하는 경우
             if item_type == '노상 주차장':
-                if queue and parking_addr not in queue["parking_addr"] and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
+                if queue and next((d for d in queue if d["parking_addr"] == addr_to_check), None) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                     queue.append(
                         {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif parking_addr not in queue["parking_addr"] and len(queue) == 0:  # 신규 주차장이며 큐 맨 앞에 들어오는 경우
+                elif next((d for d in queue if d["parking_addr"] == addr_to_check), None) and len(queue) == 0:  # 신규 주차장이며 큐 맨 앞에 들어오는 경우
                     queue.append(
                         {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif parking_addr not in queue["parking_addr"] and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
+                elif next((d for d in queue if d["parking_addr"] == addr_to_check), None) and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
