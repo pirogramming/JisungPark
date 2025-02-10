@@ -117,6 +117,7 @@ def load_parking_data(request):
                 lot['available_spots'] = second_available_spots
             else:
                 lot['available_spots'] = 0
+            print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
         # 🚀 JSON 배열([])로 반환
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
@@ -162,6 +163,7 @@ def map(request):   # 페이지 로드시 사용
         else:
             lot['available_spots'] = 0
         enriched_data.append(lot)
+        print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
     context = {
         "parking_data": json.dumps(enriched_data, ensure_ascii=False),
