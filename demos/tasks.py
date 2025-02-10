@@ -11,18 +11,20 @@ logger = logging.getLogger(__name__)
 # Redis 클라이언트 설정 (한 번만 설정하고 재사용)
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
+
 def normalize_address(address):
-    # 광역지자체명(서울시, 경기도 등) 제거
-    address = re.sub(r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
+    pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
+    pattern2 = r'-0\b'  # 끝 -0 삭제
+    pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
 
-    # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
-    address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
+    address = re.sub(pattern1, '', address)
+    address = re.sub(pattern2, '', address)
+    if re.fullmatch(pattern3, address):
+        #print(address)
+        return address
 
-    # 모든 숫자를 정수 형태로 변환 (앞에 0이 있는 경우 제거)
-    address = re.sub(r'\b\d+\b', lambda x: str(int(x.group())), address)
-    print(address)
-    return address
-
+    return "정규화 실패"
+    #정규식 수정 필요
 def normalize_phonenumber(number):
     # 지역번호 포함 전화번호 처리
     pattern = r'(\d{2,3})[-)]?(\d{3,4})[-]?(\d{4})' #010 or 02 - 3333 - 3333

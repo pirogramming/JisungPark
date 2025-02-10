@@ -14,13 +14,17 @@ import logging
 logger = logging.getLogger(__name__)
 # 주소 비교
 def normalize_address(address):
-    # 광역지자체명(서울시, 경기도 등) 제거
-    address = re.sub(r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
+    pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
+    pattern2 = r'-0\b'  # 끝 -0 삭제
+    pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
 
-    # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
-    address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
-    logger.info(f'주차장주소 : {address}')
-    return address
+    address = re.sub(pattern1, '', address)
+    address = re.sub(pattern2, '', address)
+    if re.fullmatch(pattern3, address):
+        #print(address)
+        return address
+
+    return "정규화 실패"
 
 # Create your views here.
 def get_reviews(request, parking_lot_id):
