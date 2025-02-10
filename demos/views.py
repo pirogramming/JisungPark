@@ -24,7 +24,8 @@ def normalize_address(address):
         #print(address)
         return address
 
-    return "정규화 실패"
+    print('정규화 실패')
+    return address
 
 # Create your views here.
 def get_reviews(request, parking_lot_id):
