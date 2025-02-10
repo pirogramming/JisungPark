@@ -106,10 +106,10 @@ def load_parking_data(request):
             redis_key = f'parking_availability:{parking_addr}'
             available_spots = convert_to_int(redis_client.get(redis_key)) or 0
 
-            '''if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
+            if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
-                second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0'''
+                second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
             # 🚀 올바른 방식으로 남은 자리 설정
             if available_spots and available_spots > 0:
@@ -118,7 +118,7 @@ def load_parking_data(request):
                 lot['available_spots'] = second_available_spots
             else:
                 lot['available_spots'] = 0
-            print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
+            #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
         # 🚀 JSON 배열([])로 반환
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
@@ -151,10 +151,10 @@ def map(request):   # 페이지 로드시 사용
         redis_key = f'parking_availability:{parking_addr}'
         available_spots = convert_to_int(redis_client.get(redis_key)) or 0
 
-        '''if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
+        if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
             phone_num = normalize_phonenumber(phone_num)
             redis_subkey = f'parking_info:{phone_num}'
-            second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0'''
+            second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
         # 🚀 올바른 방식으로 남은 자리 설정
         if available_spots and available_spots > 0:
@@ -164,7 +164,7 @@ def map(request):   # 페이지 로드시 사용
         else:
             lot['available_spots'] = 0
         enriched_data.append(lot)
-        print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
+        #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
     context = {
         "parking_data": json.dumps(enriched_data, ensure_ascii=False),
