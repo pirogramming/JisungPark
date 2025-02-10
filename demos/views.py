@@ -79,7 +79,6 @@ def home(request):
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
 # 수정된 코드 (views.py)
-@csrf_exempt
 def load_parking_data(request):
     try:
         parking_data = list(ParkingLot.objects.values(
