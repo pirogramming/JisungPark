@@ -115,7 +115,7 @@ p{
 .search-box {
     display: grid;
     grid-template-columns: 1fr auto;
-    margin-block: 1rem;
+    margin-block: 1rem; 
 }
 .search-btn {
     background:var(--blue);
