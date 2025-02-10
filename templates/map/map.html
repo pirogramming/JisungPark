@@ -9,7 +9,12 @@
         <div class="option">
             <form onsubmit="searchPlaces(); return false;">
                     <input type="text" value=" " id="keyword" size="15"> 
-                    <button type="submit" class="search-button">검색</button> 
+                    <button type="submit" class="search-button">검색</button>
+                    <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
+                    margin-left: 3px;
+                    top: 2px;
+                    position: relative;
+                    cursor: pointer;"></i>
             </form>
         </div>
         <div class="map_wrap">
@@ -137,7 +142,6 @@
                     const data = await response.json();
 
                     favoriteParkingIds = data.liked_parking_lots.map(lot => lot.id);
-
                     if (selectedPlace) {
                         updateVisibleParkingMarkers();
                     } 
@@ -1137,5 +1141,29 @@
                 })
                 .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
+            document.getElementById("location-btn").addEventListener("click", function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var lon = position.coords.longitude;
+                        var locPosition = new kakao.maps.LatLng(lat, lon);
+
+                        selectedPlace = locPosition;
+                        if (selectedPlaceMarker) {
+                        selectedPlaceMarker.setMap(null);
+                        selectedPlaceMarker = null;
+                    }
+
+                    closeAllInfoWindows();
+
+                        var dummyMarker = { getPosition: () => locPosition }; // 마커 없이 위치 전달
+                        focusOnPlace(dummyMarker);
+                    }, function(error) {
+                        console.error("위치 정보를 가져올 수 없습니다:", error);
+                    });
+                } else {
+                    alert("Geolocation을 지원하지 않는 브라우저입니다.");
+                }
+            });
         </script>
         {% endblock %}
