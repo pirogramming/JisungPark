@@ -105,7 +105,7 @@ def load_parking_data(request):
             redis_key = f'parking_availability:{parking_addr}'
             available_spots = convert_to_int(redis_client.get(redis_key))
 
-            if phone_num.strip() and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
+            if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
                 second_available_spots = convert_to_int(redis_client.get(redis_subkey))
@@ -149,7 +149,7 @@ def map(request):   # 페이지 로드시 사용
         redis_key = f'parking_availability:{parking_addr}'
         available_spots = convert_to_int(redis_client.get(redis_key))
 
-        if phone_num.strip() and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
+        if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
             phone_num = normalize_phonenumber(phone_num)
             redis_subkey = f'parking_info:{phone_num}'
             second_available_spots = convert_to_int(redis_client.get(redis_subkey))
