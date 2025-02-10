@@ -596,7 +596,6 @@
 
                 if (visibleparkinglot.length === 0) {
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
-                    return;
                 }
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
@@ -1159,8 +1158,8 @@
                         var dummyMarker = { getPosition: () => locPosition }; // 마커 없이 위치 전달
                         focusOnPlace(dummyMarker);
                     }, function(error) {
-                        console.error("위치 정보를 가져올 수 없습니다:", error);
-                    });
+                        console.error("위치 정보를 가져올 수 없습니다:", error);}
+                    );
                 } else {
                     alert("Geolocation을 지원하지 않는 브라우저입니다.");
                 }
