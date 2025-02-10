@@ -118,9 +118,9 @@ p{
     margin-block: 1rem;
 }
 .search-btn {
-    background: var(--yellow);
+    background:var(--blue);
     padding:1rem;
-    border-radius: 1rem;
+    border-radius: 0.6rem;
     margin-top: 1rem;
     color: black;
 }
@@ -200,7 +200,6 @@ p{
     border-radius: 4px;
     box-sizing: border-box;
     margin-block: 1rem;
-    background: rgba(255, 255, 255, 0.7);
 }
 .form-control::placeholder {
     opacity: 1; 
@@ -285,7 +284,7 @@ p{
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
-    padding: 40px 30px;
+    padding: 40px 10px;
 }
 .mypage a {
     margin: 1.5rem;
@@ -639,3 +638,29 @@ h6 {
     object-fit: cover; 
 }
 
+.click {
+    position:absolute;
+}
+.me {
+    position: relative;
+    top:360px;
+    left:255px;
+    z-index: 1;
+}
+.me p {
+    font-size: 1.3rem;
+    color: #3C61D1;
+}
+.star {
+    position: relative;
+    top:360px;
+    left:98px;
+    z-index: 1;
+}
+.star i{
+    color:#FFDC3C;
+    font-size: 1.3rem;
+}
+.ri-parking-box-fill, .ri-user-fill{
+    color: var(--icon);
+}

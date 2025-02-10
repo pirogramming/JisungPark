@@ -121,7 +121,7 @@
     font-size: 2rem;
     font-weight: bold;
 }
-#menu_wrap hr {
+#menu_wrap hr{
     display: block; 
     height: 1px;
     border: 0; 
@@ -238,11 +238,24 @@
 .review-btn, .community-btn{
     padding: 10px;
     background: var(--btn);
-    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     color: black;
+}
+.fix-btn{
+    padding: 5px;
+    background: var(--blue);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: black;
+    width: 30%;
+    margin-bottom: 2rem;
+}
+.fix-container {
+    display: flex;
+    flex-direction: column;
 }
 .input-msg, .input-qna {
     flex-direction: row;
@@ -265,6 +278,7 @@
 .review-item p, .review-item strong{
     margin-top: 1rem;
     font-size: 1.4rem;
+    margin-left: 0.5rem;
 }
 #favorite, #myreview{
     margin-top: 2rem;
@@ -325,6 +339,7 @@
     display: flex;
     gap: 5px;
     cursor: pointer;
+    align-items: center;
 }
 
 .star-rating i {

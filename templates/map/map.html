@@ -945,14 +945,16 @@
                 if (!reviewElement) return;
             
                 reviewElement.innerHTML = `
-                    <div class="star-rating">
-                        ${[1, 2, 3, 4, 5].map(star => `
-                            <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
-                        `).join('')}
+                    <div class="fix-container">
+                        <div class="star-rating">
+                            ${[1, 2, 3, 4, 5].map(star => `
+                                <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
+                            `).join('')}
+                            <p id="rating-display-${reviewId}">${currentRating}점</p>
+                        </div>
+                        <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
+                        <button class="fix-btn" onclick="updateReview(${reviewId})">수정 완료</button>
                     </div>
-                    <p id="rating-display-${reviewId}">${currentRating}점</p>
-                    <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
-                    <button class="review-btn" onclick="updateReview(${reviewId})">수정 완료</button>
                 `;
                 selectRating(currentRating, reviewId);
             }
