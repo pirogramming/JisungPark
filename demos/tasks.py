@@ -22,8 +22,9 @@ def normalize_address(address):
     if re.fullmatch(pattern3, address):
         #print(address)
         return address
-
-    return "정규화 실패"
+    
+    print('정규화 실패')
+    return address
     #정규식 수정 필요
 def normalize_phonenumber(number):
     # 지역번호 포함 전화번호 처리
