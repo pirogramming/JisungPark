@@ -491,7 +491,7 @@
                 }
 
                 let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 찜한 주차장 마커 이미지
-                let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 35));
+                let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 39));
 
                 let marker = new kakao.maps.Marker({
                     position: position,
@@ -505,9 +505,9 @@
                 if (seat > 10) textColor = "green";
                 else if (seat > 5) textColor = "orange";
 
-                let overlayContent = `<div style="position:relative;width:17px;height:17px;text-align:center;
+                let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
                                         color:${textColor};font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:13px;bottom:23px;">${seat}</div>`;
+                                        line-height:20px;font-size:12px;bottom:26px; left:1px; pointer-events: none;">${seat}</div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
@@ -545,9 +545,9 @@
                 if (seat > 10) textColor = "green";
                 else if (seat > 5) textColor = "orange";
 
-                let overlayContent = `<div style="position:relative;width:17px;height:17px;text-align:center;
+                let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
                                         color:${textColor};font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:13px;bottom:27px;">${seat}</div>`;
+                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">${seat}</div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
@@ -1141,6 +1141,7 @@
                 })
                 .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
+
             document.getElementById("location-btn").addEventListener("click", function() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
