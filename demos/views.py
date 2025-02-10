@@ -24,7 +24,7 @@ def normalize_address(address):
         #print(address)
         return address
 
-    print('정규화 실패')
+    #print('정규화 실패')
     return address
 
 # Create your views here.
