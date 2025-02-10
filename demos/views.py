@@ -79,6 +79,7 @@ def home(request):
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
 # 수정된 코드 (views.py)
+@csrf_exempt
 def load_parking_data(request):
     try:
         parking_data = list(ParkingLot.objects.values(
@@ -86,36 +87,41 @@ def load_parking_data(request):
             "base_time", "base_fee", "extra_time", "extra_fee",
             "fee_info", "type", "disabled_parking", "average_rating", "phone"
         ))
+
+        def convert_to_int(value):
+            """ Redis 데이터를 정수로 변환하는 함수 """
+            if value is None:
+                return 0
+            try:
+                return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
+            except ValueError:
+                return 0
+
         for lot in parking_data:
             parking_addr = lot['lot_address']
             phone_num = lot['phone']
             second_available_spots = None
-            parking_addr = normalize_address(parking_addr)  # 주소 정규화
-            redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
-            available_spots = redis_client.get(redis_key)
 
-            if phone_num != '' and phone_num != ' ': #전화번호가 공백이 아닌 경우에만 매칭에 이용
+            parking_addr = normalize_address(parking_addr)  # 주소 정규화
+            redis_key = f'parking_availability:{parking_addr}'
+            available_spots = convert_to_int(redis_client.get(redis_key))
+
+            if phone_num and phone_num.strip():  # 전화번호가 공백이 아닐 때만
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
-                second_available_spots = redis_client.get(redis_subkey)
+                second_available_spots = convert_to_int(redis_client.get(redis_subkey))
 
-            ### if available_spots!=None:
-            ### print(available_spots)
-
-            if available_spots != '0' and available_spots:
-                lot['available_spots'] = int(float(available_spots))
-            elif second_available_spots != '0' and available_spots:
-                lot['available_spots'] = int(float(second_available_spots))
+            # 🚀 올바른 방식으로 남은 자리 설정
+            if available_spots > 0:
+                lot['available_spots'] = available_spots
+            elif second_available_spots > 0:
+                lot['available_spots'] = second_available_spots
             else:
                 lot['available_spots'] = 0
 
-            #lot['available_spots'] = (available_spots) if available_spots else 0
-
-            ### if lot['available_spots'] != None and lot['available_spots']!=0 and lot['available_spots']!='0':
-                ### print(lot['available_spots'])
-
-
+        # 🚀 JSON 배열([])로 반환
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
+
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
