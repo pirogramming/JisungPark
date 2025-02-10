@@ -93,7 +93,8 @@ def load_parking_data(request):
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
             redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
             available_spots = redis_client.get(redis_key)
-            if phone_num != '':
+
+            if phone_num != '' and phone_num != ' ': #전화번호가 공백이 아닌 경우에만 매칭에 이용
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
                 second_available_spots = redis_client.get(redis_subkey)
@@ -101,9 +102,9 @@ def load_parking_data(request):
             ### if available_spots!=None:
             ### print(available_spots)
 
-            if available_spots:
+            if available_spots != 0:
                 lot['available_spots'] = available_spots
-            elif second_available_spots:
+            elif second_available_spots != 0:
                 lot['available_spots'] = second_available_spots
             else:
                 lot['available_spots'] = 0
