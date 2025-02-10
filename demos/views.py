@@ -112,9 +112,9 @@ def load_parking_data(request):
 
             # 🚀 올바른 방식으로 남은 자리 설정
             if available_spots > 0:
-                lot['available_spots'] = available_spots
+                lot['available_spots'] = str(available_spots)
             elif second_available_spots > 0:
-                lot['available_spots'] = second_available_spots
+                lot['available_spots'] = str(second_available_spots)
             else:
                 lot['available_spots'] = 0
 
