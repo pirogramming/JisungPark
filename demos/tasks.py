@@ -139,7 +139,7 @@ def fetch_parking_data_from_api(self):
             timeout=10  # 10초 타임아웃 설정
         )
         response2 = requests.get(
-            f'http://openapi.seoul.go.kr:8088/{settings.SEOUL_KEY}/json/GetParkingInfo/2/1000',
+            f'http://openapi.seoul.go.kr:8088/{settings.SEOUL_KEY}/json/GetParkingInfo/1001/1875',
             timeout=10  # 10초 타임아웃 설정
         )
 
