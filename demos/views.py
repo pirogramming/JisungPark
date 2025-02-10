@@ -102,9 +102,9 @@ def load_parking_data(request):
             ### if available_spots!=None:
             ### print(available_spots)
 
-            if available_spots != '0':
+            if available_spots != '0' and available_spots:
                 lot['available_spots'] = int(float(available_spots))
-            elif second_available_spots != '0':
+            elif second_available_spots != '0' and available_spots:
                 lot['available_spots'] = int(float(second_available_spots))
             else:
                 lot['available_spots'] = 0
