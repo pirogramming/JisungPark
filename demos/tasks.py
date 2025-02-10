@@ -87,7 +87,7 @@ def response_handle(response):
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                else:  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
+                elif next((d for d in queue if d["parking_addr"] == parking_addr), None):  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
                     queue[-1]["total_capacity"] += total_capacity
                     continue
             elif queue and not queue[-1]["saved"]:  # 노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우
