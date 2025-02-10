@@ -38,7 +38,7 @@ def normalize_phonenumber(number):
 
     return number
 
-def response_handle(response):
+'''def response_handle(response):
     if response.status_code == 200:
         data = response.json().get('GetParkingInfo', {}).get('row', [])
         queue = []
@@ -125,6 +125,65 @@ def response_handle(response):
             redis_client.setex(redis_key_alias, 60, available_spots)  # 1분 TTL 설정
 
             logger.info(f"주차장주소 '{parking_addr}' 데이터 저장 완료 (남은 자리: {available_spots})")
+
+    else:
+        logger.error(f"API 요청 실패: {response.status_code} - {response.text}")
+        raise self.retry(exc=Exception(f"API 요청 실패: {response.status_code}"))'''
+
+
+def response_handle(response):
+    if response.status_code == 200:
+        data = response.json().get('GetParkingInfo', {}).get('row', [])
+        queue = []
+
+        for item in data:
+            # 데이터 전처리
+            parking_addr = item.get('ADDR', 'unknown').strip().lower()
+            parking_addr = normalize_address(parking_addr)
+            total_capacity = item.get('TPKCT', 0)
+            current_vehicles = item.get('NOW_PRK_VHCL_CNT', 0)
+            phone_num = item.get('TELNO', '')
+            phone_num = normalize_phonenumber(phone_num)
+            item_type = item.get("PRK_TYPE_NM", '')
+
+            # 🚀 [개선] 기존 queue에 동일한 주차장이 있는지 확인
+            existing_entry = next((q for q in queue if q["parking_addr"] == parking_addr), None)
+            
+            if existing_entry:
+                # 중복된 주차장일 경우 total_capacity 추가
+                existing_entry["total_capacity"] += total_capacity
+                existing_entry["current_vehicles"] += current_vehicles
+                continue  # 중복된 항목은 새로운 객체를 추가하지 않고 capacity만 업데이트
+
+            # 새로운 주차장 추가
+            queue.append({
+                "parking_addr": parking_addr,
+                "total_capacity": total_capacity,
+                "phone_num": phone_num,
+                "saved": False,
+                "current_vehicles": current_vehicles
+            })
+
+        # 🚀 [개선] Redis 저장 로직
+        for entry in queue:
+            if not entry["saved"]:
+                entry["saved"] = True
+
+                # 데이터 타입 검증
+                entry["total_capacity"] = entry["total_capacity"] if isinstance(entry["total_capacity"],
+                                                                                (int, float)) else 0
+                entry["current_vehicles"] = entry["current_vehicles"] if isinstance(entry["current_vehicles"],
+                                                                                    (int, float)) else 0
+                available_spots = max(0, entry["total_capacity"] - entry["current_vehicles"])
+
+                # Redis 저장
+                redis_key_main = f'parking_availability:{entry["parking_addr"]}'
+                redis_client.setex(redis_key_main, 60, available_spots)
+
+                redis_key_alias = f'parking_info:{entry["phone_num"]}'
+                redis_client.setex(redis_key_alias, 60, available_spots)
+
+                logger.info(f"주차장주소 '{entry['parking_addr']}' 데이터 저장 완료 (남은 자리: {available_spots})")
 
     else:
         logger.error(f"API 요청 실패: {response.status_code} - {response.text}")
