@@ -9,9 +9,10 @@ from user.models import User
 from .models import UserFavoriteParking, Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .forms import CommentForm
+from .forms import CommentForm, MyInfoForm
 from .tasks import normalize_phonenumber
 import logging
+from django.contrib.auth import logout
 
 logger = logging.getLogger(__name__)
 # 주소 비교
@@ -382,17 +383,27 @@ def get_parking(request, parking_lot_id):
         return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
 
 def mypage_detail(request, user_id):
+    user = get_object_or_404(User, id=user_id)  # 사용자 객체 가져오기
+    form = MyInfoForm(instance=user)  # 기존 사용자 정보로 폼 초기화
+
     if request.method == "POST":
-        user = get_object_or_404(User, id=user_id)
+        form = MyInfoForm(request.POST, instance=user)  # 기존 유저 정보 갱신
+        if form.is_valid():
+            form.save()  # 사용자 정보 저장
+            return render(request, "mypage.html", {"user_id": user_id, "form": form, "message": "정보가 수정되었습니다!"})
 
     ctx = {
         "user_id": user_id,
+        "form": form,
     }
-    return render(request, 'mysetting.html', ctx)
+    return render(request, "mysetting.html", ctx)
 
 def withdraw_user(request, user_id):
-    if request.method == "DELETE":
-        user = get_object_or_404(User, id=user_id)
-        user.delete()
-        return redirect("demos:home")
-    return JsonResponse({"error":"해당 유저가 존재하지 않습니다."}, status=400)
+    if request.method == "POST":
+        user = get_object_or_404(User, id=user_id)  # 유저 조회
+        logout(request)  # 로그아웃
+        user.delete()  # 사용자 삭제
+
+        return JsonResponse({"message": "회원 탈퇴가 완료되었습니다."}, status=200)
+
+    return JsonResponse({"error": "잘못된 요청입니다."}, status=400)

@@ -32,6 +32,15 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def delete_user(self, user_id):
+        try:
+            user = self.get(id=user_id)  # ID로 사용자 조회
+            user.delete()  # 삭제
+            return True
+        except self.model.DoesNotExist:
+            return False  # 사용자가 존재하지 않음
+
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(

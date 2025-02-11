@@ -11,7 +11,11 @@
           <button type="submit" class="setting_btn">프로필 수정</button>
             <hr>
         </form>
-        <a href="{% url 'account_login'%}" class="delete_btn">계정 삭제</a> <!--url바꿔야대-->
+
+        <form id="withdrawForm" method="POST">
+            {% csrf_token %}
+            <button type="button" onclick="withdrawUser(userId)" class="delete_btn">회원 탈퇴</button>
+        </form>
     </div>
   </div>
   {% endblock %}
@@ -25,4 +29,29 @@
       <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
   </div>
     </footer>
+      {{ user_id | json_script:'userId' }}
+      <script>
+      const userId = parseInt(JSON.parse(document.getElementById("userId").textContent));
+      //console.log(userId);
+      function withdrawUser(userId) {
+    fetch(`/accounts/withdraw/${userId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCSRFToken() },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert("회원 탈퇴가 완료되었습니다.");
+            window.location.href = "/";
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error("탈퇴 실패:", error));
+}
+
+function getCSRFToken() {
+    return document.querySelector("input[name='csrfmiddlewaretoken']").value;
+}
+      </script>
 {% endblock %}
