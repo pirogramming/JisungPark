@@ -381,6 +381,15 @@ def get_parking(request, parking_lot_id):
     except ParkingLot.DoesNotExist:
         return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
 
+def mypage_detail(request, user_id):
+    if request.method == "POST":
+        user = get_object_or_404(User, id=user_id)
+
+    ctx = {
+        "user_id": user_id,
+    }
+    return render(request, 'mysetting.html', ctx)
+
 def withdraw_user(request, user_id):
     if request.method == "DELETE":
         user = get_object_or_404(User, id=user_id)

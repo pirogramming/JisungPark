@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/real-time-parking/', views.load_parking_data, name='real_time_parking'),  # 실시간 데이터 API
     path('api/toggle_favorite/', toggle_favorite, name='toggle_favorite'),
     path("api/favorites/", get_favorites, name="get_favorites"),
+    path("mypage/update/<int:user_id>", views.mypage_detail, name='mypage_detail'),
 ]
