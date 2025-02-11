@@ -167,7 +167,7 @@ p{
     background: white;
 }
 .signup_container {
-    height: 90% !important;
+    padding: 10px;
 }
 .login_container {
     height: 50rem;
@@ -212,6 +212,9 @@ input, textarea {
 }
 .signup_form ul {
     display: none;
+}
+.signup_form p {
+    margin-block: 0.5rem;
 }
 .login-btn, .signup-btn{
     margin-top: 1rem;
