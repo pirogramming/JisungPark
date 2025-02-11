@@ -438,7 +438,6 @@
                         '별점평균': parseFloat(place['average_rating']).toFixed(2),
                         '전체자리': parseInt(place['capacity'])
                     });
-                    console.log(전체자리);
                 }); 
                 //updateParkingDisplay();
             }
@@ -537,8 +536,8 @@
                 markers.push(marker);
 
                 let textColor = "";
-                if (seat > 10) textColor = "green";
-                else if (seat > 5) textColor = "orange";
+                if (seat/parking.전체자리 >= 0.5) textColor = "green";
+                else if (seat/parking.전체자리 >= 0.1) textColor = "orange";
                 else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
 
                 // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
@@ -585,8 +584,8 @@
                 markers.push(marker);
 
                 let textColor = "";
-                if (seat > 10) textColor = "green";
-                else if (seat > 5) textColor = "orange";
+                if (seat/parking.전체자리 >= 0.5) textColor = "green";
+                else if (seat/parking.전체자리 >= 0.1) textColor = "orange";
                 else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
 
                 // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
@@ -813,9 +812,16 @@
                     infoElement3.innerHTML = `
                     장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
                     `;
-                    infoElement4.innerHTML = `
-                    남은자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}
-                    `;
+                    if(parking.남은자리 === null || parking.남은자리 === undefined || isNaN(parking.남은자리)){
+                        infoElement4.innerHTML = `
+                        전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전체자리}
+                        `;
+                    }
+                    else{
+                        infoElement4.innerHTML = `
+                        남은자리/전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}/${parking.전체자리}
+                        `;
+                    }
                 }
 
                 selectedParkingLotId = parking.id;  

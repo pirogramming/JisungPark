@@ -131,7 +131,6 @@ p{
     justify-content: center;
     align-items: center;
     background-color: white;
-    padding: 30px 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -168,7 +167,7 @@ p{
     background: white;
 }
 .signup_container {
-    height: 60rem;
+    padding: 10px;
 }
 .login_container {
     height: 50rem;
@@ -178,7 +177,7 @@ p{
     display: inline-block;
     margin-right: 5px;
     text-align: right;
-    width: 7rem;
+    width: 8rem;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     color: #555;
@@ -214,8 +213,10 @@ input, textarea {
 .signup_form ul {
     display: none;
 }
+.signup_form p {
+    margin-block: 0.5rem;
+}
 .login-btn, .signup-btn{
-    margin-top: 1rem;
     padding: 10px 15px;
     font-size: 16px;
     background-color: #8BE0F1;
@@ -239,8 +240,9 @@ input, textarea {
     border-radius: 50%;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
-
-
+.social-login button {
+    border-radius: 50%;
+}
 .login-add {
     display:flex;
     flex-direction: column;
