@@ -452,9 +452,9 @@
                             const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
                                 parking['남은자리'] = realTimeInfo['available_spots'] === null ? null : Number(realTimeInfo['available_spots']);
-                                if (parking['남은자리'] > 0) {
-                                    console.log(`주소: ${parking['소재지지번주소']}, 주차장: ${parking['주차장명']}, 남은자리: ${parking['남은자리']}`);
-                                }
+                                // if (parking['남은자리'] > 0) {
+                                //     console.log(`주소: ${parking['소재지지번주소']}, 주차장: ${parking['주차장명']}, 남은자리: ${parking['남은자리']}`);
+                                // }
                             }
                             
                         });
