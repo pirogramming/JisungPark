@@ -639,30 +639,6 @@ h6 {
     border-radius: 50%;
     object-fit: cover; 
 }
-
-.click {
-    position:absolute;
-}
-.me {
-    position: relative;
-    top:330px;
-    left:255px;
-    z-index: 1;
-}
-.me p {
-    font-size: 1.3rem;
-    color: #3C61D1;
-}
-.star {
-    position: relative;
-    top:330px;
-    left:98px;
-    z-index: 1;
-}
-.star i{
-    color:#FFDC3C;
-    font-size: 1.3rem;
-}
 .ri-parking-box-fill, .ri-user-fill{
     color: var(—icon);
 }
