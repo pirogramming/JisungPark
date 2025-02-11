@@ -130,7 +130,6 @@ def load_parking_data(request):
 
 def map(request):   # 페이지 로드시 사용
     parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone")
-
     enriched_data = []
 
     def convert_to_int(value):
@@ -168,7 +167,8 @@ def map(request):   # 페이지 로드시 사용
 
     context = {
         "parking_data": json.dumps(enriched_data, ensure_ascii=False),
-        "MAP_KEY": settings.MAP_KEY
+        "MAP_KEY": settings.MAP_KEY,
+        
     }
     return render(request, "map/map.html", context)
 

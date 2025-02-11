@@ -15,6 +15,12 @@
                     top: 2px;
                     position: relative;
                     cursor: pointer;"></i>
+                    <button type="submit" class="search-button">검색</button>
+                    <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
+                    margin-left: 3px;
+                    top: 2px;
+                    position: relative;
+                    cursor: pointer;"></i>
             </form>
         </div>
         <div class="map_wrap">
@@ -799,6 +805,7 @@
                 }
 
                 selectedParkingLotId = parking.id;  
+                updateHeartIcon(selectedParkingLotId);
 
                 
                 document.getElementById('parkingListWrap').style.display = "none"; 
@@ -810,6 +817,8 @@
                     }
                     else{
                     showClosestParkingLots();
+                    document.getElementById('list-btn').style.display = "block";
+                    document.getElementById('parkingListWrap').style.display = "none"; 
                     document.getElementById('list-btn').style.display = "block";
                     document.getElementById('parkingListWrap').style.display = "none"; 
                     document.getElementById('parkingDetailWrap').style.display = "none";
@@ -990,6 +999,16 @@
                         <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
                         <button class="fix-btn" onclick="updateReview(${reviewId})">수정 완료</button>
                     </div>
+                    <div class="fix-container">
+                        <div class="star-rating">
+                            ${[1, 2, 3, 4, 5].map(star => `
+                                <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
+                            `).join('')}
+                            <p id="rating-display-${reviewId}">${currentRating}점</p>
+                        </div>
+                        <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
+                        <button class="fix-btn" onclick="updateReview(${reviewId})">수정 완료</button>
+                    </div>
                 `;
                 selectRating(currentRating, reviewId);
             }
@@ -1133,6 +1152,28 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
+            function updateHeartIcon(parkingId) {
+                fetch('/api/favorites/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const favorited = data.liked_parking_lots.some(lot => lot.id === parkingId);
+                        const heartIcon = document.getElementById("toggle-btn");
+            
+                        if (heartIcon) {
+                            if (favorited) {
+                                heartIcon.classList.remove("ri-heart-3-line");
+                                heartIcon.classList.add("ri-heart-3-fill");
+                                heartIcon.style.color = "red";
+                            } else {
+                                heartIcon.classList.remove("ri-heart-3-fill");
+                                heartIcon.classList.add("ri-heart-3-line");
+                                heartIcon.style.color = "black";
+                            }
+                        }
+                    })
+                    .catch(error => console.error("🚨 찜한 주차장 로드 실패:", error));
+            }
+            
             function toggleLike() { 
                 const heartIcon = document.getElementById("toggle-btn");
                 const parkingId = selectedParkingLotId; 
@@ -1172,7 +1213,6 @@
                 })
                 .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
-
             document.getElementById("location-btn").addEventListener("click", function() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
