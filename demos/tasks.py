@@ -54,7 +54,7 @@ def response_handle(response):
             print(queue)
             # 한 자리씩 여러 개가 존재하는 경우
             if item_type == '노상 주차장':
-                if queue and (d for d in queue if d["parking_addr"] != parking_addr) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
+                if queue and not any(d["parking_addr"] == parking_addr for d in queue) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                     queue.append(
                         {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                          "saved": False
@@ -66,7 +66,7 @@ def response_handle(response):
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif (d for d in queue if d["parking_addr"] != parking_addr) and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
+                elif not any(d["parking_addr"] == parking_addr for d in queue) and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
@@ -87,7 +87,7 @@ def response_handle(response):
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif (d for d in queue if d["parking_addr"] == parking_addr) and not queue[-1]["saved"]:  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
+                elif any(d["parking_addr"] == parking_addr for d in queue) and not queue[-1]["saved"]:  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
                     queue[-1]["total_capacity"] += total_capacity
                     continue
             elif queue and not queue[-1]["saved"]:  # 노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우
