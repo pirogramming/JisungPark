@@ -17,14 +17,16 @@ def normalize_address(address):
     pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
     pattern2 = r'-0\b'  # 끝 -0 삭제
     pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
+    pattern4 = r'\s\(.*?\)'
 
     address = re.sub(pattern1, '', address)
     address = re.sub(pattern2, '', address)
+    address = re.sub(pattern4, '', address)
     if re.fullmatch(pattern3, address):
-        #print(address)
+        # print(address)
         return address
 
-    #print('정규화 실패')
+    # print('정규화 실패')
     return address
 
 # Create your views here.
@@ -112,12 +114,12 @@ def load_parking_data(request):
                 second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
             # 🚀 올바른 방식으로 남은 자리 설정
-            if available_spots and available_spots > 0:
+            if available_spots and available_spots >= 0:
                 lot['available_spots'] = available_spots
-            elif second_available_spots and second_available_spots > 0:
+            elif second_available_spots and second_available_spots >= 0:
                 lot['available_spots'] = second_available_spots
             else:
-                lot['available_spots'] = 0
+                lot['available_spots'] = None
             #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
         # 🚀 JSON 배열([])로 반환
@@ -156,12 +158,12 @@ def map(request):   # 페이지 로드시 사용
             second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
         # 🚀 올바른 방식으로 남은 자리 설정
-        if available_spots and available_spots > 0:
+        if available_spots and available_spots >= 0:
             lot['available_spots'] = available_spots
-        elif second_available_spots and second_available_spots > 0:
+        elif second_available_spots and second_available_spots >= 0:
             lot['available_spots'] = second_available_spots
         else:
-            lot['available_spots'] = 0
+            lot['available_spots'] = None
         enriched_data.append(lot)
         #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 

@@ -16,15 +16,18 @@ def normalize_address(address):
     pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
     pattern2 = r'-0\b'  # 끝 -0 삭제
     pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
+    pattern4 = r'\s\(.*?\)'
 
     address = re.sub(pattern1, '', address)
     address = re.sub(pattern2, '', address)
+    address = re.sub(pattern4, '', address)
     if re.fullmatch(pattern3, address):
-        #print(address)
+        # print(address)
         return address
-    
-    #print('정규화 실패')
+
+    # print('정규화 실패')
     return address
+
     #정규식 수정 필요
 def normalize_phonenumber(number):
     # 지역번호 포함 전화번호 처리
@@ -51,22 +54,22 @@ def response_handle(response):
             phone_num = item.get('TELNO', '')
             phone_num = normalize_phonenumber(phone_num)
             item_type = item.get("PRK_TYPE_NM", '')
-            print(queue)
+            #print(queue)
             # 한 자리씩 여러 개가 존재하는 경우
             if item_type == '노상 주차장':
-                if queue and next((d for d in queue if d["parking_addr"] == parking_addr), None) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
+                if queue and not any(d["parking_addr"] == parking_addr for d in queue) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
                     queue.append(
                         {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif next((d for d in queue if d["parking_addr"] == parking_addr), None) and len(queue) == 0:  # 신규 주차장이며 큐 맨 앞에 들어오는 경우
+                elif len(queue) == 0 :  # 신규 주차장이며 큐 맨 앞에 들어오는 경우
                     queue.append(
                         {"parking_addr": parking_addr, "total_capacity": total_capacity, "phone_num": phone_num,
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif next((d for d in queue if d["parking_addr"] == parking_addr), None) and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
+                elif not any(d["parking_addr"] == parking_addr for d in queue) and not queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 redis에 저장이 안된 경우
                     queue[-1]["saved"] = True
                     if not isinstance(queue[-1]["total_capacity"], (int, float)):
                         queue[-1]["total_capacity"] = 0
@@ -87,7 +90,7 @@ def response_handle(response):
                          "saved": False
                             , "current_vehicles": current_vehicles})
                     continue
-                elif next((d for d in queue if d["parking_addr"] == parking_addr), None):  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
+                elif any(d["parking_addr"] == parking_addr for d in queue) and not queue[-1]["saved"]:  # 큐에 기존에 존재하는 주차장이며 redis에 저장이 안된 경우
                     queue[-1]["total_capacity"] += total_capacity
                     continue
             elif queue and not queue[-1]["saved"]:  # 노상 주차장이 아니며 큐에 마지막으로 삽입된 것이 redis에 저장이 안된 경우

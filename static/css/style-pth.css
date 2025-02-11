@@ -8,7 +8,14 @@
     width:100%;
     height:94%;
 }
+.form-top{
+    width:100%;
+}
 .option{
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    justify-content: center;
     width: 100%;
     height: 5%;
     padding:7px;
@@ -95,8 +102,8 @@
     position: relative;
     z-index: 1;
     left: 6px;
-    bottom: 470px;
-    height: 50%;
+    bottom: 363px;
+    height: 329px;
     overflow-y: auto;
     background:rgba(255, 255, 255, 0.9);
     padding: 20px 30px;
