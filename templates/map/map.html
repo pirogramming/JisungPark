@@ -8,13 +8,7 @@
 {% block content %}
         <div class="option">
             <form onsubmit="searchPlaces(); return false;">
-                    <input type="text" value=" " id="keyword" size="15"> 
-                    <button type="submit" class="search-button">검색</button>
-                    <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
-                    margin-left: 3px;
-                    top: 2px;
-                    position: relative;
-                    cursor: pointer;"></i>
+                    <input type="text" value=" " id="keyword" size="15">
                     <button type="submit" class="search-button">검색</button>
                     <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
                     margin-left: 3px;
@@ -164,6 +158,10 @@
                 selectedPlace = null;
                 var keyword = document.getElementById('keyword').value;
 
+                 // mypage안 favorite, myreview 에서 클릭 시 alert 문 생성 방지
+                if (window.location.search.includes("parking_id=")) {
+                return; // /map/?parking_id= 경로에선 실행되지 않음 
+                }
                 if (!keyword.replace(/^\s+|\s+$/g, '')) {
                     alert('주소나 장소를 입력해주세요!');
                     return false;
@@ -887,9 +885,9 @@
                     parkingListWrap.style.display = "none"; 
                 }
             }
-            {% comment %} document.addEventListener('DOMContentLoaded', () => {
-                loadReviews(); // 페이지 로드 시 기존 리뷰 로드
-            });  {% endcomment %}
+            //document.addEventListener('DOMContentLoaded', () => {
+               // loadReviews(); // 페이지 로드 시 기존 리뷰 로드
+            //});  
 
             const reviewContainer = document.querySelector('.review-list');
 
