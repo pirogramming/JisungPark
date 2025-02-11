@@ -85,7 +85,7 @@ redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_respo
 def load_parking_data(request):
     try:
         parking_data = list(ParkingLot.objects.values(
-            "id", "name", "lot_address", "latitude", "longitude",
+            "id", "name", "lot_address", "capacity", "latitude", "longitude",
             "base_time", "base_fee", "extra_time", "extra_fee",
             "fee_info", "type", "disabled_parking", "average_rating", "phone"
         ))
@@ -93,11 +93,11 @@ def load_parking_data(request):
         def convert_to_int(value):
             """ Redis 데이터를 정수로 변환하는 함수 """
             if value is None:
-                return 0
+                return value
             try:
                 return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
             except ValueError:
-                return 0
+                return None
 
         for lot in parking_data:
             parking_addr = lot['lot_address']
@@ -106,12 +106,12 @@ def load_parking_data(request):
 
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
             redis_key = f'parking_availability:{parking_addr}'
-            available_spots = convert_to_int(redis_client.get(redis_key)) or 0
+            available_spots = convert_to_int(redis_client.get(redis_key))
 
             if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
-                second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
+                second_available_spots = convert_to_int(redis_client.get(redis_subkey))
 
             # 🚀 올바른 방식으로 남은 자리 설정
             if available_spots and available_spots >= 0:
@@ -137,11 +137,11 @@ def map(request):   # 페이지 로드시 사용
     def convert_to_int(value):
         """ Redis 데이터를 정수로 변환하는 함수 """
         if value is None:
-            return 0
+            return value
         try:
             return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
         except ValueError:
-            return 0
+            return None
 
     for lot in parking_data:
         parking_addr = lot['lot_address']
@@ -150,12 +150,12 @@ def map(request):   # 페이지 로드시 사용
 
         parking_addr = normalize_address(parking_addr)  # 주소 정규화
         redis_key = f'parking_availability:{parking_addr}'
-        available_spots = convert_to_int(redis_client.get(redis_key)) or 0
+        available_spots = convert_to_int(redis_client.get(redis_key))
 
         if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
             phone_num = normalize_phonenumber(phone_num)
             redis_subkey = f'parking_info:{phone_num}'
-            second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
+            second_available_spots = convert_to_int(redis_client.get(redis_subkey))
 
         # 🚀 올바른 방식으로 남은 자리 설정
         if available_spots and available_spots >= 0:
