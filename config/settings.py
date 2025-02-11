@@ -131,7 +131,7 @@ ASGI_APPLICATION = 'config.asgi.application'
     }
 }'''
 #‼️✔️✔️✔️📢📢📢📢📢📢호스팅 할 때는 주석 처리 풀어줘요
-'''DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'jisungpark',
@@ -140,7 +140,7 @@ ASGI_APPLICATION = 'config.asgi.application'
         'HOST': (f"{DB_NAME}"),
         'PORT': '3306'
     }
-}'''
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
