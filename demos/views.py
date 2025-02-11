@@ -112,12 +112,12 @@ def load_parking_data(request):
                 second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
             # 🚀 올바른 방식으로 남은 자리 설정
-            if available_spots and available_spots > 0:
+            if available_spots and available_spots >= 0:
                 lot['available_spots'] = available_spots
-            elif second_available_spots and second_available_spots > 0:
+            elif second_available_spots and second_available_spots >= 0:
                 lot['available_spots'] = second_available_spots
             else:
-                lot['available_spots'] = 0
+                lot['available_spots'] = None
             #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
         # 🚀 JSON 배열([])로 반환
@@ -156,12 +156,12 @@ def map(request):   # 페이지 로드시 사용
             second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
         # 🚀 올바른 방식으로 남은 자리 설정
-        if available_spots and available_spots > 0:
+        if available_spots and available_spots >= 0:
             lot['available_spots'] = available_spots
-        elif second_available_spots and second_available_spots > 0:
+        elif second_available_spots and second_available_spots >= 0:
             lot['available_spots'] = second_available_spots
         else:
-            lot['available_spots'] = 0
+            lot['available_spots'] = None
         enriched_data.append(lot)
         #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 

@@ -51,7 +51,7 @@ def response_handle(response):
             phone_num = item.get('TELNO', '')
             phone_num = normalize_phonenumber(phone_num)
             item_type = item.get("PRK_TYPE_NM", '')
-            print(queue)
+            #print(queue)
             # 한 자리씩 여러 개가 존재하는 경우
             if item_type == '노상 주차장':
                 if queue and not any(d["parking_addr"] == parking_addr for d in queue) and queue[-1]["saved"]:  # 신규 주차장이며 큐 앞순서 주차장이 저장되어 있는 경우
