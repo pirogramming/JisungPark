@@ -1129,8 +1129,13 @@
                         document.getElementById("contentInput").value = ""; // 입력내용 초기화
                     }
                 } catch (error) {
-                    console.error("❌ 리뷰 추가 실패:", error);
-                    alert("로그인 후 이용해주세요.");
+                    console.error(`❌ 리뷰 추가 실패:${error}`);
+                    if (error.message == "서버 오류: 400"){
+                        alert(`리뷰 등록 실패: 유저는 한 주차장 당 한 개의 리뷰만 작성 가능합니다.`);
+                    }
+                    else{
+                        alert(`리뷰 등록 실패: ${error.message}`);
+                    }
                 }
             }
             function resetStars() {

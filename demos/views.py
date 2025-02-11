@@ -4,6 +4,8 @@ import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from django.conf import settings
+
+from user.models import User
 from .models import UserFavoriteParking, Review, ParkingLot, Post, Comment
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -54,6 +56,9 @@ def add_review(request):
         content = data.get('content')
         parking_lot_id = data.get('parking_lot_id')  # 주차장 ID 받기
         user = request.user
+
+        if Review.objects.filter(user=user, parking_lot=ParkingLot.objects.get(id=parking_lot_id)).exists():
+            return JsonResponse({'error': '유저는 한 주차장 당 한 개의 리뷰만 작성 가능합니다.'}, status=400)
 
         if not user.is_authenticated:
             return JsonResponse({'error': '로그인이 필요합니다.'}, status=401)
@@ -375,3 +380,10 @@ def get_parking(request, parking_lot_id):
         return JsonResponse(parking_data)
     except ParkingLot.DoesNotExist:
         return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
+
+def withdraw_user(request, user_id):
+    if request.method == "DELETE":
+        user = get_object_or_404(User, id=user_id)
+        user.delete()
+        return redirect("demos:home")
+    return JsonResponse({"error":"해당 유저가 존재하지 않습니다."}, status=400)
