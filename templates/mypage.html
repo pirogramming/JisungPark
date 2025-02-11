@@ -3,7 +3,10 @@
 {% block content %}
     <div class="mypage-container">
         <div class="mypage_container">
-            <div class="mypage-h1"><h1>MY PAGE</h1></div>
+            <div class="mypage-h1">
+                <h1>MY PAGE</h1>
+                <a href="{% url 'demos:introduce' %}"><i class="ri-user-settings-line"></i></a>
+            </div>
             <div class="profile">
                 <div class="profile_img">
                     <img src="{% static 'img/profile.png' %}">
@@ -103,6 +106,7 @@
                             <p>${review.content || ''}</p>
                             <hr>
                         `;
+                
                             // 클릭 시 해당 주차장 상세 페이지 이동
                     reviewElement.addEventListener("click", function() {
                     window.location.href = `/map/?parking_id=${review.parking_lot__id}`; 

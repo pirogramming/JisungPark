@@ -48,7 +48,7 @@ footer {
 .footer-bottom a {
     margin: 0 1rem;
 }
-.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container{
+.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container, .setting-container{
     justify-content: center;
     align-items: center;
     color: #333;
@@ -123,6 +123,7 @@ p{
     border-radius: 0.6rem;
     margin-top: 1rem;
     color: black;
+    font-size: 1.4rem;
 }
 .signup_container, .login_container{
     display: flex;
@@ -130,14 +131,14 @@ p{
     justify-content: center;
     align-items: center;
     background-color: white;
-    padding: 30px auto;
+    padding: 30px 40px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 80%;
     text-align: center;
 }
-.introduce_container, .home_container {
+.introduce_container, .setting_container{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -146,7 +147,7 @@ p{
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     max-width: 80%;
-    padding: 40px 30px;
+    padding: 30px 40px;
 }
 .qanda_container, .guidemap_container {
     background-color: white;
@@ -308,8 +309,14 @@ input, textarea {
     align-items: center;
 }
 .mypage-h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 5rem;
     font-size: 3rem;
+}
+.mypage-h1 a {
+    margin-bottom: 1rem;
 }
 .aboutus_container p {
     font-weight: 700;
@@ -641,4 +648,39 @@ h6 {
 }
 .ri-parking-box-fill, .ri-user-fill{
     color: var(—icon);
+}
+
+@keyframes slide-in {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0); }
+}
+@keyframes slide-out {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+.slide-in {
+    animation: slide-in 0.5s ease-in-out forwards;
+}
+
+.delete_btn {
+    padding: 5px;
+    background-color: white;
+    color: #9C0707;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    margin-block: 1rem;
+}
+.setting_btn {
+    background-color: var(--blue);
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-block: 1rem;
+    width: 60%;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
 }
