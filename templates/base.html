@@ -32,7 +32,7 @@
             </div>
         </header>
         <main>
-          <div id="menu" class="menu">
+          <div id="menu" class="menu" slide-in>
               <a href="{% url 'demos:home' %}">Home</a>
               <a href="{% url 'demos:introduce' %}">Service</a>
               <a href="{% url 'demos:aboutus' %}">About Us</a>
@@ -58,16 +58,22 @@
           }
           #overlay.active {
               display: block;
+              animation: slide-in 0.3s ease-in-out forwards;
           }
           #menu {
-              background: white;
-          }
-          body.fixed {
-              overflow: hidden;
-              height: 100vh;
-              position: fixed;
-              width: 100%;
-          }
+            background: white;
+        }
+        
+        /* ✅ 메뉴가 열릴 때 */
+        #menu.active {
+            left: 0;
+            animation: slide-in 0.3s ease-in-out forwards;
+        }
+        
+        /* ✅ 메뉴가 닫힐 때 */
+        #menu.closing {
+            animation: slide-out 0.3s ease-in-out forwards;
+        }
         </style>
         {% block footer %}
         {% endblock %}
@@ -78,10 +84,21 @@
         const overlay = document.getElementById('overlay');
         const body = document.body;
     
-        menu.classList.toggle('active');
+        if (menu.classList.contains('active')) {
+            // 메뉴 닫을 때 `closing` 애니메이션 실행
+            menu.classList.add('closing');
+            setTimeout(() => {
+                menu.classList.remove('active', 'closing'); // 애니메이션 종료 후 클래스 제거
+            }, 300); // `slide-out` 애니메이션 시간과 동일 (0.3s)
+        } else {
+            // 메뉴 열 때 `active` 클래스 추가
+            menu.classList.add('active');
+        }
+    
         overlay.classList.toggle('active');
         body.classList.toggle('fixed');
-      }
+    }
+    
     </script>
       {% block scripts %}{% endblock %}
   </body>
