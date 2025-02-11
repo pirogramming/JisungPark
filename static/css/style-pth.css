@@ -231,7 +231,6 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1.6rem;
 }
 .review input, .review textarea{
     width: 60%;
@@ -265,11 +264,9 @@
     padding-block: 5px;
     border: 1px solid #5F5F5F;
     border-radius: 4px;
-    font-size: 1.6rem;
 }
 .input-qna input {
     width: 80%;
-    font-size: 1.6rem;
 }
 .review-item {
     margin: 1rem;
@@ -299,7 +296,6 @@
     border: none;
     border-bottom: 1px solid #789;
     text-align: center;
-    font-size: 1.6rem;
 }
 .adjust{
     background-color: #e9e9e9;
