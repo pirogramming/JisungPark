@@ -130,7 +130,6 @@ ASGI_APPLICATION = 'config.asgi.application'
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }'''
-
 #‼️✔️✔️✔️📢📢📢📢📢📢호스팅 할 때는 주석 처리 풀어줘요
 DATABASES = {
     'default': {
