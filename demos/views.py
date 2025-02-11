@@ -17,14 +17,16 @@ def normalize_address(address):
     pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
     pattern2 = r'-0\b'  # 끝 -0 삭제
     pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
+    pattern4 = r'\s\(.*?\)'
 
     address = re.sub(pattern1, '', address)
     address = re.sub(pattern2, '', address)
+    address = re.sub(pattern4, '', address)
     if re.fullmatch(pattern3, address):
-        #print(address)
+        # print(address)
         return address
 
-    #print('정규화 실패')
+    # print('정규화 실패')
     return address
 
 # Create your views here.
