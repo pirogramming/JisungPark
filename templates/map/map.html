@@ -438,9 +438,9 @@
                         '별점평균': parseFloat(place['average_rating']).toFixed(2),
                         '전체자리': parseInt(place['capacity'])
                     });
+                    console.log(전체자리);
                 }); 
-
-                updateParkingDisplay();
+                //updateParkingDisplay();
             }
 
             // 실시간 데이터 갱신
@@ -451,7 +451,6 @@
                         data.forEach(function(realTimeInfo) {
                             const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
-                                console.log(realTimeInfo['available_spots'])
                                 parking['남은자리'] = realTimeInfo['available_spots'] === null ? null : Number(realTimeInfo['available_spots']);
                                 if (parking['남은자리'] > 0) {
                                     console.log(`주소: ${parking['소재지지번주소']}, 주차장: ${parking['주차장명']}, 남은자리: ${parking['남은자리']}`);
