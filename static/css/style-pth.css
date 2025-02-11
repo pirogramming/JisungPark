@@ -332,10 +332,11 @@
     color: #789;
 }
 #parkingInfo2, #parkingInfo3, #parkingInfo4{
-    color: #007bff;
+    color: black;
     font-size: 1.5rem;
     display: flex;
-    margin-bottom: 0.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
 }
 .firstline i{
     font-size: 2rem;
