@@ -9,7 +9,12 @@
         <div class="option">
             <form onsubmit="searchPlaces(); return false;">
                     <input type="text" value=" " id="keyword" size="15"> 
-                    <button type="submit" class="search-button">검색</button> 
+                    <button type="submit" class="search-button">검색</button>
+                    <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
+                    margin-left: 3px;
+                    top: 2px;
+                    position: relative;
+                    cursor: pointer;"></i>
             </form>
         </div>
         <div class="map_wrap">
@@ -137,7 +142,6 @@
                     const data = await response.json();
 
                     favoriteParkingIds = data.liked_parking_lots.map(lot => lot.id);
-
                     if (selectedPlace) {
                         updateVisibleParkingMarkers();
                     } 
@@ -592,7 +596,6 @@
 
                 if (visibleparkinglot.length === 0) {
                     parkingListEl.innerHTML = "<li>현재 지도에 표시된 주차장이 없습니다.</li>";
-                    return;
                 }
 
                 visibleparkinglot.sort((a, b) => a.distance - b.distance);
@@ -765,6 +768,7 @@
                 }
 
                 selectedParkingLotId = parking.id;  
+                updateHeartIcon(selectedParkingLotId);
 
                 
                 document.getElementById('parkingListWrap').style.display = "none"; 
@@ -776,7 +780,8 @@
                     }
                     else{
                     showClosestParkingLots();
-                    document.getElementById('parkingListWrap').style.display = "block"; 
+                    document.getElementById('list-btn').style.display = "block";
+                    document.getElementById('parkingListWrap').style.display = "none"; 
                     document.getElementById('parkingDetailWrap').style.display = "none";
                 } }); 
                 loadReviews(); 
@@ -945,14 +950,16 @@
                 if (!reviewElement) return;
             
                 reviewElement.innerHTML = `
-                    <div class="star-rating">
-                        ${[1, 2, 3, 4, 5].map(star => `
-                            <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
-                        `).join('')}
+                    <div class="fix-container">
+                        <div class="star-rating">
+                            ${[1, 2, 3, 4, 5].map(star => `
+                                <i class="ri-star-line" data-value="${star}" onclick="selectRating(${star}, ${reviewId})"></i>
+                            `).join('')}
+                            <p id="rating-display-${reviewId}">${currentRating}점</p>
+                        </div>
+                        <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
+                        <button class="fix-btn" onclick="updateReview(${reviewId})">수정 완료</button>
                     </div>
-                    <p id="rating-display-${reviewId}">${currentRating}점</p>
-                    <textarea id="edit-content-${reviewId}">${currentContent}</textarea>
-                    <button class="review-btn" onclick="updateReview(${reviewId})">수정 완료</button>
                 `;
                 selectRating(currentRating, reviewId);
             }
@@ -1096,6 +1103,28 @@
                     ratingDisplay.textContent = "0점"; // 별점 텍스트 초기화
                 }
             }
+            function updateHeartIcon(parkingId) {
+                fetch('/api/favorites/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const favorited = data.liked_parking_lots.some(lot => lot.id === parkingId);
+                        const heartIcon = document.getElementById("toggle-btn");
+            
+                        if (heartIcon) {
+                            if (favorited) {
+                                heartIcon.classList.remove("ri-heart-3-line");
+                                heartIcon.classList.add("ri-heart-3-fill");
+                                heartIcon.style.color = "red";
+                            } else {
+                                heartIcon.classList.remove("ri-heart-3-fill");
+                                heartIcon.classList.add("ri-heart-3-line");
+                                heartIcon.style.color = "black";
+                            }
+                        }
+                    })
+                    .catch(error => console.error("🚨 찜한 주차장 로드 실패:", error));
+            }
+            
             function toggleLike() { 
                 const heartIcon = document.getElementById("toggle-btn");
                 const parkingId = selectedParkingLotId; 
@@ -1135,5 +1164,29 @@
                 })
                 .catch(error => console.error("🚨 좋아요 기능 오류:", error));
             }
+            document.getElementById("location-btn").addEventListener("click", function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var lat = position.coords.latitude;
+                        var lon = position.coords.longitude;
+                        var locPosition = new kakao.maps.LatLng(lat, lon);
+
+                        selectedPlace = locPosition;
+                        if (selectedPlaceMarker) {
+                        selectedPlaceMarker.setMap(null);
+                        selectedPlaceMarker = null;
+                    }
+
+                    closeAllInfoWindows();
+
+                        var dummyMarker = { getPosition: () => locPosition }; // 마커 없이 위치 전달
+                        focusOnPlace(dummyMarker);
+                    }, function(error) {
+                        console.error("위치 정보를 가져올 수 없습니다:", error);}
+                    );
+                } else {
+                    alert("Geolocation을 지원하지 않는 브라우저입니다.");
+                }
+            });
         </script>
         {% endblock %}
