@@ -14,12 +14,17 @@ import logging
 logger = logging.getLogger(__name__)
 # 주소 비교
 def normalize_address(address):
-    # 광역지자체명(서울시, 경기도 등) 제거
-    address = re.sub(r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*', '', address)
+    pattern1 = r'^(서울특별시|경기도|부산광역시|대구광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|제주특별자치도)\s*'  # 지자체 명으로 시작하는 패턴
+    pattern2 = r'-0\b'  # 끝 -0 삭제
+    pattern3 = r'\S+\s+\S+\s+\d+(?:-\d*[1-9])?\b'
 
-    # 숫자가 -로 여러 번 연결된 경우 마지막 한 개만 유지
-    address = re.sub(r'(\d+-\d+)-\d+', r'\1', address)
-    logger.info(f'주차장주소 : {address}')
+    address = re.sub(pattern1, '', address)
+    address = re.sub(pattern2, '', address)
+    if re.fullmatch(pattern3, address):
+        #print(address)
+        return address
+
+    #print('정규화 실패')
     return address
 
 # Create your views here.
@@ -82,35 +87,42 @@ def load_parking_data(request):
             "base_time", "base_fee", "extra_time", "extra_fee",
             "fee_info", "type", "disabled_parking", "average_rating", "phone"
         ))
+
+        def convert_to_int(value):
+            """ Redis 데이터를 정수로 변환하는 함수 """
+            if value is None:
+                return 0
+            try:
+                return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
+            except ValueError:
+                return 0
+
         for lot in parking_data:
             parking_addr = lot['lot_address']
             phone_num = lot['phone']
             second_available_spots = None
+
             parking_addr = normalize_address(parking_addr)  # 주소 정규화
-            redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
-            available_spots = redis_client.get(redis_key)
-            if phone_num != '':
+            redis_key = f'parking_availability:{parking_addr}'
+            available_spots = convert_to_int(redis_client.get(redis_key)) or 0
+
+            if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
                 phone_num = normalize_phonenumber(phone_num)
                 redis_subkey = f'parking_info:{phone_num}'
-                second_available_spots = redis_client.get(redis_subkey)
+                second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
-            ### if available_spots!=None:
-            ### print(available_spots)
-
-            if available_spots:
+            # 🚀 올바른 방식으로 남은 자리 설정
+            if available_spots and available_spots > 0:
                 lot['available_spots'] = available_spots
-            elif second_available_spots:
+            elif second_available_spots and second_available_spots > 0:
                 lot['available_spots'] = second_available_spots
             else:
                 lot['available_spots'] = 0
+            #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
-            #lot['available_spots'] = (available_spots) if available_spots else 0
-
-            ### if lot['available_spots'] != None and lot['available_spots']!=0 and lot['available_spots']!='0':
-                ### print(lot['available_spots'])
-
-
+        # 🚀 JSON 배열([])로 반환
         return JsonResponse(parking_data, safe=False, json_dumps_params={'ensure_ascii': False})
+
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
@@ -119,28 +131,39 @@ def load_parking_data(request):
 def map(request):   # 페이지 로드시 사용
     parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone")
     enriched_data = []
+
+    def convert_to_int(value):
+        """ Redis 데이터를 정수로 변환하는 함수 """
+        if value is None:
+            return 0
+        try:
+            return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
+        except ValueError:
+            return 0
+
     for lot in parking_data:
         parking_addr = lot['lot_address']
         phone_num = lot['phone']
         second_available_spots = None
+
         parking_addr = normalize_address(parking_addr)  # 주소 정규화
-        redis_key = f'parking_availability:{parking_addr}'  # 일관된 키 사용
-        available_spots = redis_client.get(redis_key)
-        if phone_num != '':
+        redis_key = f'parking_availability:{parking_addr}'
+        available_spots = convert_to_int(redis_client.get(redis_key)) or 0
+
+        if phone_num and phone_num.strip() != '':  # 전화번호가 공백이 아닐 때만
             phone_num = normalize_phonenumber(phone_num)
             redis_subkey = f'parking_info:{phone_num}'
-            second_available_spots = redis_client.get(redis_subkey)
+            second_available_spots = convert_to_int(redis_client.get(redis_subkey)) or 0
 
-        ### if available_spots!=None:
-        ### print(available_spots)
-
-        if available_spots:
+        # 🚀 올바른 방식으로 남은 자리 설정
+        if available_spots and available_spots > 0:
             lot['available_spots'] = available_spots
-        elif second_available_spots:
+        elif second_available_spots and second_available_spots > 0:
             lot['available_spots'] = second_available_spots
         else:
             lot['available_spots'] = 0
         enriched_data.append(lot)
+        #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
 
     context = {
         "parking_data": json.dumps(enriched_data, ensure_ascii=False),
@@ -302,7 +325,7 @@ def update_review(request, review_id):
 def toggle_favorite(request):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "로그인이 필요합니다."}) 
-    
+
     if request.method == "POST":
         data = json.loads(request.body)
         parking_id = data.get("parking_id")
@@ -350,4 +373,3 @@ def get_parking(request, parking_lot_id):
         return JsonResponse(parking_data)
     except ParkingLot.DoesNotExist:
         return JsonResponse({"error": "해당 주차장이 존재하지 않습니다."}, status=404)
-
