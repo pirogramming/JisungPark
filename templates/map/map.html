@@ -537,13 +537,21 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                let textColor = "red"; 
+                let textColor = "";
                 if (seat > 10) textColor = "green";
                 else if (seat > 5) textColor = "orange";
+                else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
+
+                // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
+                let seatContent = (seat === null || seat === undefined || isNaN(seat))
+                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  // 아이콘 크기 1rem, 색상 검정
+                    : `<span style="color:${textColor};">${seat}</span>`;  // 숫자에만 색상 적용
 
                 let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
-                                        color:${textColor};font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:12px;bottom:26px; left:1px; pointer-events: none;">${seat}</div>`;
+                                        font-weight:bold;background:white;border-radius:50%;
+                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">
+                                        ${seatContent}
+                                    </div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
@@ -577,13 +585,21 @@
                 marker.setMap(map);
                 markers.push(marker);
 
-                let textColor = "red"; 
+                let textColor = "";
                 if (seat > 10) textColor = "green";
                 else if (seat > 5) textColor = "orange";
+                else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
+
+                // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
+                let seatContent = (seat === null || seat === undefined || isNaN(seat))
+                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  // 아이콘 크기 1rem, 색상 검정
+                    : `<span style="color:${textColor};">${seat}</span>`;  // 숫자에만 색상 적용
 
                 let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
-                                        color:${textColor};font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">${seat}</div>`;
+                                        font-weight:bold;background:white;border-radius:50%;
+                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">
+                                        ${seatContent}
+                                    </div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
