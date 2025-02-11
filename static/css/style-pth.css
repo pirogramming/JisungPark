@@ -287,6 +287,9 @@
     font-size: 1.4rem;
     margin-left: 0.5rem;
 }
+.review-item hr {
+    margin-top: 0.5rem;
+}
 #favorite, #myreview{
     margin-top: 2rem;
 }
