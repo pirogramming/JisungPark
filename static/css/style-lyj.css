@@ -645,7 +645,7 @@ h6 {
 }
 .me {
     position: relative;
-    top:360px;
+    top:330px;
     left:255px;
     z-index: 1;
 }
@@ -655,7 +655,7 @@ h6 {
 }
 .star {
     position: relative;
-    top:360px;
+    top:330px;
     left:98px;
     z-index: 1;
 }
