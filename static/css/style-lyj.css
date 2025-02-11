@@ -167,7 +167,7 @@ p{
     background: white;
 }
 .signup_container {
-    height: 60rem;
+    height: 60rem !important;
 }
 .login_container {
     height: 50rem;
@@ -238,8 +238,6 @@ input, textarea {
     border-radius: 50%;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
-
-
 .login-add {
     display:flex;
     flex-direction: column;
