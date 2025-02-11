@@ -167,7 +167,7 @@ p{
     background: white;
 }
 .signup_container {
-    height: 60rem !important;
+    height: 80% !important;
 }
 .login_container {
     height: 50rem;
@@ -177,7 +177,7 @@ p{
     display: inline-block;
     margin-right: 5px;
     text-align: right;
-    width: 7.5rem;
+    width: 8rem;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     color: #555;
