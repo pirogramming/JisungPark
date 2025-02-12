@@ -47,6 +47,8 @@
                 <ul id="parkingList"></ul>
             </div>
             <div id="parkingDetailWrap" style="display: none;">
+                <span id="parkingInfo-star"></span>
+                <span id="parkingInfo-distance"></span>
                 <i id="return-btn"class="ri-arrow-go-back-line"></i>
                 <i id="delete-btn2" class="ri-close-large-line"></i>
                 <div class="firstline">
@@ -805,101 +807,108 @@
                 document.getElementById('parkingDetailWrap').style.display = "none"; 
                 }
 
-            function showParkingDetail(parking) { 
-                var titleElement = document.getElementById('parkingTitle');
-                var infoElement1 = document.getElementById('parkingInfo1'); 
-                var infoElement2 = document.getElementById('parkingInfo2');
-                var infoElement3 = document.getElementById('parkingInfo3');
-                var infoElement4 = document.getElementById('parkingInfo4');
-                var infoElement5 = document.getElementById('parkingInfo5');
-                var infoElement6 = document.getElementById('parkingInfo6');
-                var infoElement7 = document.getElementById('parkingInfo7');
-                var infoElement8 = document.getElementById('parkingInfo8');
-                var returnBtn = document.getElementById('return-btn');
-                var deleteBtn = document.getElementById('delete-btn2');
+                function parkingUserDistance(parking) {
+                    return new Promise((resolve, reject) => {
+                        if (!navigator.geolocation) {
+                            return reject("거리 계산 오류");
+                        }
 
-                if (titleElement && infoElement1 && infoElement2) {
-                    titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
-                    infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"}주차장`;
-                    infoElement2.innerHTML = `
-                    주차장 유형:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.주차장유형 || "유형 정보 없음"}<br>
-                    `;
-                    infoElement3.innerHTML = `
-                    장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
-                    `;
-                    infoElement5.innerHTML = `
-                    평일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.평일운영종료시각 || "??:??"}<br>
-                    `;
-                    infoElement6.innerHTML = `
-                    토요일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.토요일운영종료시각 || "??:??"}<br>
-                    `;
-                    infoElement7.innerHTML = `
-                    공휴일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.공휴일운영시작시각 || "??:??"}-${parking.공휴일운영종료시각 || "??:??"}<br>
-                    `;
-                    infoElement8.innerHTML = `
-                    전화번호:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전화번호 || "전화번호 정보 없음"}<br>
-                    `;
-                    if(parking.남은자리 === null || parking.남은자리 === undefined || isNaN(parking.남은자리)){
-                        infoElement4.innerHTML = `
-                        전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전체자리}
-                        `;
-                    }
-                    else{
-                        infoElement4.innerHTML = `
-                        남은자리/전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}/${parking.전체자리}
-                        `;
-                    }
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var userLat = position.coords.latitude;
+                            var userLng = position.coords.longitude;
+                            var userPosition = new kakao.maps.LatLng(userLat, userLng);
+
+                            var parkingLat = parking.위도;
+                            var parkingLng = parking.경도;
+                            var parkingPosition = new kakao.maps.LatLng(parkingLat, parkingLng);
+
+                            var distance = getDistance(userPosition, parkingPosition);
+                            resolve(distance);
+                        }, function (error) {
+                            reject("거리 계산 오류");
+                        });
+                    });
                 }
 
-                selectedParkingLotId = parking.id;  
-                updateHeartIcon(selectedParkingLotId);
 
-                
-                document.getElementById('parkingListWrap').style.display = "none"; 
-                document.getElementById('parkingDetailWrap').style.display = "block";
-                deleteBtn.addEventListener("click", function () {
-                    if (!selectedPlace) {
-                        document.getElementById('parkingDetailWrap').style.display = "none";
-                        return;
-                    }
-                    else{
-                    showClosestParkingLots();
-                    document.getElementById('list-btn').style.display = "block";
-                    document.getElementById('parkingListWrap').style.display = "none"; 
-                    document.getElementById('list-btn').style.display = "block";
-                    document.getElementById('parkingListWrap').style.display = "none"; 
-                    document.getElementById('parkingDetailWrap').style.display = "none";
-                } }); 
-                loadReviews(); 
+                async function showParkingDetail(parking) { 
+                try {
+                    var distance = await parkingUserDistance(parking); // 비동기 처리
+                    var parkingInfodistance = document.getElementById('parkingInfo-distance');
 
-                returnBtn.addEventListener("click", function () {
-                    if (!selectedPlace) {
-                        document.getElementById('parkingDetailWrap').style.display = "none";
-                        return;
+                    if (typeof distance === "number" && !isNaN(distance)) {
+                        parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650;">${distance.toFixed(2)} km</span>`;
+                    } else {
+                        parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650; color: red;">거리 계산 오류</span>`;
                     }
-                    else{
-                    showClosestParkingLots();
-                    document.getElementById('parkingListWrap').style.display = "block"; 
-                    document.getElementById('parkingDetailWrap').style.display = "none";
-                } }); 
-                loadReviews(); 
+
+                    var parkingInfostar = document.getElementById('parkingInfo-star');
+                    var titleElement = document.getElementById('parkingTitle');
+                    var infoElement1 = document.getElementById('parkingInfo1'); 
+                    var infoElement2 = document.getElementById('parkingInfo2');
+                    var infoElement3 = document.getElementById('parkingInfo3');
+                    var infoElement4 = document.getElementById('parkingInfo4');
+                    var infoElement5 = document.getElementById('parkingInfo5');
+                    var infoElement6 = document.getElementById('parkingInfo6');
+                    var infoElement7 = document.getElementById('parkingInfo7');
+                    var infoElement8 = document.getElementById('parkingInfo8');
+                    var returnBtn = document.getElementById('return-btn');
+                    var deleteBtn = document.getElementById('delete-btn2');
+
+                    if (titleElement && infoElement1 && infoElement2) {
+                        parkingInfostar.innerHTML = `<i class="ri-star-fill" style="font-size: 1.8rem;"></i>&nbsp;<span style="font-size: 1.7rem; font-weight: 650;">${parking.별점평균 || "평점 없음"}`;
+                        titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
+                        infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"} 주차장`;
+                        infoElement2.innerHTML = `주차장 유형:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.주차장유형 || "유형 정보 없음"}</span><br>`;
+                        infoElement3.innerHTML = `장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}</span><br>`;
+                        infoElement5.innerHTML = `평일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.평일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement6.innerHTML = `토요일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.토요일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement7.innerHTML = `공휴일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.공휴일운영시작시각 || "??:??"}-${parking.공휴일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement8.innerHTML = `전화번호:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전화번호 || "전화번호 정보 없음"}</span><br>`;
+
+                        if (parking.남은자리 === null || parking.남은자리 === undefined || isNaN(parking.남은자리)) {
+                            infoElement4.innerHTML = `전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전체자리}</span>`;
+                        } else {
+                            infoElement4.innerHTML = `남은자리/전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}/${parking.전체자리}</span>`;
+                        }
+                    }
+
+                    selectedParkingLotId = parking.id;  
+                    updateHeartIcon(selectedParkingLotId);
+
+                    document.getElementById('parkingListWrap').style.display = "none"; 
+                    document.getElementById('parkingDetailWrap').style.display = "block";
+
+                    deleteBtn.addEventListener("click", function () {
+                        if (!selectedPlace) {
+                            document.getElementById('parkingDetailWrap').style.display = "none";
+                            return;
+                        } else {
+                            showClosestParkingLots();
+                            document.getElementById('list-btn').style.display = "block";
+                            document.getElementById('parkingListWrap').style.display = "none"; 
+                            document.getElementById('parkingDetailWrap').style.display = "none";
+                        }
+                    }); 
+
+                    returnBtn.addEventListener("click", function () {
+                        if (!selectedPlace) {
+                            document.getElementById('parkingDetailWrap').style.display = "none";
+                            return;
+                        } else {
+                            showClosestParkingLots();
+                            document.getElementById('parkingListWrap').style.display = "block"; 
+                            document.getElementById('parkingDetailWrap').style.display = "none";
+                        }
+                    });
+
+                    loadReviews(); 
+
+                } catch (error) {
+                    console.error("🚨 오류 발생:", error);
+                    parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650; color: red;">거리 계산 오류</span>`;
+                }
             }
-            document.addEventListener("DOMContentLoaded", function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                const parkingId = urlParams.get("parking_id");
-            
-                if (parkingId) {
-                    fetch(`/api/get_parking/${parkingId}/`)  // 주차장 정보를 가져오는 API 호출
-                        .then(response => response.json())
-                        .then(parking => {
-                            showParkingDetail(parking); // 가져온 주차장 정보로 showParkingDetail 실행
-                            loadReviews(parkingId); // 주차장 정보를 가져온 후 리뷰 로드 실행
-                        })
-                        .catch(error => console.error("❌ 주차장 정보 로드 실패:", error));
-                }
-            });
-            
-            
 
             const DEG_TO_RAD = Math.PI / 180;
 
