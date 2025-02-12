@@ -574,6 +574,7 @@
                 openInfoWindows[idx] = overlay;
 
                 kakao.maps.event.addListener(marker, 'click', function () {
+                    map.setCenter(marker.getPosition());
                     showParkingDetail(parking);
                 });
 
@@ -622,6 +623,7 @@
                 openInfoWindows[idx] = overlay;
 
                 kakao.maps.event.addListener(marker, 'click', function () {
+                    map.setCenter(marker.getPosition());
                     showParkingDetail(parking);
                 });
 
@@ -674,6 +676,8 @@
                     li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
+                        var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도); 
+                        map.setCenter(parkingLatLng); 
                     };
                     parkingListEl.appendChild(li);
                 });
@@ -741,6 +745,8 @@
                     li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km) - 요금: ${parking.totalFee} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
+                        var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도); 
+                        map.setCenter(parkingLatLng); 
                     };
                     parkingListEl.appendChild(li);
                 });
@@ -794,6 +800,8 @@
                     li.innerHTML = `<b>${index + 1}. ${parking.주차장명}</b> (${parking.distance.toFixed(2)} km)${feeText} (<i class="ri-star-fill"></i> ${parking.별점평균 || "평점 없음"})`;
                     li.onclick = function () {
                         showParkingDetail(parking);
+                        var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도); 
+                        map.setCenter(parkingLatLng); 
                     };
                     parkingListEl.appendChild(li);
                 });
@@ -837,7 +845,7 @@
                     var parkingInfodistance = document.getElementById('parkingInfo-distance');
 
                     if (typeof distance === "number" && !isNaN(distance)) {
-                        parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650;">${distance.toFixed(2)} km</span>`;
+                        parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650;">이곳에서&nbsp;${distance.toFixed(2)} km</span>`;
                     } else {
                         parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650; color: red;">거리 계산 오류</span>`;
                     }
@@ -856,20 +864,20 @@
                     var deleteBtn = document.getElementById('delete-btn2');
 
                     if (titleElement && infoElement1 && infoElement2) {
-                        parkingInfostar.innerHTML = `<i class="ri-star-fill" style="font-size: 1.8rem;"></i>&nbsp;<span style="font-size: 1.7rem; font-weight: 650;">${parking.별점평균 || "평점 없음"}`;
+                        parkingInfostar.innerHTML = `<i class="ri-star-fill" style="font-size: 1.8rem;"></i>&nbsp;<span style="font-size: 1.7rem; font-weight: 650; margin-right: 15px;">${parking.별점평균 || "평점 없음"}`;
                         titleElement.innerText = parking.주차장명 || "주차장 정보 없음";
                         infoElement1.innerText = `${parking.요금정보 || "요금 정보 없음"} 주차장`;
-                        infoElement2.innerHTML = `주차장 유형:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.주차장유형 || "유형 정보 없음"}</span><br>`;
-                        infoElement3.innerHTML = `장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}</span><br>`;
-                        infoElement5.innerHTML = `평일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.평일운영종료시각 || "??:??"}</span><br>`;
-                        infoElement6.innerHTML = `토요일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.토요일운영종료시각 || "??:??"}</span><br>`;
-                        infoElement7.innerHTML = `공휴일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.공휴일운영시작시각 || "??:??"}-${parking.공휴일운영종료시각 || "??:??"}</span><br>`;
-                        infoElement8.innerHTML = `전화번호:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전화번호 || "전화번호 정보 없음"}</span><br>`;
+                        infoElement2.innerHTML = `<i class="ri-car-fill" style="color: #606060;"></i>&nbsp;주차장 유형:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.주차장유형 || "유형 정보 없음"}</span><br>`;
+                        infoElement3.innerHTML = `<i class="ri-wheelchair-fill" style="color: #606060;"></i>&nbsp;장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}</span><br>`;
+                        infoElement5.innerHTML = `<i class="ri-alarm-line" style="color: #606060;"></i>&nbsp;평일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.평일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement6.innerHTML = `<i class="ri-alarm-line" style="color: #606060;"></i>&nbsp;토요일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.토요일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement7.innerHTML = `<i class="ri-alarm-line" style="color: #606060;"></i>&nbsp;공휴일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.공휴일운영시작시각 || "??:??"}-${parking.공휴일운영종료시각 || "??:??"}</span><br>`;
+                        infoElement8.innerHTML = `<i class="ri-phone-fill" style="color: #606060;"></i>&nbsp;전화번호:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전화번호 || "전화번호 정보 없음"}</span><br>`;
 
                         if (parking.남은자리 === null || parking.남은자리 === undefined || isNaN(parking.남은자리)) {
-                            infoElement4.innerHTML = `전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전체자리}</span>`;
+                            infoElement4.innerHTML = `<i class="ri-parking-box-fill" style="color: #606060;"></i>&nbsp;전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전체자리}</span>`;
                         } else {
-                            infoElement4.innerHTML = `남은자리/전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}/${parking.전체자리}</span>`;
+                            infoElement4.innerHTML = `<i class="ri-parking-box-fill" style="color: #606060;"></i>&nbsp;남은자리/전체자리:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.남은자리}/${parking.전체자리}</span>`;
                         }
                     }
 
@@ -905,7 +913,6 @@
                     loadReviews(); 
 
                 } catch (error) {
-                    console.error("🚨 오류 발생:", error);
                     parkingInfodistance.innerHTML = `<span style="font-size: 1.7rem; font-weight: 650; color: red;">거리 계산 오류</span>`;
                 }
             }

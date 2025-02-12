@@ -365,3 +365,12 @@
 .ri-heart-3-line, .ri-heart-3-fill{
     transition: color 0.3s ease-in-out;
 }
+.ri-arrow-go-back-line:before {
+    font-size: 1.8rem;
+    content: "\ea58";
+}
+.ri-close-large-line:before {
+    font-size: 1.8rem;
+    content: "\f4c8";
+
+}
