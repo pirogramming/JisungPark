@@ -334,7 +334,7 @@
 #parkingInfo1{
     color: #789;
 }
-#parkingInfo2, #parkingInfo3, #parkingInfo4{
+#parkingInfo2, #parkingInfo3, #parkingInfo4, #parkingInfo5, #parkingInfo6, #parkingInfo7, #parkingInfo8{
     color: black;
     font-size: 1.5rem;
     display: flex;

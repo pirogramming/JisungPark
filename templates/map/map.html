@@ -57,6 +57,10 @@
                 <span id="parkingInfo2"></span>
                 <span id="parkingInfo3"></span>
                 <span id="parkingInfo4"></span>
+                <span id="parkingInfo5"></span>
+                <span id="parkingInfo6"></span>
+                <span id="parkingInfo7"></span>
+                <span id="parkingInfo8"></span>
                 <p id="parkingReview">리뷰
                     <i id="toggle-btn" onclick="toggleReview()" class="ri-arrow-down-s-fill"></i>
                 </p>
@@ -436,7 +440,14 @@
                         '소재지지번주소': place['lot_address'],
                         '남은자리': isNaN(parseInt(place['available_spots'])) ? null : parseInt(place['available_spots']),
                         '별점평균': parseFloat(place['average_rating']).toFixed(2),
-                        '전체자리': parseInt(place['capacity'])
+                        '전체자리': parseInt(place['capacity']),
+                        '평일운영시작시각': place['weekday_start'],
+                        '평일운영종료시각': place['weekday_end'],
+                        '토요일운영시작시각': place['saturday_start'],
+                        '토요일운영종료시각': place['saturday_end'],
+                        '공휴일운영시작시각': place['holiday_start'],
+                        '공휴일운영종료시각': place['holiday_end'],
+                        '전화번호': place['phone']
                     });
                 }); 
                 //updateParkingDisplay();
@@ -800,6 +811,10 @@
                 var infoElement2 = document.getElementById('parkingInfo2');
                 var infoElement3 = document.getElementById('parkingInfo3');
                 var infoElement4 = document.getElementById('parkingInfo4');
+                var infoElement5 = document.getElementById('parkingInfo5');
+                var infoElement6 = document.getElementById('parkingInfo6');
+                var infoElement7 = document.getElementById('parkingInfo7');
+                var infoElement8 = document.getElementById('parkingInfo8');
                 var returnBtn = document.getElementById('return-btn');
                 var deleteBtn = document.getElementById('delete-btn2');
 
@@ -811,6 +826,18 @@
                     `;
                     infoElement3.innerHTML = `
                     장애인전용주차구역:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.장애인전용주차구역보유여부 ? "보유" : "미보유"}<br>
+                    `;
+                    infoElement5.innerHTML = `
+                    평일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.평일운영종료시각 || "??:??"}<br>
+                    `;
+                    infoElement6.innerHTML = `
+                    토요일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.평일운영시작시각 || "??:??"}-${parking.토요일운영종료시각 || "??:??"}<br>
+                    `;
+                    infoElement7.innerHTML = `
+                    공휴일운영시간:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.공휴일운영시작시각 || "??:??"}-${parking.공휴일운영종료시각 || "??:??"}<br>
+                    `;
+                    infoElement8.innerHTML = `
+                    전화번호:&nbsp;<span style="color:#4130f5; font-weight: bold;">${parking.전화번호 || "전화번호 정보 없음"}<br>
                     `;
                     if(parking.남은자리 === null || parking.남은자리 === undefined || isNaN(parking.남은자리)){
                         infoElement4.innerHTML = `

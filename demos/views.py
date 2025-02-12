@@ -93,7 +93,9 @@ def load_parking_data(request):
         parking_data = list(ParkingLot.objects.values(
             "id", "name", "lot_address", "capacity", "latitude", "longitude",
             "base_time", "base_fee", "extra_time", "extra_fee",
-            "fee_info", "type", "disabled_parking", "average_rating", "phone", "capacity"
+            "fee_info", "type", "disabled_parking", "average_rating",
+            "phone", "capacity", "weekday_start", "weekday_end", "saturday_start",
+            "saturday_end", "holiday_start", "holiday_end"
         ))
 
         def convert_to_int(value):
@@ -137,7 +139,7 @@ def load_parking_data(request):
 
 
 def map(request):   # 페이지 로드시 사용
-    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone", "capacity")
+    parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone", "capacity", "weekday_start", "weekday_end", "saturday_start", "saturday_end", "holiday_start", "holiday_end")
     enriched_data = []
 
     def convert_to_int(value):
