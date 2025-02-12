@@ -330,8 +330,17 @@
     align-items: center;
     gap: 10px;
     margin: 10px 0;
+    flex-wrap: wrap; 
+}
+#parkingTitle {
+    white-space: nowrap; 
+}
+#toggle-btn {
+    flex-shrink: 0; 
 }
 #parkingInfo1{
+    flex-grow: 1; 
+    min-width: 50px; 
     color: #789;
 }
 #parkingInfo2, #parkingInfo3, #parkingInfo4, #parkingInfo5, #parkingInfo6, #parkingInfo7, #parkingInfo8{
@@ -340,6 +349,9 @@
     display: flex;
     font-weight: 500;
     margin-bottom: 1rem;
+}
+#parkingInfo2{
+    margin-top: 15px;
 }
 .firstline i{
     font-size: 2rem;
