@@ -604,12 +604,12 @@
 
                 // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
                 let seatContent = (seat === null || seat === undefined || isNaN(seat))
-                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  // 아이콘 크기 1rem, 색상 검정
-                    : `<span style="color:${textColor};">${seat}</span>`;  // 숫자에만 색상 적용
+                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  
+                    : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;  
 
                 let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
                                         font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">
+                                        line-height:20px;font-size:12px;bottom:27px;left:0.5px; pointer-events: none;">
                                         ${seatContent}
                                     </div>`;
 
