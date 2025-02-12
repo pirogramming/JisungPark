@@ -70,7 +70,7 @@ def add_review(request):
         review = Review.objects.create(user=user, rating=rating, content=content,parking_lot=parking_lot,)
         review_list = Review.objects.filter(parking_lot=parking_lot)
         parking_lot.average_rating = (parking_lot.average_rating * (len(review_list)-1) + review.rating) / len(review_list)
-        #print(parking_lot.average_rating)
+        
         parking_lot.save()
         return JsonResponse({'message': '리뷰가 추가되었습니다.', 'review': {
             'user': user.username,
