@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="setting-container">
+    <div class="setting_container">
+      <form action="" method="POST" class="setting_form">
+        <h1>프로필 수정</h1>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="setting_btn">프로필 수정</button>
+            <hr>
+        </form>
+
+        <form id="withdrawForm" method="POST">
+            {% csrf_token %}
+            <button type="button" onclick="withdrawUser(userId)" class="delete_btn">회원 탈퇴</button>
+        </form>
+    </div>
+  </div>
+  {% endblock %}
+  {% block footer %}
+  <footer>
+    <div class="footer-top">
+      <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+      <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+      <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+      <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+      <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+  </div>
+    </footer>
+      {{ user_id | json_script:'userId' }}
+      <script>
+      const userId = parseInt(JSON.parse(document.getElementById("userId").textContent));
+      //console.log(userId);
+      function withdrawUser(userId) {
+    fetch(`/accounts/withdraw/${userId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCSRFToken() },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert("회원 탈퇴가 완료되었습니다.");
+            window.location.href = "/";
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error("탈퇴 실패:", error));
+}
+
+function getCSRFToken() {
+    return document.querySelector("input[name='csrfmiddlewaretoken']").value;
+}
+      </script>
+{% endblock %}

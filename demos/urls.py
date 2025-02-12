@@ -34,4 +34,5 @@ urlpatterns = [
     path('api/toggle_favorite/', toggle_favorite, name='toggle_favorite'),
     path("api/favorites/", get_favorites, name="get_favorites"),
     path("mypage/update/<int:user_id>", views.mypage_detail, name='mypage_detail'),
+    path("accounts/withdraw/<int:user_id>/", withdraw_user, name="withdraw_user")
 ]
