@@ -1337,7 +1337,6 @@
                     '전화번호': selectedParking['phone']
                 };
                 if (selectedParking) {
-                    console.log("🔵 선택된 주차장:", selectedParking);
                     showParkingDetail(selectedParking);
                     map.setCenter(new kakao.maps.LatLng(selectedParking.위도, selectedParking.경도)); // ✅ 해당 주차장 위치로 이동
                 }
