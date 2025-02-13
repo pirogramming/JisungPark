@@ -139,6 +139,7 @@ def load_parking_data(request):
 
 
 def map(request):   # 페이지 로드시 사용
+    parking_id = request.GET.get('parking_id')  # URL에서 parking_id 가져오기
     parking_data = ParkingLot.objects.values("id", "name", "lot_address", "latitude", "longitude", "base_time", "base_fee", "extra_time", "extra_fee", "fee_info", "type", "disabled_parking", "average_rating", "phone", "capacity", "weekday_start", "weekday_end", "saturday_start", "saturday_end", "holiday_start", "holiday_end")
     enriched_data = []
 
@@ -150,6 +151,8 @@ def map(request):   # 페이지 로드시 사용
             return int(float(value.decode())) if isinstance(value, bytes) else int(float(value))
         except ValueError:
             return None
+
+    selected_parking = None  # 특정 주차장 정보 저장할 변수
 
     for lot in parking_data:
         parking_addr = lot['lot_address']
@@ -172,15 +175,20 @@ def map(request):   # 페이지 로드시 사용
             lot['available_spots'] = second_available_spots
         else:
             lot['available_spots'] = None
+
         enriched_data.append(lot)
-        #print(f"📌 주소: {parking_addr}, Redis 주차 가능 자리: {available_spots}, 전화번호 기반 자리: {second_available_spots}")
+
+        # 🚀 특정 `parking_id`가 있으면 해당 주차장 데이터 저장
+        if parking_id and str(lot["id"]) == parking_id:
+            selected_parking = lot
 
     context = {
         "parking_data": json.dumps(enriched_data, ensure_ascii=False),
         "MAP_KEY": settings.MAP_KEY,
-        
+        "selected_parking": json.dumps(selected_parking, ensure_ascii=False) if selected_parking else None,  # 특정 주차장 정보 전달
     }
     return render(request, "map/map.html", context)
+
 
 def introduce(request):
     return render(request, 'introduce.html')

@@ -167,16 +167,18 @@
                 var keyword = document.getElementById('keyword').value;
 
                  // mypage안 favorite, myreview 에서 클릭 시 alert 문 생성 방지
-                if (window.location.search.includes("parking_id=")) {
-                return; // /map/?parking_id= 경로에선 실행되지 않음 
-                }
-                if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                if (!window.location.search.includes("parking_id=")) {
+                if(!keyword.replace(/^\s+|\s+$/g, '')) {
                     alert('주소나 장소를 입력해주세요!');
                     return false;
                 }
-
+                }
+                if (window.location.search.includes("parking_id=")){
+                    document.getElementById('parkingDetailWrap').style.display = "block";
+                }
                 ps.keywordSearch(keyword, placesSearchCB); 
             }
+            
             function sortPlacesByDistance(userLatLng, places) {
                 // 장소 목록에 각 장소까지의 거리 추가
                 var sortedPlaces = places.map(place => {
@@ -184,7 +186,6 @@
                     var distance = getDistance(userLatLng, placeLatLng);
                     return { ...place, distance };
                 });
-
                 // 거리 기준으로 오름차순 정렬
                 sortedPlaces.sort((a, b) => a.distance - b.distance);
 
@@ -201,15 +202,18 @@
                     menuEl.style.display = 'block';
                     closeAllInfoWindows();
                     document.getElementById('parkingListWrap').style.display = "none";
-                    document.getElementById('parkingDetailWrap').style.display = "none";
                     document.getElementById('list-btn').style.display = "block";
-
+                    if (window.location.search.includes("parking_id=")){
+                        document.getElementById('parkingDetailWrap').style.display = "block";
+                    }
+                    else{
+                        document.getElementById('parkingDetailWrap').style.display = "none";
+                    }
                     // 🔥 전체 데이터를 수집하여 저장
                     allPlaces = allPlaces.concat(data);
 
                     
                     if (pagination.current === pagination.last) {
-                        console.log("✅ 모든 데이터 수집 완료. 총 개수:", allPlaces.length);
                         processAndDisplayAllPlaces();
                     } else {
                         pagination.gotoPage(pagination.current + 1);
@@ -895,26 +899,17 @@
                     document.getElementById('parkingDetailWrap').style.display = "block";
 
                     deleteBtn.addEventListener("click", function () {
-                        if (!selectedPlace) {
-                            document.getElementById('parkingDetailWrap').style.display = "none";
-                            return;
-                        } else {
                             showClosestParkingLots();
                             document.getElementById('list-btn').style.display = "block";
                             document.getElementById('parkingListWrap').style.display = "none"; 
                             document.getElementById('parkingDetailWrap').style.display = "none";
-                        }
+                        
                     }); 
 
                     returnBtn.addEventListener("click", function () {
-                        if (!selectedPlace) {
-                            document.getElementById('parkingDetailWrap').style.display = "none";
-                            return;
-                        } else {
                             showClosestParkingLots();
                             document.getElementById('parkingListWrap').style.display = "block"; 
                             document.getElementById('parkingDetailWrap').style.display = "none";
-                        }
                     });
 
                     loadReviews(); 
@@ -1313,4 +1308,40 @@
                 }
             });
         </script>
+        {% if selected_parking %}
+        <script>
+            window.onload = function() {
+                let selectedParking = JSON.parse('{{ selected_parking|escapejs }}');
+                selectedParking = {
+                    'id': selectedParking['id'],
+                    '주차장명': selectedParking['name'],
+                    '위도': parseFloat(selectedParking['latitude']) || 0,  
+                    '경도': parseFloat(selectedParking['longitude']) || 0, 
+                    '주차기본시간': parseFloat(selectedParking['base_time']),
+                    '주차기본요금': parseFloat(selectedParking['base_fee']),
+                    '추가단위시간': parseFloat(selectedParking['extra_time']),
+                    '추가단위요금': parseFloat(selectedParking['extra_fee']),
+                    '요금정보': selectedParking['fee_info'],
+                    '주차장유형': selectedParking['type'],
+                    '장애인전용주차구역보유여부': selectedParking['disabled_parking'],
+                    '소재지지번주소': selectedParking['lot_address'],
+                    '남은자리': isNaN(parseInt(selectedParking['available_spots'])) ? null : parseInt(selectedParking['available_spots']),
+                    '별점평균': parseFloat(selectedParking['average_rating']).toFixed(2),
+                    '전체자리': parseInt(selectedParking['capacity']),
+                    '평일운영시작시각': selectedParking['weekday_start'],
+                    '평일운영종료시각': selectedParking['weekday_end'],
+                    '토요일운영시작시각': selectedParking['saturday_start'],
+                    '토요일운영종료시각': selectedParking['saturday_end'],
+                    '공휴일운영시작시각': selectedParking['holiday_start'],
+                    '공휴일운영종료시각': selectedParking['holiday_end'],
+                    '전화번호': selectedParking['phone']
+                };
+                if (selectedParking) {
+                    console.log("🔵 선택된 주차장:", selectedParking);
+                    showParkingDetail(selectedParking);
+                    map.setCenter(new kakao.maps.LatLng(selectedParking.위도, selectedParking.경도)); // ✅ 해당 주차장 위치로 이동
+                }
+            }
+        </script>
+    {% endif %}    
         {% endblock %}
