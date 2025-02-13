@@ -189,6 +189,9 @@ input, textarea {
 .login_elements input, .signup_form input {
     width: 16rem;
 }
+.setting_form input {
+    width: 14rem;
+}
 .login_elements input, .signup_form input, .setting_form input{
     padding: 0.5rem;
     border: 1px solid #ccc;
@@ -692,5 +695,6 @@ h6 {
     border-radius: 4px;
     cursor: pointer;
     margin-block: 2rem;
-    padding: 5px;
+    padding: 10px;
+    font-size: 1.5rem;
 }
