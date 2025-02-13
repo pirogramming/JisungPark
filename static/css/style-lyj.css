@@ -172,8 +172,7 @@ p{
 .login_container {
     height: 50rem;
 }
-
-.login_elements label, .signup_form label {
+.login_elements label, .signup_form label, .setting_form label{
     display: inline-block;
     margin-right: 5px;
     text-align: right;
@@ -189,6 +188,8 @@ input, textarea {
 }
 .login_elements input, .signup_form input {
     width: 16rem;
+}
+.login_elements input, .signup_form input, .setting_form input{
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -239,9 +240,6 @@ input, textarea {
     height: 40px;
     border-radius: 50%;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
-}
-.social-login button {
-    border-radius: 50%;
 }
 .login-add {
     display:flex;
@@ -379,6 +377,12 @@ input, textarea {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
+    padding: 20px;
+}
+.edit_container{
+    position: relative;
+    width: 100%;
+    max-width: 600px;
     padding: 20px;
 }
 .qanda_container label {
@@ -664,25 +668,29 @@ h6 {
 .slide-in {
     animation: slide-in 0.5s ease-in-out forwards;
 }
-
+.setting_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.setting_form p{
+    margin-block: 0.5rem;
+}
 .delete_btn {
     padding: 5px;
-    background-color: white;
-    color: #9C0707;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    background-color: rgb(255, 235, 235);
+    color: #dd0000;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1.3rem;
-    margin-block: 1rem;
+    margin-block: 2rem;
 }
 .setting_btn {
     background-color: var(--blue);
     color: black;
     border-radius: 4px;
     cursor: pointer;
-    margin-block: 1rem;
-    width: 60%;
+    margin-block: 2rem;
     padding: 5px;
-    display: flex;
-    justify-content: center;
 }
