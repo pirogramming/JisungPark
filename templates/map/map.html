@@ -162,6 +162,7 @@
             document.addEventListener("DOMContentLoaded", loadUserFavorites);
 
             function searchPlaces() {
+                allPlaces = [];
                 selectedPlace = null;
                 var keyword = document.getElementById('keyword').value;
 
@@ -246,10 +247,7 @@
                 let totalPage = Math.ceil(sortedPlaces.length / perPage);
                 let paginationEl = document.getElementById('pagination');
 
-                // 기존 페이지네이션 초기화
-                while (paginationEl.hasChildNodes()) {
-                    paginationEl.removeChild(paginationEl.lastChild);
-                }
+                paginationEl.innerHTML = "";
 
                 for (let i = 1; i <= totalPage; i++) {
                     let el = document.createElement('a');
