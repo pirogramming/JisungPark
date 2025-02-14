@@ -97,12 +97,13 @@
                                 // div 요소 생성
                         const reviewElement = document.createElement("div");
                         reviewElement.classList.add("review-item");
-                        reviewElement.setAttribute("data-review-id", review.id); // 리뷰 id 추가가
-                        
+                        reviewElement.setAttribute("data-review-id", review.id); // 리뷰 id 추가
+                    
                         // 내부 html
                         reviewElement.innerHTML = `
                             <strong><i class="ri-user-fill"></i> ${review.user__username}</strong>
                             <span><i class="ri-star-fill"></i> ${review.rating}</span>
+                            <p><strong></strong> ${review.parking_lot__name}</p> 
                             <p>${review.content || ''}</p>
                             <hr>
                         `;

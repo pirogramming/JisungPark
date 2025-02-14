@@ -35,7 +35,7 @@ def normalize_address(address):
 # Create your views here.
 def get_reviews(request, parking_lot_id):
     reviews = Review.objects.filter(parking_lot_id=parking_lot_id).values(
-        'user__username', 'rating', 'content', 'id'
+        'user__username', 'rating', 'content', 'id','parking_lot__name' 
     )  # 필요한 필드만 가져오기
     reviews_list = list(reviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
@@ -44,7 +44,7 @@ def get_reviews(request, parking_lot_id):
 def get_myreviews(request):
     user = request.user
     myreviews = Review.objects.filter(user=user).values(
-        'user__username', 'rating', 'content', 'id','parking_lot__id' 
+        'user__username', 'rating', 'content', 'id','parking_lot__id' ,'parking_lot__name' 
     )  # 필요한 필드만 가져오기
     reviews_list = list(myreviews)
     return JsonResponse({'reviews': reviews_list}, json_dumps_params={'ensure_ascii': False})
