@@ -238,7 +238,7 @@
   display: inline-block;
   margin-right: 10px;
 }
-# .on {
+.on {
   font-weight: bold;
   cursor: default;
   color: #777;
@@ -329,7 +329,6 @@
 .review-item strong {
   margin-top: 1rem;
   font-size: 1.4rem;
-  margin-left: 0.5rem;
 }
 .review-item hr {
   margin-top: 0.5rem;

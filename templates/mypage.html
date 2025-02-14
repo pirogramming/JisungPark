@@ -101,9 +101,9 @@
                     
                         // 내부 html
                         reviewElement.innerHTML = `
+                            <p><strong><i class="ri-parking-box-fill"></i> ${review.parking_lot__name}</strong></p>
                             <strong><i class="ri-user-fill"></i> ${review.user__username}</strong>
                             <span><i class="ri-star-fill"></i> ${review.rating}</span>
-                            <p><strong></strong> ${review.parking_lot__name}</p> 
                             <p>${review.content || ''}</p>
                             <hr>
                         `;
