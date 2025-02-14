@@ -702,3 +702,8 @@ h6 {
     font-size: 1.3rem;
     font-weight: 400;
 }
+
+.guidemap img{
+    width: 255px;
+    height: 338px;
+}
