@@ -4,6 +4,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta property="og:title" content="지성Park">
+    <meta property="og:description" content="지금 가장 가까운 주차장은 어디? 실시간 주차 정보 제공!">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/jisungpark3.png' %}">
+    <meta property="og:url" content="https://www.jisungpark.co.kr">
+    <meta property="og:type" content="website">
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="{%static 'css/reset.css'%}">  
     <link rel="stylesheet" href="{%static 'css/layout.css'%}"> 
@@ -15,7 +20,7 @@
     <div class="container">
         <header>
             <div class="logo">
-              <a href="{% url 'demos:home' %}"><img src="{% static 'img/jisungpark1.png' %}" alt="jisungpark" style="display:flex;" width="75">
+              <a href="{% url 'demos:home' %}"><img src="{% static 'img/jisungpark4.png' %}" alt="jisungpark" style="display:flex;" width="75">
               </a>
             </div>
             <div class="header-nav">
