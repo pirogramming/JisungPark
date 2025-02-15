@@ -41,7 +41,6 @@
       {{ user_id | json_script:'userId' }}
       <script>
       const userId = parseInt(JSON.parse(document.getElementById("userId").textContent));
-      //console.log(userId);
       function withdrawUser(userId) {
     fetch(`/accounts/withdraw/${userId}/`, {
         method: "POST",
@@ -56,7 +55,7 @@
             alert(data.error);
         }
     })
-    .catch(error => console.error("탈퇴 실패:", error));
+    .catch(error => {});
 }
 
 function getCSRFToken() {

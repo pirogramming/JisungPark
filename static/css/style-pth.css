@@ -24,6 +24,13 @@
   padding-left: 20px;
   background-color: var(--blue);
 }
+#location-btn{
+  font-size: 20px;
+  margin-left: 3px;
+  top: 2px;
+  position: relative;
+  cursor: pointer;
+}
 #keyword {
   border: none;
   width: 80%;

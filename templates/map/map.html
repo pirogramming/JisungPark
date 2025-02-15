@@ -10,11 +10,7 @@
             <form class="form-top" onsubmit="searchPlaces(); return false;">
                     <input type="text" value=" " id="keyword" size="15"> 
                     <button type="submit" class="search-button">검색</button>
-                    <i id="location-btn" class="ri-crosshair-2-line" style="font-size: 20px;
-                    margin-left: 3px;
-                    top: 2px;
-                    position: relative;
-                    cursor: pointer;"></i>
+                    <i id="location-btn" class="ri-crosshair-2-line"></i>
             </form>
         </div>
         <div class="map_wrap">
@@ -155,7 +151,6 @@
                         updateVisibleParkingMarkers();
                     } 
                 } catch (error) {
-                    console.error("🚨 찜한 주차장 로드 실패:", error);
                 }
             }
 
@@ -238,7 +233,6 @@
 
                         applyCustomPagination(allPlaces);
                     }, function (error) {
-                        console.error("위치 정보를 가져올 수 없습니다.", error);
                     });
                 }
             }
@@ -472,33 +466,21 @@
                             const parking = parkingData.find(p => p['소재지지번주소'] === realTimeInfo['lot_address']);
                             if (parking) {
                                 parking['남은자리'] = realTimeInfo['available_spots'] === null ? null : Number(realTimeInfo['available_spots']);
-                                // if (parking['남은자리'] > 0) {
-                                //     console.log(`주소: ${parking['소재지지번주소']}, 주차장: ${parking['주차장명']}, 남은자리: ${parking['남은자리']}`);
-                                // }
                             }
                             
                         });
                         if(selectedPlace){
                             updateVisibleParkingMarkers();
                         }
-                        //updateParkingDisplay();
                     })
-                    .catch(error => console.error('실시간 데이터 로드 오류:', error));
-            }
-
-            // 주차장 데이터 표시 (예시)
-            function updateParkingDisplay() {
-                parkingData.forEach(function(place) {
-                    console.log(`주차장: ${place['주차장명']} | 남은 자리: ${place['남은자리']}개`);
-                    // 지도 마커 또는 DOM 요소 업데이트
-                });
+                    .catch(error => {});
             }
 
             // 초기 로딩
             fetchRealTimeData();
 
             // 1분마다 자동 갱신
-            setInterval(fetchRealTimeData, 50000);  // 1분 간격
+            setInterval(fetchRealTimeData, 50000); 
 
             // 지도 이동 시 보이는 주차장 마커만 표시하는 기능 추가
             kakao.maps.event.addListener(map, 'bounds_changed', function () {
@@ -984,7 +966,6 @@
                 const heartIcon = document.getElementById("toggle-btn");
             
                 if (!heartIcon) {
-                    console.error("🚨 오류: 하트 아이콘을 찾을 수 없습니다.");
                     return;
                 }
                 const isLiked = heartIcon.classList.contains("ri-heart-3-fill");
@@ -998,10 +979,7 @@
 
             
             function loadReviews() {
-                console.log( "selectedParkingLotId 값 확인:", selectedParkingLotId);
-
                 const url = `/api/reviews/${selectedParkingLotId}/`;
-                console.log('Fetching URL:', url);
             
                 fetch(url)
                     .then(response => {
@@ -1013,7 +991,6 @@
                     .then(data => {
                         reviewContainer.innerHTML = ''; 
                         data.reviews.forEach(review => {
-                            console.log("리뷰 객체 확인:", review);
                             const reviewElement = `
                                 <div class="review-item" id="review-${review.id}">
                                     <strong>${review.user__username}</strong>
@@ -1035,7 +1012,7 @@
                         });
                         initializeStarRating();
                     })
-                    .catch(error => console.error('리뷰 로드 실패:', error));
+                    .catch(error => {});
             }
             
             function initializeStarRating() {
@@ -1057,7 +1034,6 @@
             }
             
             function editReview(reviewId, currentRating, currentContent) {
-                console.log("수정할 리뷰 ID:", reviewId); // ✅ 리뷰 ID 값 확인
                 const reviewElement = document.getElementById(`review-${reviewId}`);
                 if (!reviewElement) return;
             
@@ -1099,7 +1075,6 @@
             
             async function updateReview(reviewId) {
                 const content = document.getElementById(`edit-content-${reviewId}`).value.trim();
-                console.log("리뷰 별점 확인:", document.getElementById(`edit-content-${reviewId}`).value);
                 if (!selectedRating) {
                     alert("별점을 선택해주세요.");
                     return;
@@ -1126,7 +1101,6 @@
                     alert("✅ 리뷰가 수정되었습니다!");
                     loadReviews();
                 } catch (error) {
-                    console.error("❌ 리뷰 수정 실패:", error);
                     alert("로그인 후 이용해주세요.");
                 }
             }
@@ -1152,7 +1126,6 @@
                     alert("✅ 리뷰가 삭제되었습니다!");
                     loadReviews();
                 } catch (error) {
-                    console.error("❌ 리뷰 삭제 실패:", error);
                     alert("로그인 후 이용해주세요.");
                 }
             }
@@ -1202,13 +1175,11 @@
                         alert(`리뷰 등록 실패: ${data.error}`);
                     } else {
                         alert("✅ 리뷰가 추가되었습니다!");
-                        console.log("✅ 리뷰 추가됨:", data);
                         loadReviews(); // 리뷰 목록 새로고침
                         resetStars(); // 별점 초기화
                         document.getElementById("contentInput").value = ""; // 입력내용 초기화
                     }
                 } catch (error) {
-                    console.error(`❌ 리뷰 추가 실패:${error}`);
                     if (error.message == "서버 오류: 400"){
                         alert(`리뷰 등록 실패: 유저는 한 주차장 당 한 개의 리뷰만 작성 가능합니다.`);
                     }
@@ -1249,7 +1220,7 @@
                             }
                         }
                     })
-                    .catch(error => console.error("🚨 찜한 주차장 로드 실패:", error));
+                    .catch(error => {});
             }
             
             function toggleLike() { 
@@ -1289,7 +1260,7 @@
 
                     }
                 })
-                .catch(error => console.error("🚨 좋아요 기능 오류:", error));
+                .catch(error => {});
             }
             document.getElementById("location-btn").addEventListener("click", function() {
                 if (navigator.geolocation) {
@@ -1308,8 +1279,7 @@
 
                         var dummyMarker = { getPosition: () => locPosition }; // 마커 없이 위치 전달
                         focusOnPlace(dummyMarker);
-                    }, function(error) {
-                        console.error("위치 정보를 가져올 수 없습니다:", error);}
+                    }, function(error) {}
                     );
                 } else {
                     alert("Geolocation을 지원하지 않는 브라우저입니다.");
