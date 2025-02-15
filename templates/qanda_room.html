@@ -7,14 +7,13 @@
                 <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
             </div>
             <div class="qna_container2">
-                <h3>{{ post.title }}</h3> {% comment %} 문의 내용 {% endcomment %}
+                <h3>{{ post.title }}</h3>
                 <div id="post-writer">
                     <h5 id = "qna_writer">작성자: {{ post.writer }}</h5>
                 </div id="post-main">
                 <div class ="qna_post_content">
                     <h4>{{ post.content }}</h4>
                 </div>
-
                 <div class="qna-left-btns">
                     <a href="{% url 'demos:qanda_delete' post.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                     <a href="{% url 'demos:qanda_update' post.id %}"><i class="ri-edit-line"></i>[수정]</a>
@@ -34,7 +33,7 @@
                                     <li class="reply">
                                         <i class="ri-corner-down-right-line"></i> 
                                         {{ reply.writer }}: {{ reply.content }}
-                                         <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
+                                        <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                                         <a href="{% url 'demos:delete_comment' reply.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                                 {% endfor %}
                             </ul>

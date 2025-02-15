@@ -205,22 +205,7 @@ def qna(request):
 def mypage(request):
     return render(request, 'mypage.html')
 
-def community(request):
-    return render(request, 'home.html')
-
-def work(request):
-    return render(request, 'home.html')
-
-def github(request):
-    return render(request, 'home.html')
-
 def email(request):
-    return render(request, 'home.html')
-
-def insta(request):
-    return render(request, 'home.html')
-
-def facebook(request):
     return render(request, 'home.html')
 
 def qna(request):
