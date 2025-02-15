@@ -76,14 +76,10 @@
             const reviewLink = document.querySelector(".mypage_review a");
             const favoriteLink = document.querySelector(".mypage_heart a");
         
-            // `.active` 클래스 토글
-            const isActive = myreview.classList.contains('active');
-        
+            const isActive = myreview.classList.contains('active'); // `.active` 클래스 토글
             myreview.classList.toggle('active', !isActive);
             favorite.classList.remove('active');
-        
-            // 글씨 색 변경
-            reviewLink.classList.toggle('active', !isActive);
+            reviewLink.classList.toggle('active', !isActive); // 글씨 색 변경
             favoriteLink.classList.remove('active');
         }
         
@@ -94,12 +90,9 @@
                 .then(data => {
                     reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
                     data.reviews.forEach(review => {
-                                // div 요소 생성
                         const reviewElement = document.createElement("div");
                         reviewElement.classList.add("review-item");
                         reviewElement.setAttribute("data-review-id", review.id); // 리뷰 id 추가
-                    
-                        // 내부 html
                         reviewElement.innerHTML = `
                             <p><strong><i class="ri-parking-box-fill"></i> ${review.parking_lot__name}</strong></p>
                             <strong><i class="ri-user-fill"></i> ${review.user__username}</strong>
@@ -107,7 +100,6 @@
                             <p>${review.content || ''}</p>
                             <hr>
                         `;
-                
                             // 클릭 시 해당 주차장 상세 페이지 이동
                     reviewElement.addEventListener("click", function() {
                     window.location.href = `/map/?parking_id=${review.parking_lot__id}`; 
@@ -115,11 +107,9 @@
                         reviewContainer.appendChild(reviewElement);
                     });
                 })
-                .catch(error => console.error('리뷰 로드 실패:', error));
+                .catch(error => {});
             }
         document.addEventListener('DOMContentLoaded', loadReviews);
-            
-        
         const likeContainer = document.getElementById('like-list');
 
         function loadLikedParking() {
@@ -136,7 +126,6 @@
                         likeContainer.innerHTML = '<p>좋아요한 주차장이 없습니다.</p>';
                         return;
                     }
-
                     data.liked_parking_lots.forEach(parking => {
                         const likeElement = document.createElement("div");
                         likeElement.classList.add("liked-item");
@@ -152,10 +141,8 @@
                         likeContainer.appendChild(likeElement);
                     });
                 })
-                .catch(error => console.error('❌ 좋아요한 주차장 목록 로드 실패:', error));
+                .catch(error => {});
         }
-
-        // 페이지 로드 시 좋아요한 주차장 목록 불러오기
         document.addEventListener('DOMContentLoaded', loadLikedParking);
 
                 
