@@ -175,19 +175,6 @@
 
                 ps.keywordSearch(keyword, placesSearchCB); 
             }
-            
-            function sortPlacesByDistance(userLatLng, places) {
-                // 장소 목록에 각 장소까지의 거리 추가
-                var sortedPlaces = places.map(place => {
-                    var placeLatLng = new kakao.maps.LatLng(place.y, place.x);
-                    var distance = getDistance(userLatLng, placeLatLng);
-                    return { ...place, distance };
-                });
-                // 거리 기준으로 오름차순 정렬
-                sortedPlaces.sort((a, b) => a.distance - b.distance);
-
-                return sortedPlaces;
-            }
 
             function placesSearchCB(data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
@@ -201,7 +188,7 @@
                     document.getElementById('parkingListWrap').style.display = "none";
                     document.getElementById('list-btn').style.display = "block";
                     document.getElementById('parkingDetailWrap').style.display = "none";
-                    // 🔥 전체 데이터를 수집하여 저장
+                    // 전체 데이터를 수집하여 저장
                     allPlaces = allPlaces.concat(data);
 
                     
@@ -233,7 +220,10 @@
 
                         applyCustomPagination(allPlaces);
                     }, function (error) {
+                        applyCustomPagination(allPlaces);
                     });
+                }else {
+                    applyCustomPagination(allPlaces); // 위치 정보 없이 기본 정렬로 실행
                 }
             }
 
