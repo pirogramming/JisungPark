@@ -137,7 +137,7 @@ p{
     max-width: 80%;
     text-align: center;
 }
-.introduce_container, .setting_container{
+.introduce_container, .setting_container, .guidemap_container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -148,7 +148,7 @@ p{
     max-width: 80%;
     padding: 30px 40px;
 }
-.qanda_container, .guidemap_container {
+.qanda_container{
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -704,6 +704,5 @@ h6 {
 }
 
 .guidemap img{
-    margin-top: 2rem;
-    width: 260px;
+    width: 300px;
 }
