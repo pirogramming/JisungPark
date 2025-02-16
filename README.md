@@ -1,59 +1,90 @@
-# JisungPark
+# JisungPark 🅿️
 운전자들에게 주차장 정보를 실시간으로 제공하는 서비스입니다.
 
-## 🚀  Stacks
+## 📲  서비스 소개
+### 주차장 정보 제공
+- 위치
+- 요금
+- 운영시간
 
+### 실시간 주차 가능 공간 업데이트
+- 실시간 주차 가능 대수 정보 제공
+- 동선 낭비 없이 주차 가능!
+
+### 주차장 리뷰
+- 사용자 리뷰
+- 별점
+- 객관적인 지표로 작용
+
+### 주차장 찜
+- 자주가거나 좋았던 주차장 즐겨찾기
+- 마이페이지에서 확인 가능
+
+### 문의기능
+- FAQ와 함께 제공
+- 개발자에게 문의하는 글을 쓰면 답장 달기 가능
+
+### 기타
+- 로그인/회원가입 + 소셜로그인
+- 서비스 소개
+- 멤버 소개
+- 가이드맵
 ---
+### 🚀  Stacks
+- HTML
+- CSS
+- JavaScript
+- Python
+- Django
 
-<aside>
-<img src="attachment:246e5bf0-1549-49d0-af01-05da5d24a10e:pngwing.com_(3).png" alt="attachment:246e5bf0-1549-49d0-af01-05da5d24a10e:pngwing.com_(3).png" width="40px" /> **HTML**
+### 🛠  Tools
+- Figma
+- Git
 
-</aside>
+### 👥  Collaboration
+- GitHub
+- Notion
+- Discord
 
-<aside>
-<img src="attachment:5e68322b-c560-4299-9d9c-1b80fc230e0e:pngwing.com_(1).png" alt="attachment:5e68322b-c560-4299-9d9c-1b80fc230e0e:pngwing.com_(1).png" width="40px" /> **CSS(SCSS)**
+## 👥  멤버 소개
 
-</aside>
+### 📌  정원준(PM)
+기획, 백엔드
+Email : dietken1@ajou.ac.kr
+Github : dietken1
+지성 있는 사람들을 이끄는 사람
 
-<aside>
-<img src="attachment:3d851fa7-8bc0-444a-8eef-95626e23f297:pngwing.com_(2).png" alt="attachment:3d851fa7-8bc0-444a-8eef-95626e23f297:pngwing.com_(2).png" width="40px" /> **JavaScript**
+### 📌  김현진
+백엔드
+Email : khj32201270@dankook.ac.kr
+Github: blueoxygens
+나는 감자
 
-</aside>
+### 📌  임유지
+프론트엔드, 디자인
+Email : limyuji01@naver.com
+Github : lim-yuji
+나는 고구마가 좋아
 
-<aside>
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHLN0RrPTmNUSMhl6MTeX0p_uIIj6Qzoxok9gjmzjELFRCeJaN34K8nOSaG56rrrw-evQ&usqp=CAU" alt="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHLN0RrPTmNUSMhl6MTeX0p_uIIj6Qzoxok9gjmzjELFRCeJaN34K8nOSaG56rrrw-evQ&usqp=CAU" width="40px" /> **Python**
+### 📌  김태린
+백엔드
+Email : redgreenyell@naver.com
+Github : ttaerrin
+지성공원이 좋아요
 
-</aside>
+### 📌  박태희
+프론트엔드, 디자인
+Email : suk05553@naver.com
+Github : qkrxogmla
+지성있는 사람1
 
-## 🛠  Tools
+##  🤙🏻 팀 규칙
 
----
-
-<aside>
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" alt="https://cdn-icons-png.flaticon.com/512/5968/5968705.png" width="40px" /> **Figma**
-
-</aside>
-
-<aside>
-<img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" width="40px" /> **Git**
-
-</aside>
-
-## 👥  Collaboration
-
----
-
-<aside>
-<img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="40px" /> **GitHub**
-
-</aside>
-
-<aside>
-<img src="https://cdn.icon-icons.com/icons2/2389/PNG/512/notion_logo_icon_145025.png" alt="https://cdn.icon-icons.com/icons2/2389/PNG/512/notion_logo_icon_145025.png" width="40px" /> **Notion**
-
-</aside>
-
-<aside>
-<img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" width="40px" /> **Discord**
-
-</aside>
+📌 Git에 풀리퀘 날릴 경우, 무조건 5명 톡방에 보고한다!
+🍎 대면 회의 및 모각코 주 1~2회 이상 무조건 진행
+🍪 카톡방 알림 끄지 말기!
+🔥 매일 시간 맞춰서 회.의.진.행.
+🗣 무조건 반!말!하기
+⚠️ 공지 확인 시 12시간 내에 답장 해주기 + 공지 확인 후에 ✅ 체크 필수
+📝 공부하다 모르는 내용 생기면 공유하고 서로 같이 고민하기
+💬 지속적인 소통하기🤙🏻
