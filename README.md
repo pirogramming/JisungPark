@@ -49,42 +49,42 @@
 ## 👥  멤버 소개
 
 ### 📌  정원준(PM)
-기획, 백엔드
-Email : dietken1@ajou.ac.kr
-Github : dietken1
-지성 있는 사람들을 이끄는 사람
+- 기획, 백엔드
+- Email : dietken1@ajou.ac.kr
+- Github : dietken1
+- 지성 있는 사람들을 이끄는 사람
 
 ### 📌  김현진
-백엔드
-Email : khj32201270@dankook.ac.kr
-Github: blueoxygens
-나는 감자
+- 백엔드
+- Email : khj32201270@dankook.ac.kr
+- Github: blueoxygens
+- 나는 감자
 
 ### 📌  임유지
-프론트엔드, 디자인
-Email : limyuji01@naver.com
-Github : lim-yuji
-나는 고구마가 좋아
+- 프론트엔드, 디자인
+- Email : limyuji01@naver.com
+- Github : lim-yuji
+- 나는 고구마가 좋아
 
 ### 📌  김태린
-백엔드
-Email : redgreenyell@naver.com
-Github : ttaerrin
-지성공원이 좋아요
+- 백엔드
+- Email : redgreenyell@naver.com
+- Github : ttaerrin
+- 지성공원이 좋아요
 
 ### 📌  박태희
-프론트엔드, 디자인
-Email : suk05553@naver.com
-Github : qkrxogmla
-지성있는 사람1
+- 프론트엔드, 디자인
+- Email : suk05553@naver.com
+- Github : qkrxogmla
+- 지성있는 사람1
 
 ##  🤙🏻 팀 규칙
 
-📌 Git에 풀리퀘 날릴 경우, 무조건 5명 톡방에 보고한다!
-🍎 대면 회의 및 모각코 주 1~2회 이상 무조건 진행
-🍪 카톡방 알림 끄지 말기!
-🔥 매일 시간 맞춰서 회.의.진.행.
-🗣 무조건 반!말!하기
-⚠️ 공지 확인 시 12시간 내에 답장 해주기 + 공지 확인 후에 ✅ 체크 필수
-📝 공부하다 모르는 내용 생기면 공유하고 서로 같이 고민하기
-💬 지속적인 소통하기🤙🏻
+###### 📌 Git에 풀리퀘 날릴 경우, 무조건 5명 톡방에 보고한다!
+###### 🍎 대면 회의 및 모각코 주 1~2회 이상 무조건 진행
+###### 🍪 카톡방 알림 끄지 말기!
+###### 🔥 매일 시간 맞춰서 회.의.진.행.
+###### 🗣 무조건 반!말!하기
+###### ⚠️ 공지 확인 시 12시간 내에 답장 해주기 + 공지 확인 후에 ✅ 체크 필수
+###### 📝 공부하다 모르는 내용 생기면 공유하고 서로 같이 고민하기
+###### 💬 지속적인 소통하기🤙🏻
