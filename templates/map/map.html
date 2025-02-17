@@ -433,7 +433,6 @@
                         '전화번호': place['phone']
                     });
                 }); 
-                //updateParkingDisplay();
             }
 
             // 실시간 데이터 갱신
@@ -457,7 +456,6 @@
 
             // 초기 로딩
             fetchRealTimeData();
-
             // 1분마다 자동 갱신
             setInterval(fetchRealTimeData, 50000); 
 
@@ -524,14 +522,10 @@
 
                 // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
                 let seatContent = (seat === null || seat === undefined || isNaN(seat))
-                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  // 아이콘 크기 1rem, 색상 검정
+                    ? `<i class="ri-car-fill icon"></i>`  
                     : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;  
 
-                let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
-                                        font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:12px;bottom:27px; left:0.5px; pointer-events: none;">
-                                        ${seatContent}
-                                    </div>`;
+                let overlayContent = `<div class="custom-overlay">${seatContent}</div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
@@ -573,14 +567,10 @@
 
                 // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
                 let seatContent = (seat === null || seat === undefined || isNaN(seat))
-                    ? `<i class="ri-car-fill" style="font-size:1rem; color:black;"></i>`  
+                    ? `<i class="ri-car-fill icon"></i>`  
                     : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;  
 
-                let overlayContent = `<div style="position:relative;width:18px;height:18px;text-align:center;
-                                        font-weight:bold;background:white;border-radius:50%;
-                                        line-height:20px;font-size:12px;bottom:27px;left:0.5px; pointer-events: none;">
-                                        ${seatContent}
-                                    </div>`;
+                let overlayContent = `<div class="custom-overlay">${seatContent}</div>`;
 
                 let overlay = new kakao.maps.CustomOverlay({
                     content: overlayContent,
