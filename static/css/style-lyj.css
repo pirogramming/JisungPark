@@ -32,6 +32,7 @@ footer {
     justify-content: center;
     align-items: center;
     padding-block: 1rem;
+    flex-shrink: 0;
 }
 .footer-bottom  {
     display: flex;

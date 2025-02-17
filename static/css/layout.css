@@ -4,10 +4,11 @@
   margin: auto;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 main {
-  height: 100%;
+  height: 100dvh;
 }
 
 :root {
