@@ -184,7 +184,6 @@
                     }
                     var menuEl = document.getElementById('menu_wrap');
                     menuEl.style.display = 'block';
-                    closeAllInfoWindows();
                     document.getElementById('parkingListWrap').style.display = "none";
                     document.getElementById('list-btn').style.display = "block";
                     document.getElementById('parkingDetailWrap').style.display = "none";
@@ -375,16 +374,6 @@
                 });
                 newMarker.setMap(map); 
                 return newMarker;
-                }
-                function closeAllInfoWindows() {
-                    openInfoWindows.forEach(iw => {
-                        if (iw instanceof kakao.maps.InfoWindow) {
-                            iw.close(); 
-                        } else if (iw instanceof kakao.maps.CustomOverlay) {
-                            iw.setMap(null);  
-                        }
-                    });
-                    openInfoWindows = []; 
                 }
 
             function removeMarker() {
@@ -1287,8 +1276,6 @@
                         selectedPlaceMarker.setMap(null);
                         selectedPlaceMarker = null;
                     }
-
-                    closeAllInfoWindows();
 
                         var dummyMarker = { getPosition: () => locPosition }; // 마커 없이 위치 전달
                         focusOnPlace(dummyMarker);
