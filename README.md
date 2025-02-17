@@ -38,12 +38,12 @@
 - Django
 
 ### 🛠  Tools
-- Figma
+- [Figma](https://www.figma.com/design/ee9BWDZneCiMtoI5nwQIaa/%EC%A7%80%EC%84%B1park?node-id=0-1&t=ljWy43kN09Wy0sHY-1)
 - Git
 
 ### 👥  Collaboration
+- [Notion](https://www.notion.so/18740a3e16118140b5ded0b27076593e?pvs=4)
 - GitHub
-- Notion
 - Discord
 
 ## 👥  멤버 소개
