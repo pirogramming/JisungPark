@@ -32,9 +32,9 @@
                                 {% for reply in comment.comments.all %}
                                     <li class="reply">
                                         <i class="ri-corner-down-right-line"></i> 
-                                        {{ reply.writer }}: {{ reply.content }}
+                                        <strong>{{ reply.writer }}: {{ reply.content }}</strong>
                                         <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
-                                        <a href="{% url 'demos:delete_comment' reply.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
+                                        <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                                 {% endfor %}
                             </ul>
 

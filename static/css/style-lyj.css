@@ -440,9 +440,6 @@ h6 {
 .comment-form textarea{
     width: 100%;
 }
-.comment strong {
-    font-size: medium;
-}
 .comment text {
     font-size: 1.3rem;
     margin-top: 1rem;
@@ -570,7 +567,6 @@ h6 {
     padding: 8px 12px;
     margin-right: 10px;
     border-radius: 5px;
-    transition: background 0.3s ease;
 }
 
 .qna-left-btns a:hover {
@@ -592,7 +588,7 @@ h6 {
     margin-bottom: 10px;
 }
 
-.comment strong {
+.comment strong, .reply strong {
     color: #333;
     font-size: 1.3rem;
 }
@@ -605,7 +601,9 @@ h6 {
 .comment a {
     color: red;
     font-size: 10px;
-    margin-left: 10px;
+}
+.ri-delete-bin-6-line2 {
+    margin-left: 5px;
 }
 
 .reply-form-create-btn{
