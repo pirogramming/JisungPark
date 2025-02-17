@@ -148,6 +148,12 @@ p{
     max-width: 80%;
     padding: 30px 40px;
 }
+.guidemap_container {
+    height: 80%;
+}
+.guidemap {
+    overflow-y: scroll;
+}
 .qanda_container{
     background-color: white;
     border-radius: 10px;
@@ -463,9 +469,9 @@ h6 {
     font-weight: 700;
     font-size: 1.8rem;
 }
-.qanda_title h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
+.qanda_title h3 , .contact_title h3{
+    font-size: 1.7rem;
+    font-weight: 600;
     color: #333;
 }
 .FQA {
@@ -588,14 +594,14 @@ h6 {
 
 .comment strong {
     color: #333;
+    font-size: 1.3rem;
 }
 
 .comment .date {
-    font-size: 12px;
+    font-size: 1rem;
     color: #777;
     margin-top: 5px;
 }
-
 .comment a {
     color: red;
     font-size: 10px;
@@ -705,4 +711,8 @@ h6 {
 
 .guidemap img{
     width: 300px;
+}
+.us {
+    width: 100%;
+    margin-block: 6rem;
 }

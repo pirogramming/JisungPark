@@ -22,7 +22,7 @@
                 <ul class="comments-list">
                     {% for comment in comments %}
                         <li class="comment">
-                            <strong>{{ comment.writer }}</strong>: {{ comment.content }}
+                            <strong>{{ comment.writer }}: {{ comment.content }} </strong>
                             <h5 class="date">{{ comment.created_date|date:"y.m.d H:i" }}</h5>
                             <a href="{% url 'demos:delete_comment' comment.id %}"><i class="ri-delete-bin-6-line"></i>[삭제]</a>
                             <button class="reply-form-create-btn">답글 달기</button>
