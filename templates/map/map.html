@@ -468,126 +468,77 @@
                     }, 300);
                 });
 
-            function updateVisibleParkingMarkers() {
-                var bounds = map.getBounds(); 
+                function updateVisibleParkingMarkers() {
+                    var bounds = map.getBounds();
+                    removeMarker();
 
-                removeMarker(); 
+                    var visibleParking = parkingData.filter(parking => {
+                        var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
+                        var isInBounds = bounds.contain(parkingLatLng);
+                        var distanceFromSelected = getDistance(selectedPlace, parkingLatLng);
+                        var isWithin2km = distanceFromSelected <= 2; // 2km 이내 여부
+                        return isInBounds && isWithin2km;
+                    });
 
-                var visibleParking = parkingData.filter(parking => {
-                var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-                
-                //지도 화면 안에 있는지 확인
-                var isInBounds = bounds.contain(parkingLatLng);
+                    visibleParking.forEach((parking, index) => {
+                        var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
 
-                //선택한 장소에서 2km 이내인지 확인
-                var distanceFromSelected = getDistance(selectedPlace, parkingLatLng);
-                var isWithin2km = distanceFromSelected <= 2; // 2km 이내 여부
-                
-                return isInBounds && isWithin2km;
-                });
+                        // 기존 마커 및 오버레이 제거
+                        if (openInfoWindows[index]) {
+                            if (openInfoWindows[index] instanceof kakao.maps.InfoWindow) {
+                                openInfoWindows[index].close();
+                            } else {
+                                openInfoWindows[index].setMap(null);
+                            }
+                        }
 
-                visibleParking.forEach((parking, index) => {
-                    var parkingLatLng = new kakao.maps.LatLng(parking.위도, parking.경도);
-                    if (favoriteParkingIds.includes(parking.id)) {
-                        addFavoriteMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
-                    } else {
-                        addDefaultMarker(parkingLatLng, index, parking.주차장명, parking.남은자리, parking);
-                    }
-                });
-            }
-            function addFavoriteMarker(position, idx, title, seat, parking) {
-                if (openInfoWindows[idx]) {
-                    if (openInfoWindows[idx] instanceof kakao.maps.InfoWindow) {
-                        openInfoWindows[idx].close();
-                    } else {
-                        openInfoWindows[idx].setMap(null);
-                    }
+                        // 찜한 주차장인지 여부에 따라 마커 이미지 설정
+                        let markerImage = null;
+                        if (favoriteParkingIds.includes(parking.id)) {
+                            let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+                            markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 39));
+                        }
+
+                        // 마커 생성
+                        let marker = new kakao.maps.Marker({
+                            position: parkingLatLng,
+                            image: markerImage
+                        });
+
+                        // 마커 추가
+                        addPakingmarker(marker, index, parking.주차장명, parking.남은자리, parking, parkingLatLng);
+                    });
                 }
 
-                let markerImageUrl = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; // 찜한 주차장 마커 이미지
-                let markerImage = new kakao.maps.MarkerImage(markerImageUrl, new kakao.maps.Size(24, 39));
+                function addPakingmarker(marker, index, title, seat, parking, position) {
+                    marker.setMap(map);
+                    markers.push(marker);
 
-                let marker = new kakao.maps.Marker({
-                    position: position,
-                    image: markerImage
-                });
+                    let textColor = "";
+                    if (seat / parking.전체자리 >= 0.5) textColor = "green";
+                    else if (seat / parking.전체자리 >= 0.1) textColor = "orange";
+                    else if (!isNaN(seat)) textColor = "red";
 
-                marker.setMap(map);
-                markers.push(marker);
+                    let seatContent = (seat === null || seat === undefined || isNaN(seat))
+                        ? `<i class="ri-car-fill icon"></i>`
+                        : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;
 
-                let textColor = "";
-                if (seat/parking.전체자리 >= 0.5) textColor = "green";
-                else if (seat/parking.전체자리 >= 0.1) textColor = "orange";
-                else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
+                    let overlayContent = `<div class="custom-overlay">${seatContent}</div>`;
 
-                // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
-                let seatContent = (seat === null || seat === undefined || isNaN(seat))
-                    ? `<i class="ri-car-fill icon"></i>`  
-                    : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;  
+                    let overlay = new kakao.maps.CustomOverlay({
+                        content: overlayContent,
+                        position: position,
+                        yAnchor: 0.5
+                    });
 
-                let overlayContent = `<div class="custom-overlay">${seatContent}</div>`;
+                    overlay.setMap(map);
+                    openInfoWindows[index] = overlay;
 
-                let overlay = new kakao.maps.CustomOverlay({
-                    content: overlayContent,
-                    position: position,
-                    yAnchor: 0.5
-                });
-
-                overlay.setMap(map);
-                openInfoWindows[idx] = overlay;
-
-                kakao.maps.event.addListener(marker, 'click', function () {
-                    map.setCenter(marker.getPosition());
-                    showParkingDetail(parking);
-                });
-
-                return marker;
-            }
-
-            function addDefaultMarker(position, idx, title, seat, parking) {
-                if (openInfoWindows[idx]) {
-                    if (openInfoWindows[idx] instanceof kakao.maps.InfoWindow) {
-                        openInfoWindows[idx].close();
-                    } else {
-                        openInfoWindows[idx].setMap(null);
-                    }
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        map.setCenter(marker.getPosition());
+                        showParkingDetail(parking);
+                    });
                 }
-
-                var marker = new kakao.maps.Marker({
-                    position: position, 
-                });
-
-                marker.setMap(map);
-                markers.push(marker);
-
-                let textColor = "";
-                if (seat/parking.전체자리 >= 0.5) textColor = "green";
-                else if (seat/parking.전체자리 >= 0.1) textColor = "orange";
-                else if (!isNaN(seat)) textColor = "red";  // seat이 숫자일 때만 적용
-
-                // seat이 null 또는 NaN이면 아이콘 표시, 아니면 숫자 표시
-                let seatContent = (seat === null || seat === undefined || isNaN(seat))
-                    ? `<i class="ri-car-fill icon"></i>`  
-                    : `<span style="color:${textColor}; font-size: ${seat >= 100 ? '1.1rem' : '1.3rem'};">${seat}</span>`;  
-
-                let overlayContent = `<div class="custom-overlay">${seatContent}</div>`;
-
-                let overlay = new kakao.maps.CustomOverlay({
-                    content: overlayContent,
-                    position: position,
-                    yAnchor: 0.5
-                });
-
-                overlay.setMap(map);
-                openInfoWindows[idx] = overlay;
-
-                kakao.maps.event.addListener(marker, 'click', function () {
-                    map.setCenter(marker.getPosition());
-                    showParkingDetail(parking);
-                });
-
-                return marker;
-            }
 
             function removeAllChildNods(el) {
                 while (el.hasChildNodes()) {
