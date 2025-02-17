@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="qanda-container">
+        <div class="qanda_container">
+            <div class="qna_container">
+                <a href="{% url 'demos:qanda_list' %}"><i class="ri-close-large-line"></i></a>
+            </div>
+                <form action = "{% url 'demos:qanda_update' post.id %}" method="post">
+                {% csrf_token %}
+                <label for="title" class="form-label">제목 : </label>
+                <input type="text" name="title" id="title" value = {{ post.title }}>
+                <br>
+                <label for="content" class="form-label">문의사항 : </label><br>
+                <textarea  name="content" id="content"rows="15" cols="30"> {{ post.content }}</textarea>
+                <br>
+                <div class="upload">
+                    <button type="submit" class="btn btn-primary">문의 등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+        </div>
+    </footer>
+    <style>
+        .ri-question-answer-fill{
+            color: var(--icon);
+        }
+    </style>
+{% endblock %}

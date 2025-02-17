@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+
+{% block content %}
+  <div class="signup-container">
+    <div class="signup_container">
+      <form action="" method="POST" class="signup_form">
+        <h1>회원가입</h1>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="signup_btn">
+            <button type="submit" class="signup-btn">회원가입</button>
+          </div>
+          <p class="login-link">이미 계정이 있으신가요? <a href="{% url 'account_login'%}">로그인</a></p>
+        <hr>
+      <div class="social-login">
+          <p>소셜 로그인</p>
+          <button type="button" class="naver" onclick="location.href = '{% provider_login_url 'naver' %}'">
+            <img src="{% static 'img/naver.png' %}" alt="Naver Login">
+          </button>
+          <button type="button" class="google" onclick="location.href = '{% provider_login_url 'google' %}'">
+              <img src="{% static 'img/google.png' %}" alt="google Login">
+          </button>
+          <button type="button" class="kakao" onclick="location.href ='{% provider_login_url 'kakao'  method='oauth2' %}'">
+              <img src="{% static 'img/kakao.png' %}" alt="kakao Login">
+          </button>
+      </div>
+      </form>
+    </div>
+  </div>
+  {% endblock %}
+  {% block footer %}
+  <footer>
+    <div class="footer-top">
+      <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+      <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+      <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+      <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+      <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+  </div>
+    </footer>
+{% endblock %}

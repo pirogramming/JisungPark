@@ -1,0 +1,723 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 7dvh;
+    background-color: white;
+    padding: 0 1rem;
+    z-index: 1000;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: 1rem;
+    font-size: large;
+    font-weight: 700;
+}
+.header-nav {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.header-nav a, .header-nav i{
+    margin: 0 1.3rem;
+    font-size: 1.5rem;
+}
+
+footer {
+    background: white;
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-block: 1rem;
+    flex-shrink: 0;
+}
+.footer-bottom  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    padding-block: 1rem;
+}
+
+.footer-top a , .footer-bottom a{
+    margin: 0 2.5rem;
+    font-size: 2rem;
+}
+.footer-bottom a {
+    margin: 0 1rem;
+}
+.home-container, .signup-container, .login-container, .introduce-container, .aboutus-container, .qanda-container, .guidemap-container, .mypage-container, .setting-container{
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    max-width: 480px;
+    margin: auto;
+    background-image: url('../img/back.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.menu-icon {
+    cursor: pointer;
+}
+.menu {
+    display: none;
+    position: fixed;
+    top: 6dvh;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.menu.active {
+    display: block;
+}
+.menu a {
+    display: block;
+    margin: 100px 0;
+    font-size: 2rem;
+    text-decoration: none;
+    color: black;
+}
+h1 {
+    margin: 1rem;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #333;
+}
+h2 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #333;
+}
+p{
+    font-size: 1.6rem;
+    color: #555;
+    margin-block: 1rem;
+}
+.login_container h1, .signup_container h1 {
+    margin-bottom: 1.5rem;
+    font-size: 2.4rem;
+    color: #333;
+}
+
+.search-box {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    margin-block: 1rem; 
+}
+.search-btn {
+    background:var(--blue);
+    padding:1rem;
+    border-radius: 0.6rem;
+    margin-top: 1rem;
+    color: black;
+    font-size: 1.4rem;
+}
+.signup_container, .login_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 80%;
+    text-align: center;
+}
+.introduce_container, .setting_container {
+    padding: 30px 40px;
+}
+.introduce_container, .setting_container, .guidemap_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+}
+.guidemap_container {
+    height: 80%;
+    padding: 0 40px;
+}
+.guidemap_container h2 {
+    margin-top: 1rem;
+}
+.guidemap {
+    overflow-y: scroll;
+}
+.qanda_container{
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    height: 70dvh;
+    padding: 40px 30px;
+    overflow-y: auto;
+}
+.mypage_container, .aboutus_container{
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    height: 70dvh;
+    padding: 40px 30px;
+    overflow-y: auto;
+    background: white;
+}
+.signup_container {
+    padding: 10px;
+}
+.login_container {
+    height: 50rem;
+}
+.login_elements label, .signup_form label, .setting_form label{
+    display: inline-block;
+    margin-right: 5px;
+    text-align: right;
+    width: 8rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    color: #555;
+    margin-block: 1rem;
+}
+.setting_form label {
+    width: 9rem;
+}
+input, textarea {
+    font-size: 1.3rem;
+    touch-action: manipulation;
+}
+.login_elements input, .signup_form input {
+    width: 16rem;
+}
+.setting_form input {
+    width: 13rem;
+}
+.login_elements input, .signup_form input, .setting_form input{
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+.form-control{
+    padding: 1rem;
+    font-size: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+.form-control::placeholder {
+    opacity: 1; 
+}
+
+.login_elements p:last-of-type {
+    display: none;
+}
+.signup_form ul {
+    display: none;
+}
+.signup_form p {
+    margin-block: 0.5rem;
+}
+.login-btn, .signup-btn{
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #8BE0F1;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+.login-btn:hover, .signup-btn:hover {
+    background-color: #4BCFEA;
+    }
+.social-login {
+    margin-top: 10px;
+}
+.google img, .naver img, .kakao img{
+    margin: 0.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+.login-add {
+    display:flex;
+    flex-direction: column;
+    margin: 1rem;
+    font-size: 13px;
+    color: #555;
+}
+.signup-link, .login-link{
+    margin: 1rem;
+    font-size: 14px;
+    color: #555;
+    }
+
+.login-link a{
+    color: blueviolet;
+    text-decoration: none;
+    }
+
+.signup-link a:hover, .login-link a:hover {
+    text-decoration: underline;
+    }
+.introduce_container p {
+    margin: 1rem;
+    font-size: 1.4rem;
+}
+.profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+.profile_name {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin: 3rem;
+}
+.mypage{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 40px 10px;
+}
+.mypage a {
+    margin: 1.5rem;
+    font-size: 1.4rem;
+}
+.favorite, .myreview {
+    display: none;
+}
+.mypage_heart a, .mypage_review a {
+    color: black;
+}
+.mypage_heart a.active, .mypage_review a.active{
+    color: var(--icon);
+}
+.favorite.active, .myreview.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.mypage-h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5rem;
+    font-size: 3rem;
+}
+.mypage-h1 a {
+    margin-bottom: 1rem;
+}
+.aboutus_container p {
+    font-weight: 700;
+}
+.aboutus_container li {
+    font-size: 1.4rem;
+    margin-top: 0.5rem;
+}
+.aboutus_container ul {
+    margin-block: 2rem;
+}
+.contact_title button {
+    padding: 10px 15px;
+    font-size: 16px;
+    background: var(--btn);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.qanda_container p{
+    color: black;
+}
+.btn-primary {
+    margin: 1rem;
+    font-size: 1.4rem;
+    padding: 10px 15px;
+    background: var(--btn);
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.qna-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: black;
+}
+.qna-title:hover {
+    text-decoration: underline;
+}
+.ri-close-large-line {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    right: 10px;
+}
+.ri-arrow-go-back-line {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    right: 40px;
+}
+.qna_container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.edit_container{
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+}
+.qanda_container label {
+    width: 7rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: #555;
+    margin-block: 2rem;
+}
+.qanda_container input, .qanda_container textarea {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+h4 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #333;
+}
+h5 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: #333;
+}
+h6 {
+    margin-top: 2rem;
+    font-weight: 600;
+}
+.comment-form, .comment-form textarea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.comment-form textarea{
+    width: 100%;
+}
+.comment text {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    
+}
+.btn-info {
+    padding: 10px;
+    margin-left: 1rem;
+    font-size: 1.2rem;
+    background-color: #8BE0F1;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+.reply-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.before-qna{
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+.qanda_title h3 , .contact_title h3{
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #333;
+}
+.FQA {
+    margin-bottom: 2.5rem;
+}
+.FQA p {
+    font-size: 1.4rem;
+    color: #555;
+}
+.contact_title p{
+    font-size: 1.5rem; 
+}
+.upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.qna_container2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+.profile_name p{
+    margin-block: 0;
+}
+.profile_img img{
+    width: 50px;
+    height: 50px;
+}
+.hidden{
+    display: none;
+}
+/* 추가 Kim-Hyun-Jin */
+
+/* 제목 스타일 */
+.qna_container2 h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+/* 작성자 정보 */
+#post-writer h5 {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* 본문 스타일 */
+.qna_post_content {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.qna_post_content h4 {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* 버튼 스타일 */
+.qna-left-btns{
+    margin-block: 5px;
+}
+.qna-left-btns a {
+    font-size: 10px;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background: #007bff;
+    padding: 8px 12px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.qna-left-btns a:hover {
+    background: #0056b3;
+}
+
+/* 댓글 스타일 */
+.comments-list {
+    margin-top: 5px;
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.comment {
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.comment strong, .reply strong {
+    color: #333;
+    font-size: 1.3rem;
+}
+
+.comment .date {
+    font-size: 1rem;
+    color: #777;
+    margin-top: 5px;
+}
+.comment a {
+    color: red;
+    font-size: 10px;
+}
+.ri-delete-bin-6-line2 {
+    margin-left: 5px;
+}
+
+.reply-form-create-btn{
+    font-size: 10px;
+    color: #8a8a8a;
+}
+
+/* 대댓글 스타일 */
+.replies {
+    list-style: none;
+    margin-left: 20px;
+    padding-left: 15px;
+    border-left: 2px solid #ccc;
+}
+
+.reply {
+    background: #e9ecef;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* 댓글 입력 폼 */
+.comment-form, .reply-form {
+    margin-top: 10px;
+}
+
+.comment-form input,
+.reply-form input {
+    width: calc(100% - 100px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+
+}
+
+.comment-form button,
+.reply-form button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+}
+
+.comment-form button:hover,
+.reply-form button:hover {
+    background: #218838;
+}
+
+.mem_img img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover; 
+}
+.ri-parking-box-fill, .ri-user-fill{
+    color: var(—icon);
+}
+
+@keyframes slide-in {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(0); }
+}
+@keyframes slide-out {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+.slide-in {
+    animation: slide-in 0.5s ease-in-out forwards;
+}
+.setting_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.setting_form p{
+    margin-block: 0.5rem;
+}
+.delete_btn {
+    padding: 5px;
+    background-color: rgb(255, 235, 235);
+    color: #dd0000;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    margin-block: 2rem;
+}
+.setting_btn {
+    background-color: var(--blue);
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-block: 2rem;
+    padding: 10px;
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+.guidemap img{
+    width: 300px;
+}
+.us {
+    width: 100%;
+    margin-block: 4rem;
+}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="mypage-container">
+        <div class="mypage_container">
+            <div class="mypage-h1">
+                <h1>MY PAGE</h1>
+                <a href="{% url 'demos:mypage_detail' user.id %}"><i class="ri-user-settings-line"></i></a>
+            </div>
+            <div class="profile">
+                <div class="profile_img">
+                    <img src="{% static 'img/profile.png' %}">
+                </div>
+                <div class="profile_name">
+                    <p>{{ user.email}}</p>
+                    <p>ID: {{ user.username}}</p>
+                </div>
+            </div>
+            <div class="mypage">
+                <div class="mypage_heart">
+                    <a href="{% url 'demos:home' %}" id="toggle-btn" onclick="toggleFavorite(); return false;">FAVORITE</a>
+                </div>
+                <div class="mypage_review">
+                    <a href="{% url 'demos:home' %}" id="toggle-btn" onclick="toggleMyReview(); return false;">MY REVIEW</a>
+                </div>
+            </div>
+            <div id="favorite" class="favorite">
+                <p>Favorite</p>
+            </div>
+            <div id="myreview" class="myreview">
+                <div id="review-list" class="review-list">
+                    <p>My Review</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+        </div>
+    </footer>
+    <style>
+        .gotomypage{
+            color: var(--icon);
+        }
+    </style>
+{% endblock %}
+{% block scripts %}
+    <script>
+        function toggleFavorite() {
+            const favorite = document.getElementById('favorite');
+            const myreview = document.getElementById('myreview');
+            const favoriteLink = document.querySelector(".mypage_heart a");
+            const reviewLink = document.querySelector(".mypage_review a");
+        
+            // `.active` 클래스 토글
+            const isActive = favorite.classList.contains('active');
+        
+            favorite.classList.toggle('active', !isActive);
+            myreview.classList.remove('active');
+        
+            // 글씨 색 변경
+            favoriteLink.classList.toggle('active', !isActive);
+            reviewLink.classList.remove('active');
+        }
+        
+        function toggleMyReview() {
+            const myreview = document.getElementById('myreview');
+            const favorite = document.getElementById('favorite');
+            const reviewLink = document.querySelector(".mypage_review a");
+            const favoriteLink = document.querySelector(".mypage_heart a");
+        
+            const isActive = myreview.classList.contains('active'); // `.active` 클래스 토글
+            myreview.classList.toggle('active', !isActive);
+            favorite.classList.remove('active');
+            reviewLink.classList.toggle('active', !isActive); // 글씨 색 변경
+            favoriteLink.classList.remove('active');
+        }
+        
+        const reviewContainer = document.getElementById('review-list'); 
+        function loadReviews() {
+            fetch('/api/myreviews')
+                .then(response => response.json())
+                .then(data => {
+                    reviewContainer.innerHTML = ''; // 기존 리뷰 초기화
+                    data.reviews.forEach(review => {
+                        const reviewElement = document.createElement("div");
+                        reviewElement.classList.add("review-item");
+                        reviewElement.setAttribute("data-review-id", review.id); // 리뷰 id 추가
+                        reviewElement.innerHTML = `
+                            <p><strong><i class="ri-parking-box-fill"></i> ${review.parking_lot__name}</strong></p>
+                            <strong><i class="ri-user-fill"></i> ${review.user__username}</strong>
+                            <span><i class="ri-star-fill"></i> ${review.rating}</span>
+                            <p>${review.content || ''}</p>
+                            <hr>
+                        `;
+                            // 클릭 시 해당 주차장 상세 페이지 이동
+                    reviewElement.addEventListener("click", function() {
+                    window.location.href = `/map/?parking_id=${review.parking_lot__id}`; 
+                    });
+                        reviewContainer.appendChild(reviewElement);
+                    });
+                })
+                .catch(error => {});
+            }
+        document.addEventListener('DOMContentLoaded', loadReviews);
+        const likeContainer = document.getElementById('like-list');
+
+        function loadLikedParking() {
+            fetch('/api/favorites/')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP 오류! 상태 코드: ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    const likeContainer = document.getElementById("favorite"); // 좋아요 가져오기 
+                    likeContainer.innerHTML = '';
+
+                    if (!data.liked_parking_lots || data.liked_parking_lots.length === 0) {
+                        likeContainer.innerHTML = '<p>좋아요한 주차장이 없습니다.</p>';
+                        return;
+                    }
+                    data.liked_parking_lots.forEach(parking => {
+                        const likeElement = document.createElement("div");
+                        likeElement.classList.add("liked-item");
+                        likeElement.innerHTML = `
+                        <div class="review-item" data-parking-id="${parking.id}">
+                        <strong><i class="ri-parking-box-fill"></i> ${parking.name}</strong>
+                        <hr>
+                        </div>
+                `;
+                likeElement.addEventListener("click", function() {
+                    window.location.href = `/map/?parking_id=${parking.id}`; 
+                });
+                        likeContainer.appendChild(likeElement);
+                    });
+                })
+                .catch(error => {});
+        }
+        document.addEventListener('DOMContentLoaded', loadLikedParking);
+
+                
+    </script>
+{% endblock %}

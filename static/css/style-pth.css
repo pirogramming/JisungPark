@@ -1,0 +1,469 @@
+.map_wrap,
+.map_wrap * {
+  margin: 0;
+  padding: 0;
+  font-size: 1.4rem;
+}
+.map_wrap {
+  position: relative;
+  width: 100%;
+  height: 94%;
+}
+.form-top {
+  width: 100%;
+}
+.option {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  justify-content: center;
+  width: 100%;
+  height: 5%;
+  padding: 7px;
+  z-index: 1;
+  padding-left: 20px;
+  background-color: var(--blue);
+}
+#location-btn{
+  font-size: 20px;
+  margin-left: 3px;
+  top: 2px;
+  position: relative;
+  cursor: pointer;
+}
+#keyword {
+  border: none;
+  width: 80%;
+  height: 100%;
+  background-color: var(--white);
+  border-radius: 4px;
+  padding: 5px;
+}
+.search-button {
+  border: none;
+  width: 10%;
+  height: 100%;
+  background-color: var(--white);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  color: black;
+}
+.list-button {
+  border: none;
+  width: 25%;
+  background: var(--btn);
+  cursor: pointer;
+  font-size: 1.2rem;
+  border-radius: 4px;
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  color: black;
+  padding: 10px;
+}
+.off-button {
+  margin-top: 2.5rem;
+  border: none;
+  background-color: var(--btn);
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 4px;
+}
+.bottom-btn {
+  bottom: 55px;
+  z-index: 1;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 4%;
+  border-radius: 8px;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+#menu_wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 95%;
+  height: 43%;
+  margin: 10px 10px 30px 10px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  font-size: 10px;
+  border-radius: 10px;
+}
+.bg_white {
+  background: #fff;
+}
+#parkingListWrap,
+#parkingDetailWrap {
+  position: relative;
+  z-index: 1;
+  left: 6px;
+  bottom: 363px;
+  height: 329px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px 30px;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 97%;
+}
+#parkingListWrap ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#parkingListWrap li {
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+#parkingDetailWrap {
+  z-index: 1;
+}
+#parkingTitle {
+  font-size: 2rem;
+  font-weight: bold;
+}
+#menu_wrap hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+#menu_wrap .option {
+  text-align: center;
+}
+#menu_wrap .option p {
+  margin: 10px 0;
+}
+#menu_wrap .option button {
+  margin-left: 5px;
+}
+#placesList li {
+  list-style: none;
+}
+#placesList .item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 65px;
+}
+#placesList .item span {
+  display: block;
+  margin-top: 4px;
+}
+#placesList .item h5,
+#placesList .item .info {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#placesList .item .info {
+  padding: 10px 0 10px 55px;
+}
+#placesList .info .gray {
+  color: #8a8a8a;
+}
+#placesList .item .markerbg {
+  float: left;
+  position: absolute;
+  width: 36px;
+  height: 37px;
+  margin: 10px 0 0 10px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat;
+}
+#parkingReview {
+  margin-block: 1rem;
+  color: black;
+}
+#placesList .item .marker_1 {
+  background-position: 0 -10px;
+}
+#placesList .item .marker_2 {
+  background-position: 0 -56px;
+}
+#placesList .item .marker_3 {
+  background-position: 0 -102px;
+}
+#placesList .item .marker_4 {
+  background-position: 0 -148px;
+}
+#placesList .item .marker_5 {
+  background-position: 0 -194px;
+}
+#placesList .item .marker_6 {
+  background-position: 0 -240px;
+}
+#placesList .item .marker_7 {
+  background-position: 0 -286px;
+}
+#placesList .item .marker_8 {
+  background-position: 0 -332px;
+}
+#placesList .item .marker_9 {
+  background-position: 0 -378px;
+}
+#placesList .item .marker_10 {
+  background-position: 0 -423px;
+}
+#placesList .item .marker_11 {
+  background-position: 0 -470px;
+}
+#placesList .item .marker_12 {
+  background-position: 0 -516px;
+}
+#placesList .item .marker_13 {
+  background-position: 0 -562px;
+}
+#placesList .item .marker_14 {
+  background-position: 0 -608px;
+}
+#placesList .item .marker_15 {
+  background-position: 0 -654px;
+}
+#pagination {
+  margin: 10px auto;
+  text-align: center;
+}
+#pagination a {
+  display: inline-block;
+  margin-right: 10px;
+}
+.on {
+  font-weight: bold;
+  cursor: default;
+  color: #777;
+}
+.ri-arrow-down-s-fill,
+.ri-arrow-up-s-fill {
+  font-size: 20px;
+  cursor: pointer;
+}
+.review,
+.community {
+  display: none;
+  margin-bottom: 20px;
+}
+.review.active,
+.community.active {
+  display: flex;
+  margin-block: 20px;
+  font-size: 15px;
+  padding-block: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+.review p {
+  margin-block: 1rem;
+}
+.review input,
+.review textarea,
+.community input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.review input,
+.review textarea {
+  width: 60%;
+}
+.review-btn,
+.community-btn {
+  padding: 10px;
+  background: var(--btn);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: black;
+}
+.fix-btn {
+  padding: 5px;
+  background: var(--blue);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: black;
+  width: 30%;
+  margin-bottom: 2rem;
+}
+.fix-container {
+  display: flex;
+  flex-direction: column;
+}
+.input-msg,
+.input-qna {
+  flex-direction: row;
+}
+.input-msg input,
+.input-qna input {
+  padding-block: 5px;
+  border: 1px solid #5f5f5f;
+  border-radius: 4px;
+}
+.input-qna input {
+  width: 80%;
+}
+.review-item {
+  margin: 1rem;
+  width: 25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  padding-inline: 1rem;
+}
+.review-item p,
+.review-item strong {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+}
+.review-item hr {
+  margin-top: 0.5rem;
+}
+#favorite,
+#myreview {
+  margin-top: 2rem;
+}
+.sort-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  white-space: nowrap;
+}
+.sort-btn input {
+  width: 8%;
+  border: none;
+  border-bottom: 1px solid #789;
+  text-align: center;
+}
+.adjust {
+  background-color: #e9e9e9;
+  border-radius: 22%;
+  padding: 2px;
+}
+.list-way {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.list-way button {
+  color: #789;
+  cursor: pointer;
+}
+.list-way p {
+  color: #789;
+}
+.firstline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+#parkingTitle {
+  white-space: nowrap;
+}
+#toggle-btn {
+  flex-shrink: 0;
+}
+#parkingInfo1 {
+  flex-grow: 1;
+  min-width: 50px;
+  color: #789;
+}
+#parkingInfo2,
+#parkingInfo3,
+#parkingInfo4,
+#parkingInfo5,
+#parkingInfo6,
+#parkingInfo7,
+#parkingInfo8 {
+  color: black;
+  font-size: 1.5rem;
+  display: flex;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+#parkingInfo2 {
+  margin-top: 15px;
+}
+.firstline i {
+  font-size: 2rem;
+  cursor: pointer;
+  margin-bottom: 0.3rem;
+}
+.star-rating {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+  align-items: center;
+}
+
+.star-rating i {
+  font-size: 2rem;
+  color: gold;
+  transition: color 0.3s;
+}
+
+.star-rating i,
+.ri-star-fill {
+  color: gold;
+}
+.ri-heart-3-line,
+.ri-heart-3-fill {
+  transition: color 0.3s ease-in-out;
+}
+.ri-arrow-go-back-line:before {
+  font-size: 1.8rem;
+  content: "\ea58";
+}
+.ri-close-large-line:before {
+  font-size: 1.8rem;
+  content: "\f4c8";
+}
+.custom-overlay {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+  font-weight: bold;
+  background: white;
+  border-radius: 50%;
+  line-height: 20px;
+  font-size: 12px;
+  bottom: 27px;
+  left: 0.5px;
+  pointer-events: none;
+}
+
+.custom-overlay span {
+  font-weight: bold;
+}
+
+.custom-overlay .icon {
+  font-size: 1rem;
+  color: black;
+}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+
+{% block content %}
+  <div class="login-container">
+    <div class="login_container">
+        <form action="" method="POST">
+            <h1>로그인</h1>
+            {% csrf_token %}
+            <div class="login_elements">
+            {{ form.as_p }}
+            </div>
+            <div class="login_btn">
+                <button type="submit" class="login-btn">로그인</button>
+            </div>
+            <div class="login-add">
+                <p class="login-link">아직 계정이 없으신가요? <a href="{% url 'account_signup'%}">회원가입</a></p>
+            </div>
+            <hr>
+            <div class="social-login">
+                <p>소셜 로그인</p>
+                <button type="button" class="naver" onclick="location.href = '{% provider_login_url 'naver' %}'">
+                    <img src="{% static 'img/naver.png' %}" alt="Naver Login">
+                </button>
+                <button type="button" class="google" onclick="location.href = '{% provider_login_url 'google' %}'">
+                    <img src="{% static 'img/google.png' %}" alt="google Login">
+                </button>
+                <button type="button" class="kakao" onclick="location.href ='{% provider_login_url 'kakao'  method='oauth2' %}'">
+                    <img src="{% static 'img/kakao.png' %}" alt="kakao Login">
+                </button>
+            </div>
+        {% if invalid_creds %}
+            <p>다시 시도해주세요</p>
+        {% endif %}
+        </form>
+    </div>
+  </div>
+  {% endblock %}
+  {% block footer %}
+  <footer>
+    <div class="footer-top">
+        <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+        <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+        <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+        <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+        <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+    </div>
+    </footer>
+{% endblock %}
+
+

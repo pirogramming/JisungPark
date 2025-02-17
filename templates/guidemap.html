@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="guidemap-container">
+        <div class="guidemap_container">
+            <h2>Guide Map</h2>
+            <div class="guidemap">
+                <img src="{% static 'img/guidemap1.png' %}">
+                <img src="{% static 'img/guidemap2.png' %}">
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+        </div>
+    </footer>
+    <style>
+        .ri-route-line{
+            color: var(--icon);
+        }
+    </style>
+{% endblock %}

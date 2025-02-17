@@ -1,0 +1,31 @@
+.container {
+  width: 400px;
+  height: 100dvh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+main {
+  height: 100%;
+}
+
+:root {
+  /* spacing */
+  --gutter: 2rem;
+  --padding: 1.6rem;
+  --padding-sm: 1rem;
+
+  /* fontsize */
+  --heading: 1.6rem;
+  --body: 1.4rem;
+
+  /* color */
+  --blue:	#CEDFF1;
+  --btn: #8BE0F1;
+  --yellow: #FFFABB;
+  --white: #fff;
+  --gray: #c4c4c4;
+  --icon: #32BEBE;
+}

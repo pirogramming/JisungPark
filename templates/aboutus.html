@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="aboutus-container">
+        <div class="aboutus_container">
+            <h2>MEMBERS</h2>
+            <img class="us" src="{% static 'img/us.png' %}">
+            <div>
+                <ul class="mem">
+                    <div class="mem_img">
+                        <img src="{% static 'img/jwj.png' %}">
+                    </div>
+                    <p>정원준(PM)</p>
+                        <li>기획, 백엔드</li>
+                        <li>Email : dietken1@ajou.ac.kr</li>
+                        <li>Github : dietken1</li>
+                        <li>지성 있는 사람들을 이끄는 사람<li>
+                </ul>
+                <ul class="mem">
+                    <div class="mem_img">
+                        <img src="{% static 'img/khj.png' %}">
+                    </div>
+                    <p>김현진</p>
+                        <li>백엔드</li>
+                        <li>Email : khj32201270@dankook.ac.kr</li>
+                        <li>Github: blueoxygens</li>
+                        <li>나는 감자<li>
+                </ul>
+                <ul class="mem">
+                    <div class="mem_img">
+                        <img src="{% static 'img/lyj.png' %}">
+                    </div>
+                    <p>임유지</p>
+                        <li>프론트엔드, 디자인</li>
+                        <li>Email : limyuji01@naver.com</li>
+                        <li>Github : lim-yuji</li>
+                        <li>나는 고구마가 좋아<li>
+                </ul>
+                <ul class="mem">
+                    <div class="mem_img">
+                        <img src="{% static 'img/ktr.png' %}">
+                    </div>
+                    <p>김태린</p>
+                        <li>백엔드</li>
+                        <li>Email : redgreenyell@naver.com</li>
+                        <li>Github : ttaerrin</li>
+                        <li>지성공원이 좋아요<li>
+                </ul>
+                <ul class="mem">
+                    <div class="mem_img">
+                        <img src="{% static 'img/pth.png' %}">
+                    </div>
+                    <p>박태희</p>
+                        <li>프론트엔드, 디자인</li>
+                        <li>Email : suk05553@naver.com</li>
+                        <li>Github : qkrxogmla</li>
+                        <li>지성있는 사람1<li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <footer>
+        <div class="footer-top">
+            <a href="{% url 'demos:introduce' %}"><i class="ri-service-line"></i></a>
+            <a href="{% url 'demos:aboutus' %}"><i class="ri-team-fill"></i></a>
+            <a href="{% url 'demos:home' %}"><i class="ri-home-4-line"></i></a>
+            <a href="{% url 'demos:guidemap' %}"><i class="ri-route-line"></i></a>
+            <a href="{% url 'demos:qna' %}"><i class="ri-question-answer-fill"></i></a>
+        </div>
+    </footer>
+    <style>
+        .ri-team-fill{
+            color: var(--icon);
+        }
+    </style>
+{% endblock %} 
